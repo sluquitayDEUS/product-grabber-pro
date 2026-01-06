@@ -1,6 +1,9 @@
 import { MessageCircle, ShoppingCart } from "lucide-react";
+import { useNavigate } from "react-router-dom";
 
 const ProductFooter = () => {
+  const navigate = useNavigate();
+
   return (
     <footer className="fixed bottom-0 left-0 right-0 bg-card border-t border-border z-50">
       <div className="flex items-center h-14">
@@ -25,7 +28,10 @@ const ProductFooter = () => {
         </button>
 
         {/* Buy Now */}
-        <button className="flex-1 h-full bg-primary text-primary-foreground font-medium text-sm">
+        <button 
+          onClick={() => navigate("/checkout")}
+          className="flex-1 h-full bg-primary text-primary-foreground font-medium text-sm"
+        >
           Comprar Agora
         </button>
       </div>
