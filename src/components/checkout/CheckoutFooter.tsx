@@ -1,10 +1,17 @@
 import { ShieldCheck } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { useToast } from "@/hooks/use-toast";
+import { useCart } from "@/contexts/CartContext";
 
 const CheckoutFooter = () => {
   const navigate = useNavigate();
   const { toast } = useToast();
+  const { product, selectedShipping } = useCart();
+
+  const subtotal = product.price * product.quantity;
+  const voucher = -5.00;
+  const coins = -0.50;
+  const total = subtotal + selectedShipping.price + voucher + coins;
 
   const handleConfirmOrder = () => {
     toast({
@@ -28,7 +35,7 @@ const CheckoutFooter = () => {
       <div className="flex items-center h-14">
         <div className="flex-1 px-3">
           <p className="text-xs text-muted-foreground">Total do Pedido</p>
-          <p className="text-lg font-bold text-primary">R$ 84,40</p>
+          <p className="text-lg font-bold text-primary">R$ {total.toFixed(2).replace('.', ',')}</p>
         </div>
         <button 
           onClick={handleConfirmOrder}
