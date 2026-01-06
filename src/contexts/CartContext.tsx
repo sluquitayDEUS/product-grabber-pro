@@ -25,6 +25,31 @@ interface Product {
   quantity: number;
 }
 
+interface CustomerData {
+  name: string;
+  email: string;
+  document: string;
+  phone: string;
+}
+
+interface ShippingAddress {
+  street: string;
+  number: string;
+  complement: string;
+  neighborhood: string;
+  city: string;
+  state: string;
+  zipcode: string;
+}
+
+interface CardData {
+  number: string;
+  holderName: string;
+  expMonth: number;
+  expYear: number;
+  cvv: string;
+}
+
 interface CartContextType {
   product: Product;
   location: LocationData;
@@ -36,6 +61,15 @@ interface CartContextType {
   setPaymentMethod: (method: string) => void;
   pixDiscount: number;
   totalPrice: number;
+  totalPriceInCents: number;
+  customer: CustomerData;
+  setCustomer: (customer: CustomerData) => void;
+  shippingAddress: ShippingAddress;
+  setShippingAddress: (address: ShippingAddress) => void;
+  cardData: CardData | null;
+  setCardData: (data: CardData | null) => void;
+  installments: number;
+  setInstallments: (installments: number) => void;
 }
 
 const defaultProduct: Product = {
@@ -85,6 +119,23 @@ export const CartProvider = ({ children }: { children: ReactNode }) => {
   });
   const [shippingType, setShippingType] = useState<"standard" | "express">("standard");
   const [paymentMethod, setPaymentMethod] = useState<string>("pix");
+  const [customer, setCustomer] = useState<CustomerData>({
+    name: "",
+    email: "",
+    document: "",
+    phone: "",
+  });
+  const [shippingAddress, setShippingAddress] = useState<ShippingAddress>({
+    street: "",
+    number: "",
+    complement: "",
+    neighborhood: "",
+    city: "São Paulo",
+    state: "SP",
+    zipcode: "",
+  });
+  const [cardData, setCardData] = useState<CardData | null>(null);
+  const [installments, setInstallments] = useState(1);
 
   const shippingOptions = calculateShippingOptions();
   const selectedShipping = shippingOptions[shippingType];
@@ -92,6 +143,7 @@ export const CartProvider = ({ children }: { children: ReactNode }) => {
   const subtotal = defaultProduct.price * defaultProduct.quantity;
   const pixDiscount = paymentMethod === "pix" ? subtotal * 0.05 : 0;
   const totalPrice = subtotal + selectedShipping.price - pixDiscount;
+  const totalPriceInCents = Math.round(totalPrice * 100);
 
   return (
     <CartContext.Provider
@@ -105,7 +157,16 @@ export const CartProvider = ({ children }: { children: ReactNode }) => {
         paymentMethod,
         setPaymentMethod,
         pixDiscount,
-        totalPrice
+        totalPrice,
+        totalPriceInCents,
+        customer,
+        setCustomer,
+        shippingAddress,
+        setShippingAddress,
+        cardData,
+        setCardData,
+        installments,
+        setInstallments,
       }}
     >
       {children}

@@ -1,8 +1,17 @@
 import { ChevronRight, CreditCard, QrCode, Zap } from "lucide-react";
 import { useCart } from "@/contexts/CartContext";
+import CreditCardForm from "./CreditCardForm";
 
 const CheckoutPayment = () => {
-  const { paymentMethod, setPaymentMethod, pixDiscount } = useCart();
+  const { 
+    paymentMethod, 
+    setPaymentMethod, 
+    pixDiscount, 
+    setCardData, 
+    installments, 
+    setInstallments,
+    totalPriceInCents 
+  } = useCart();
 
   const paymentMethods = [
     { id: "pix", name: "Pix", icon: QrCode, description: "Aprovação imediata", hasDiscount: true },
@@ -70,6 +79,15 @@ const CheckoutPayment = () => {
             </div>
           </div>
         </div>
+      )}
+
+      {paymentMethod === "credit" && (
+        <CreditCardForm
+          onCardDataChange={setCardData}
+          installments={installments}
+          onInstallmentsChange={setInstallments}
+          totalAmount={totalPriceInCents}
+        />
       )}
     </div>
   );
