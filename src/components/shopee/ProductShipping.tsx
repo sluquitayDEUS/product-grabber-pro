@@ -1,13 +1,73 @@
-import { MapPin, Truck, ChevronRight } from "lucide-react";
+import { MapPin, Truck, ChevronRight, Loader2 } from "lucide-react";
+import { useState, useEffect } from "react";
+import { format, addDays } from "date-fns";
+import { ptBR } from "date-fns/locale";
+
+interface LocationData {
+  state: string;
+  city: string;
+  loading: boolean;
+}
 
 const ProductShipping = () => {
+  const [location, setLocation] = useState<LocationData>({
+    state: "",
+    city: "",
+    loading: true
+  });
+
+  // Calculate delivery dates (3-9 days from today)
+  const today = new Date();
+  const minDeliveryDate = addDays(today, 3);
+  const maxDeliveryDate = addDays(today, 9);
+
+  const formatDeliveryDate = (date: Date) => {
+    return format(date, "d 'de' MMM", { locale: ptBR });
+  };
+
+  const deliveryRange = `${formatDeliveryDate(minDeliveryDate)} - ${formatDeliveryDate(maxDeliveryDate)}`;
+
+  useEffect(() => {
+    // Fetch location based on IP
+    const fetchLocation = async () => {
+      try {
+        const response = await fetch("https://ipapi.co/json/");
+        const data = await response.json();
+        
+        setLocation({
+          state: data.region || "São Paulo",
+          city: data.city || "São Paulo",
+          loading: false
+        });
+      } catch (error) {
+        // Fallback to default location
+        setLocation({
+          state: "São Paulo",
+          city: "São Paulo",
+          loading: false
+        });
+      }
+    };
+
+    fetchLocation();
+  }, []);
+
   return (
     <div className="bg-card px-3 py-3 mt-2">
       {/* Location */}
       <div className="flex items-center justify-between mb-3">
         <div className="flex items-center gap-2">
           <MapPin className="w-4 h-4 text-muted-foreground" />
-          <span className="text-sm text-foreground">Enviar para São Paulo, SP</span>
+          {location.loading ? (
+            <div className="flex items-center gap-2">
+              <Loader2 className="w-4 h-4 animate-spin text-primary" />
+              <span className="text-sm text-muted-foreground">Detectando localização...</span>
+            </div>
+          ) : (
+            <span className="text-sm text-foreground">
+              Enviar para {location.city}, {location.state}
+            </span>
+          )}
         </div>
         <ChevronRight className="w-4 h-4 text-muted-foreground" />
       </div>
@@ -24,7 +84,7 @@ const ProductShipping = () => {
               </span>
             </div>
             <p className="text-xs text-muted-foreground mt-1">
-              Receba entre 10-15 Jan
+              Receba entre {deliveryRange}
             </p>
             <p className="text-xs text-muted-foreground">
               Entrega padrão: <span className="line-through">R$ 19,90</span>
