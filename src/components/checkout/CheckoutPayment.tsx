@@ -1,12 +1,12 @@
-import { ChevronRight, CreditCard, QrCode } from "lucide-react";
+import { ChevronRight, CreditCard, QrCode, Zap } from "lucide-react";
 import { useCart } from "@/contexts/CartContext";
 
 const CheckoutPayment = () => {
-  const { paymentMethod, setPaymentMethod } = useCart();
+  const { paymentMethod, setPaymentMethod, pixDiscount } = useCart();
 
   const paymentMethods = [
-    { id: "pix", name: "Pix", icon: QrCode, description: "5% de desconto • Aprovação imediata" },
-    { id: "credit", name: "Cartão de Crédito", icon: CreditCard, description: "Até 12x sem juros" },
+    { id: "pix", name: "Pix", icon: QrCode, description: "Aprovação imediata", hasDiscount: true },
+    { id: "credit", name: "Cartão de Crédito", icon: CreditCard, description: "Até 12x sem juros", hasDiscount: false },
   ];
 
   return (
@@ -20,7 +20,9 @@ const CheckoutPayment = () => {
           <button
             key={method.id}
             onClick={() => setPaymentMethod(method.id)}
-            className="w-full px-3 py-3 flex items-center gap-3"
+            className={`w-full px-3 py-3 flex items-center gap-3 transition-colors ${
+              method.id === "pix" && paymentMethod === "pix" ? "bg-green-50" : ""
+            }`}
           >
             <div className={`w-5 h-5 rounded-full border-2 flex items-center justify-center ${
               paymentMethod === method.id ? 'border-primary' : 'border-muted-foreground'
@@ -33,17 +35,42 @@ const CheckoutPayment = () => {
               paymentMethod === method.id ? 'text-primary' : 'text-muted-foreground'
             }`} />
             <div className="flex-1 text-left">
-              <p className={`text-sm ${
-                paymentMethod === method.id ? 'text-primary font-medium' : 'text-foreground'
-              }`}>
-                {method.name}
-              </p>
+              <div className="flex items-center gap-2">
+                <p className={`text-sm ${
+                  paymentMethod === method.id ? 'text-primary font-medium' : 'text-foreground'
+                }`}>
+                  {method.name}
+                </p>
+                {method.hasDiscount && (
+                  <span className="inline-flex items-center gap-1 px-2 py-0.5 bg-green-500 text-white text-xs font-bold rounded-full animate-pulse">
+                    <Zap className="w-3 h-3" />
+                    5% OFF
+                  </span>
+                )}
+              </div>
               <p className="text-xs text-muted-foreground">{method.description}</p>
             </div>
+            {method.hasDiscount && paymentMethod === "pix" && (
+              <span className="text-sm font-bold text-green-600">
+                -R$ {pixDiscount.toFixed(2).replace('.', ',')}
+              </span>
+            )}
             <ChevronRight className="w-4 h-4 text-muted-foreground" />
           </button>
         ))}
       </div>
+
+      {paymentMethod === "pix" && (
+        <div className="mx-3 mb-3 p-3 bg-gradient-to-r from-green-500 to-green-600 rounded-lg">
+          <div className="flex items-center gap-2 text-white">
+            <Zap className="w-5 h-5" />
+            <div>
+              <p className="font-bold text-sm">Você está economizando R$ {pixDiscount.toFixed(2).replace('.', ',')}!</p>
+              <p className="text-xs opacity-90">Desconto exclusivo para pagamento via Pix</p>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };
