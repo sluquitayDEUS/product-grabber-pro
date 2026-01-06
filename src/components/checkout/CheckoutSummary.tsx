@@ -25,9 +25,9 @@ const CheckoutSummary = () => {
           </span>
         </div>
         {paymentMethod === "pix" && pixDiscount > 0 && (
-          <div className="flex justify-between">
-            <span className="text-sm text-muted-foreground">Desconto Pix (5%)</span>
-            <span className="text-sm text-green-600">-R$ {pixDiscount.toFixed(2).replace('.', ',')}</span>
+          <div className="flex justify-between items-center bg-green-50 -mx-3 px-3 py-2">
+            <span className="text-sm font-medium text-green-700">🎉 Desconto Pix (5%)</span>
+            <span className="text-sm font-bold text-green-600">-R$ {pixDiscount.toFixed(2).replace('.', ',')}</span>
           </div>
         )}
         <div className="flex justify-between pt-2 border-t border-border">
