@@ -1,4 +1,4 @@
-import { ChevronRight, CreditCard, Wallet, Building2, QrCode } from "lucide-react";
+import { ChevronRight, CreditCard, QrCode } from "lucide-react";
 import { useState } from "react";
 
 const CheckoutPayment = () => {
@@ -7,8 +7,6 @@ const CheckoutPayment = () => {
   const paymentMethods = [
     { id: "pix", name: "Pix", icon: QrCode, description: "Aprovação imediata" },
     { id: "credit", name: "Cartão de Crédito", icon: CreditCard, description: "Até 12x sem juros" },
-    { id: "wallet", name: "Carteira Shopee", icon: Wallet, description: "Saldo: R$ 0,00" },
-    { id: "boleto", name: "Boleto Bancário", icon: Building2, description: "Vencimento em 3 dias" },
   ];
 
   return (
