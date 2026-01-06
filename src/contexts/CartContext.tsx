@@ -32,6 +32,9 @@ interface CartContextType {
   selectedShipping: ShippingOption;
   setSelectedShippingType: (type: "standard" | "express") => void;
   getShippingOptions: () => { standard: ShippingOption; express: ShippingOption };
+  paymentMethod: string;
+  setPaymentMethod: (method: string) => void;
+  pixDiscount: number;
   totalPrice: number;
 }
 
@@ -81,11 +84,14 @@ export const CartProvider = ({ children }: { children: ReactNode }) => {
     city: "São Paulo"
   });
   const [shippingType, setShippingType] = useState<"standard" | "express">("standard");
+  const [paymentMethod, setPaymentMethod] = useState<string>("pix");
 
   const shippingOptions = calculateShippingOptions();
   const selectedShipping = shippingOptions[shippingType];
 
-  const totalPrice = defaultProduct.price * defaultProduct.quantity + selectedShipping.price;
+  const subtotal = defaultProduct.price * defaultProduct.quantity;
+  const pixDiscount = paymentMethod === "pix" ? subtotal * 0.05 : 0;
+  const totalPrice = subtotal + selectedShipping.price - pixDiscount;
 
   return (
     <CartContext.Provider
@@ -96,6 +102,9 @@ export const CartProvider = ({ children }: { children: ReactNode }) => {
         selectedShipping,
         setSelectedShippingType: setShippingType,
         getShippingOptions: () => shippingOptions,
+        paymentMethod,
+        setPaymentMethod,
+        pixDiscount,
         totalPrice
       }}
     >

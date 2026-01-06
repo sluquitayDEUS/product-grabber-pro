@@ -1,11 +1,11 @@
 import { ChevronRight, CreditCard, QrCode } from "lucide-react";
-import { useState } from "react";
+import { useCart } from "@/contexts/CartContext";
 
 const CheckoutPayment = () => {
-  const [selectedMethod, setSelectedMethod] = useState<string>("pix");
+  const { paymentMethod, setPaymentMethod } = useCart();
 
   const paymentMethods = [
-    { id: "pix", name: "Pix", icon: QrCode, description: "Aprovação imediata" },
+    { id: "pix", name: "Pix", icon: QrCode, description: "5% de desconto • Aprovação imediata" },
     { id: "credit", name: "Cartão de Crédito", icon: CreditCard, description: "Até 12x sem juros" },
   ];
 
@@ -19,22 +19,22 @@ const CheckoutPayment = () => {
         {paymentMethods.map((method) => (
           <button
             key={method.id}
-            onClick={() => setSelectedMethod(method.id)}
+            onClick={() => setPaymentMethod(method.id)}
             className="w-full px-3 py-3 flex items-center gap-3"
           >
             <div className={`w-5 h-5 rounded-full border-2 flex items-center justify-center ${
-              selectedMethod === method.id ? 'border-primary' : 'border-muted-foreground'
+              paymentMethod === method.id ? 'border-primary' : 'border-muted-foreground'
             }`}>
-              {selectedMethod === method.id && (
+              {paymentMethod === method.id && (
                 <div className="w-2.5 h-2.5 rounded-full bg-primary" />
               )}
             </div>
             <method.icon className={`w-5 h-5 ${
-              selectedMethod === method.id ? 'text-primary' : 'text-muted-foreground'
+              paymentMethod === method.id ? 'text-primary' : 'text-muted-foreground'
             }`} />
             <div className="flex-1 text-left">
               <p className={`text-sm ${
-                selectedMethod === method.id ? 'text-primary font-medium' : 'text-foreground'
+                paymentMethod === method.id ? 'text-primary font-medium' : 'text-foreground'
               }`}>
                 {method.name}
               </p>
