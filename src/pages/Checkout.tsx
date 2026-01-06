@@ -1,6 +1,7 @@
 import CheckoutHeader from "@/components/checkout/CheckoutHeader";
 import CheckoutAddress from "@/components/checkout/CheckoutAddress";
 import CheckoutProducts from "@/components/checkout/CheckoutProducts";
+import CheckoutCustomer from "@/components/checkout/CheckoutCustomer";
 import CheckoutVoucher from "@/components/checkout/CheckoutVoucher";
 import CheckoutPayment from "@/components/checkout/CheckoutPayment";
 import CheckoutSummary from "@/components/checkout/CheckoutSummary";
@@ -12,6 +13,7 @@ const Checkout = () => {
       <CheckoutHeader />
       <CheckoutAddress />
       <CheckoutProducts />
+      <CheckoutCustomer />
       <CheckoutVoucher />
       <CheckoutPayment />
       <CheckoutSummary />
