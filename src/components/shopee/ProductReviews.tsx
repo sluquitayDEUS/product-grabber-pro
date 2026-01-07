@@ -2,9 +2,9 @@ import { useState } from "react";
 import { ThumbsUp, ChevronRight, ChevronDown } from "lucide-react";
 
 // Import review images
-import review1 from "@/assets/aquavolt-1.webp";
-import review2 from "@/assets/aquavolt-2.webp";
-import review3 from "@/assets/aquavolt-3.webp";
+import review1 from "@/assets/review-product-1.jpg";
+import review2 from "@/assets/review-product-2.jpg";
+import review3 from "@/assets/review-product-3.jpg";
 
 const filters = ["Todas", "Com Foto", "5★", "4★", "3★", "2★", "1★"];
 
