@@ -60,7 +60,6 @@ interface PixPaymentResult {
   paymentMethod: 'pix';
   pix: {
     qrCode: string;
-    qrCodeUrl: string;
     expiresAt: string;
   };
 }
