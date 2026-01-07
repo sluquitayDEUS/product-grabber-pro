@@ -76,8 +76,8 @@ const defaultProduct: Product = {
   id: "1",
   name: "Máquina de Barbear 3 em 1 Profissional Elétrica Recarregável USB",
   image: "https://images.unsplash.com/photo-1621607512214-68297480165e?w=400&h=400&fit=crop",
-  price: 89.90,
-  originalPrice: 164.90,
+  price: 39.90,
+  originalPrice: 89.90,
   variation: "Preto, 3 lâminas",
   quantity: 1
 };

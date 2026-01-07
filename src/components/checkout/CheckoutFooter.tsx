@@ -105,12 +105,20 @@ const CheckoutFooter = () => {
             transactionId: result.transactionId,
           },
         });
+      } else if (result.paymentMethod === "credit_card" && result.status === "paid") {
+        // Credit card approved - navigate to success page
+        navigate("/order-success", {
+          state: {
+            orderId: result.transactionId,
+            amount: totalPriceInCents,
+            paymentMethod: "credit",
+          },
+        });
       } else {
         toast({
-          title: "Pedido realizado com sucesso!",
-          description: "Seu pagamento foi aprovado.",
+          title: "Pedido realizado!",
+          description: "Aguardando confirmação do pagamento.",
         });
-        navigate("/");
       }
     } catch (error) {
       toast({

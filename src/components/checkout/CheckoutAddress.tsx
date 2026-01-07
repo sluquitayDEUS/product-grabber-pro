@@ -130,17 +130,25 @@ const CheckoutAddress = () => {
     }
   }, [sheetOpen, initialDraft]);
 
+  const [cepNotFound, setCepNotFound] = useState(false);
+
   // Fetch address from ViaCEP when CEP is complete
   const fetchAddressFromCep = useCallback(async (cep: string) => {
     const digits = cep.replace(/\D/g, "");
     if (digits.length !== 8) return;
 
     setLoadingCep(true);
+    setCepNotFound(false);
     try {
       const response = await fetch(`https://viacep.com.br/ws/${digits}/json/`);
       const data = await response.json();
 
-      if (!data.erro) {
+      if (data.erro) {
+        // CEP not found
+        setCepNotFound(true);
+        setErrors((prev) => ({ ...prev, cep: true }));
+      } else {
+        setCepNotFound(false);
         setDraft((prev) => ({
           ...prev,
           street: data.logradouro || prev.street,
@@ -150,6 +158,7 @@ const CheckoutAddress = () => {
         }));
         setErrors((prev) => ({
           ...prev,
+          cep: false,
           street: false,
           neighborhood: false,
           city: false,
@@ -167,6 +176,7 @@ const CheckoutAddress = () => {
     const formatted = formatCEP(value);
     setDraft({ ...draft, cep: formatted });
     setErrors({ ...errors, cep: false });
+    setCepNotFound(false);
 
     // Auto-fetch when CEP is complete
     if (formatted.replace(/\D/g, "").length === 8) {
@@ -391,7 +401,9 @@ const CheckoutAddress = () => {
                 )}
               </div>
               {errors.cep && (
-                <p className="text-xs text-destructive mt-1">CEP inválido</p>
+                <p className="text-xs text-destructive mt-1">
+                  {cepNotFound ? "CEP não encontrado. Verifique o número digitado." : "CEP inválido"}
+                </p>
               )}
             </div>
 
