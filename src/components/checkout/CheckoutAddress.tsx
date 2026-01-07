@@ -43,6 +43,7 @@ const brazilianStates = [
 
 type Draft = {
   name: string;
+  email: string;
   cpf: string;
   phone: string;
   street: string;
@@ -99,6 +100,7 @@ const CheckoutAddress = () => {
   const initialDraft: Draft = useMemo(
     () => ({
       name: customer.name ?? "",
+      email: customer.email ?? "",
       cpf: customer.document ?? "",
       phone: customer.phone ?? "",
       street: shippingAddress.street ?? "",
@@ -118,9 +120,13 @@ const CheckoutAddress = () => {
     if (sheetOpen) setDraft(initialDraft);
   }, [sheetOpen, initialDraft]);
 
+  const validateEmail = (email: string) =>
+    /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+
   const handleSave = () => {
     const requiredFields: Array<keyof Draft> = [
       "name",
+      "email",
       "cpf",
       "phone",
       "street",
@@ -138,6 +144,7 @@ const CheckoutAddress = () => {
     });
 
     if (draft.cpf && !validateCPF(draft.cpf)) newErrors.cpf = true;
+    if (draft.email && !validateEmail(draft.email)) newErrors.email = true;
     if (draft.cep && !validateCEP(draft.cep)) newErrors.cep = true;
 
     if (Object.keys(newErrors).length > 0) {
@@ -149,7 +156,7 @@ const CheckoutAddress = () => {
 
     setCustomer({
       name: draft.name,
-      email: customer.email, // e-mail continua no checkout
+      email: draft.email,
       document: draft.cpf,
       phone: draft.phone,
     });
@@ -170,6 +177,8 @@ const CheckoutAddress = () => {
 
   const isAddressFilled =
     draft.name &&
+    draft.email &&
+    validateCPF(draft.cpf) &&
     draft.street &&
     validateCEP(draft.cep) &&
     draft.city &&
@@ -241,6 +250,24 @@ const CheckoutAddress = () => {
               />
               {errors.name && (
                 <p className="text-xs text-destructive mt-1">Nome é obrigatório</p>
+              )}
+            </div>
+
+            <div>
+              <Label htmlFor="email">E-mail *</Label>
+              <Input
+                id="email"
+                type="email"
+                value={draft.email}
+                onChange={(e) => {
+                  setDraft({ ...draft, email: e.target.value });
+                  setErrors({ ...errors, email: false });
+                }}
+                placeholder="seu@email.com"
+                className={errors.email ? "border-destructive" : ""}
+              />
+              {errors.email && (
+                <p className="text-xs text-destructive mt-1">E-mail inválido</p>
               )}
             </div>
 
