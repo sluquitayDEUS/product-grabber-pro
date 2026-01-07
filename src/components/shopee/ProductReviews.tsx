@@ -27,39 +27,83 @@ const sellerReplies = [
   "Incrível feedback! O AquaVolt foi pensado para momentos como esse! 🎉",
 ];
 
-// Generate 120 reviews for the Aquavolt
+// Extended comments for more variety
+const comments5Star = [
+  "Simplesmente INCRÍVEL! O Aquavolt superou todas as minhas expectativas. A sensação de deslizar na água é única!",
+  "Comprei pra usar no lago da fazenda e a família toda adorou. Silencioso e muito divertido!",
+  "Produto de altíssima qualidade. A bateria dura bastante e o desempenho é impressionante.",
+  "Melhor compra que já fiz! Meus filhos não querem sair da água. Super seguro e fácil de usar.",
+  "O design é lindo e a performance incrível. Chega a 52km/h tranquilamente!",
+  "Entrega super rápida e produto muito bem embalado. Montagem fácil, em 30 minutos estava na água!",
+  "Vale cada centavo! A experiência é única, parece um jet ski mas muito mais acessível.",
+  "Comprei pro meu marido de aniversário e ele amou! Virou a atração do condomínio.",
+  "Qualidade premium! Acabamento impecável, motor silencioso, bateria duradoura. Recomendo!",
+  "Finalmente um produto elétrico que funciona de verdade! Autonomia excelente e recarga rápida.",
+  "Perfeito para praias calmas e lagos. Muito estável, não capota mesmo em curvas fechadas.",
+  "Surpreendeu demais! Não esperava tanta qualidade por esse preço. Estou apaixonado!",
+  "Uso todo final de semana. Já fiz mais de 50 passeios e funciona como no primeiro dia.",
+  "O suporte técnico é excelente. Tive uma dúvida e me responderam em minutos!",
+  "Comprei 2, um pra mim e outro pro meu irmão. Agora fazemos corridas no lago!",
+  "Presente perfeito! Dei pro meu pai e ele ficou emocionado. Produto sensacional!",
+  "Muito fácil de transportar, cabe no porta-malas do carro. Perfeito para viagens!",
+  "A bateria realmente dura 70-80 minutos como prometido. Muito satisfeito!",
+  "Recomendo de olhos fechados. Produto top demais, superou expectativas!",
+  "Diversão garantida! Toda a família usa e todos adoram. Vale muito a pena!",
+  "Produto chegou antes do prazo, bem embalado e funcionando perfeitamente!",
+  "O motor é potente e silencioso. Não incomoda ninguém na praia!",
+  "Estou impressionado com a qualidade do acabamento. Parece muito mais caro!",
+  "Minha esposa tinha medo mas depois do primeiro passeio se apaixonou!",
+  "Usei no mar calmo e funcionou perfeitamente. Muito estável!",
+  "O melhor investimento que fiz esse ano. Diversão sem igual!",
+  "Chegou certinho, conforme anunciado. Vendedor muito atencioso!",
+  "Produto maravilhoso! Já indiquei para todos os meus amigos!",
+  "A sensação de acelerar na água é indescritível. Amo meu Aquavolt!",
+  "Super seguro, tem gaiola de proteção e é muito estável. Perfeito!",
+  "O carregamento é rápido, em 3 horas já está pronto pra mais diversão!",
+  "Não precisa de habilitação náutica! Isso foi decisivo na compra!",
+  "Meus filhos de 12 e 14 anos usam com facilidade. Muito intuitivo!",
+  "O design é moderno e chama muita atenção. Todo mundo pergunta onde comprei!",
+  "Já usei em 3 praias diferentes, sempre funciona perfeitamente!",
+  "A velocidade máxima de 52km/h é emocionante! Adrenalina pura!",
+  "Produto excelente, vendedor nota 10, entrega perfeita. Recomendo!",
+  "O Aquavolt é tudo que eu esperava e mais um pouco. Estou encantado!",
+  "Fácil de montar, fácil de usar, fácil de guardar. Perfeito!",
+  "A autonomia de 70-80 minutos é suficiente pra uma tarde inteira de diversão!",
+  "Comprei com receio por ser elétrico, mas funciona melhor que jet ski a combustão!",
+  "O acabamento é impecável, parece produto de primeira linha internacional!",
+  "Minha família inteira aprova! Desde as crianças até os avós querem usar!",
+  "Super leve, duas pessoas conseguem carregar tranquilamente!",
+  "O sistema de marchas funciona muito bem. Ré ajuda demais nas manobras!",
+  "Estou no terceiro mês de uso e continua funcionando perfeitamente!",
+  "Produto chegou muito bem embalado, sem nenhum risco ou dano!",
+  "Vendedor respondeu todas as dúvidas antes da compra. Muito profissional!",
+  "O colete salva-vidas que acompanha é de ótima qualidade também!",
+  "Usei no lago de Furnas e fez o maior sucesso entre os banhistas!",
+];
+
+const comments4Star = [
+  "Muito bom! Só tirei uma estrela porque a entrega demorou um pouco mais que o esperado.",
+  "Produto excelente, mas poderia vir com mais acessórios. No geral, super recomendo!",
+  "Ótimo custo-benefício. A bateria poderia durar um pouco mais, mas é muito divertido!",
+  "Gostei bastante. O único ponto é que o carregador esquenta um pouco.",
+  "Produto de qualidade. Tirando uma estrela pelo manual que poderia ser mais detalhado.",
+  "Bom produto! A cor era um pouco diferente da foto mas gostei mesmo assim.",
+  "Funciona muito bem. Só achei o assento um pouco duro no início.",
+  "Excelente! Só tirei uma estrela pois o painel poderia ter mais informações.",
+  "Produto top, mas o carregador poderia ter voltagem automática.",
+  "Muito bom! Só senti falta de um suporte para celular.",
+];
+
+const comments3Star = [
+  "Produto ok. Funciona bem mas esperava um pouco mais de velocidade.",
+  "Bom produto, mas tive que fazer alguns ajustes na montagem. Poderia ser mais simples.",
+  "Atende as expectativas básicas. Nada de extraordinário.",
+  "Funciona, mas achei a bateria um pouco pesada para transportar.",
+  "Razoável. Esperava mais pelo preço, mas não é ruim.",
+];
+
+// Generate 1000+ reviews for the Aquavolt
 const generateReviews = () => {
-  const comments5Star = [
-    "Simplesmente INCRÍVEL! O Aquavolt superou todas as minhas expectativas. A sensação de deslizar na água é única!",
-    "Comprei pra usar no lago da fazenda e a família toda adorou. Silencioso e muito divertido!",
-    "Produto de altíssima qualidade. A bateria dura bastante e o desempenho é impressionante.",
-    "Melhor compra que já fiz! Meus filhos não querem sair da água. Super seguro e fácil de usar.",
-    "O design é lindo e a performance incrível. Chega a 45km/h tranquilamente!",
-    "Entrega super rápida e produto muito bem embalado. Montagem fácil, em 30 minutos estava na água!",
-    "Vale cada centavo! A experiência é única, parece um jet ski mas muito mais acessível.",
-    "Comprei pro meu marido de aniversário e ele amou! Virou a atração do condomínio.",
-    "Qualidade premium! Acabamento impecável, motor silencioso, bateria duradoura. Recomendo!",
-    "Finalmente um produto elétrico que funciona de verdade! Autonomia excelente e recarga rápida.",
-    "Perfeito para praias calmas e lagos. Muito estável, não capota mesmo em curvas fechadas.",
-    "Surpreendeu demais! Não esperava tanta qualidade por esse preço. Estou apaixonado!",
-    "Uso todo final de semana. Já fiz mais de 50 passeios e funciona como no primeiro dia.",
-    "O suporte técnico é excelente. Tive uma dúvida e me responderam em minutos!",
-    "Comprei 2, um pra mim e outro pro meu irmão. Agora fazemos corridas no lago!",
-  ];
-
-  const comments4Star = [
-    "Muito bom! Só tirei uma estrela porque a entrega demorou um pouco mais que o esperado.",
-    "Produto excelente, mas poderia vir com mais acessórios. No geral, super recomendo!",
-    "Ótimo custo-benefício. A bateria poderia durar um pouco mais, mas é muito divertido!",
-    "Gostei bastante. O único ponto é que o carregador esquenta um pouco.",
-    "Produto de qualidade. Tirando uma estrela pelo manual que poderia ser mais detalhado.",
-  ];
-
-  const comments3Star = [
-    "Produto ok. Funciona bem mas esperava um pouco mais de velocidade.",
-    "Bom produto, mas tive que fazer alguns ajustes na montagem. Poderia ser mais simples.",
-  ];
-
   const avatars = [
     "https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=50&h=50&fit=crop&crop=faces",
     "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=50&h=50&fit=crop&crop=faces",
@@ -74,20 +118,20 @@ const generateReviews = () => {
   // Only 3 review images from the site
   const reviewImages = [review1, review2, review3];
 
-  const variations = ["Azul Oceano, 48V", "Branco Polar, 72V Pro", "Verde Água, 48V", "Laranja Sunset, 96V Ultra"];
-  const names = ["A***o", "M***a", "R***o", "C***s", "J***a", "P***o", "L***a", "F***o", "B***a", "D***o", "G***a", "S***o", "T***a", "V***o", "N***a"];
+  const variations = ["Vermelho/Preto", "Azul/Preto"];
+  const names = ["A***o", "M***a", "R***o", "C***s", "J***a", "P***o", "L***a", "F***o", "B***a", "D***o", "G***a", "S***o", "T***a", "V***o", "N***a", "E***a", "I***o", "U***a", "K***o", "Z***a"];
 
-  const reviews = [];
+  const reviews: any[] = [];
   let id = 1;
   let imageReviewsCount = 0;
 
-  // Generate 90 five-star reviews
-  for (let i = 0; i < 90; i++) {
+  // Generate 900 five-star reviews (75% of total)
+  for (let i = 0; i < 900; i++) {
     // Only first 3 reviews with images (one image each)
     const hasImages = imageReviewsCount < 3;
     // 85% chance of seller reply
     const hasSellerReply = Math.random() < 0.85;
-    const dayOffset = Math.floor(Math.random() * 60);
+    const dayOffset = Math.floor(Math.random() * 180);
     const date = new Date();
     date.setDate(date.getDate() - dayOffset);
 
@@ -100,7 +144,7 @@ const generateReviews = () => {
       variation: variations[Math.floor(Math.random() * variations.length)],
       comment: comments5Star[Math.floor(Math.random() * comments5Star.length)],
       images: hasImages ? [reviewImages[imageReviewsCount]] : [],
-      likes: Math.floor(Math.random() * 150) + 10,
+      likes: Math.floor(Math.random() * 200) + 10,
       sellerReply: hasSellerReply ? sellerReplies[Math.floor(Math.random() * sellerReplies.length)] : null,
     };
 
@@ -108,10 +152,10 @@ const generateReviews = () => {
     reviews.push(reviewData);
   }
 
-  // Generate 25 four-star reviews
-  for (let i = 0; i < 25; i++) {
+  // Generate 250 four-star reviews (20% of total)
+  for (let i = 0; i < 250; i++) {
     const hasSellerReply = Math.random() < 0.85;
-    const dayOffset = Math.floor(Math.random() * 60);
+    const dayOffset = Math.floor(Math.random() * 180);
     const date = new Date();
     date.setDate(date.getDate() - dayOffset);
 
@@ -124,15 +168,15 @@ const generateReviews = () => {
       variation: variations[Math.floor(Math.random() * variations.length)],
       comment: comments4Star[Math.floor(Math.random() * comments4Star.length)],
       images: [],
-      likes: Math.floor(Math.random() * 50) + 5,
+      likes: Math.floor(Math.random() * 80) + 5,
       sellerReply: hasSellerReply ? sellerReplies[Math.floor(Math.random() * sellerReplies.length)] : null,
     });
   }
 
-  // Generate 5 three-star reviews
-  for (let i = 0; i < 5; i++) {
+  // Generate 50 three-star reviews (5% of total)
+  for (let i = 0; i < 50; i++) {
     const hasSellerReply = Math.random() < 0.85;
-    const dayOffset = Math.floor(Math.random() * 60);
+    const dayOffset = Math.floor(Math.random() * 180);
     const date = new Date();
     date.setDate(date.getDate() - dayOffset);
 
@@ -145,7 +189,7 @@ const generateReviews = () => {
       variation: variations[Math.floor(Math.random() * variations.length)],
       comment: comments3Star[Math.floor(Math.random() * comments3Star.length)],
       images: [],
-      likes: Math.floor(Math.random() * 20) + 1,
+      likes: Math.floor(Math.random() * 30) + 1,
       sellerReply: hasSellerReply ? sellerReplies[Math.floor(Math.random() * sellerReplies.length)] : null,
     });
   }
@@ -177,8 +221,8 @@ const ProductReviews = () => {
   };
 
   const filteredReviews = getFilteredReviews();
-  const displayedReviews = showAll ? filteredReviews : filteredReviews.slice(0, 20);
-  const remainingCount = filteredReviews.length - 20;
+  const displayedReviews = showAll ? filteredReviews : filteredReviews.slice(0, 10);
+  const remainingCount = filteredReviews.length - 10;
 
   const renderStars = (rating: number) => {
     return (
@@ -196,16 +240,13 @@ const ProductReviews = () => {
     );
   };
 
-  // Calculate average rating
-  const avgRating = (allReviews.reduce((sum, r) => sum + r.rating, 0) / allReviews.length).toFixed(1);
-
   return (
     <div className="bg-card mt-2">
       {/* Header */}
       <div className="flex items-center justify-between px-3 py-3 border-b border-border">
         <div className="flex items-center gap-2">
           <h2 className="text-sm font-medium text-foreground">Avaliações do Produto</h2>
-          <span className="text-xs text-muted-foreground">({allReviews.length})</span>
+          <span className="text-xs text-muted-foreground">(1.2 mil)</span>
         </div>
         <button 
           onClick={() => setShowAll(!showAll)}
@@ -219,12 +260,12 @@ const ProductReviews = () => {
       {/* Rating Summary */}
       <div className="flex items-center gap-3 px-3 py-3 border-b border-border">
         <div className="flex items-baseline gap-1">
-          <span className="text-2xl font-bold text-primary">{avgRating}</span>
+          <span className="text-2xl font-bold text-primary">4.8</span>
           <span className="text-xs text-muted-foreground">/5</span>
         </div>
         <div>
           {renderStars(5)}
-          <p className="text-xs text-muted-foreground mt-0.5">{allReviews.length} avaliações</p>
+          <p className="text-xs text-muted-foreground mt-0.5">1.2 mil avaliações</p>
         </div>
       </div>
 
