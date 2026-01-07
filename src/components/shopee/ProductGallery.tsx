@@ -2,10 +2,11 @@ import { useState } from "react";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 
 const images = [
-  "https://images.unsplash.com/photo-1621607512022-6aecc4fed814?w=600&h=600&fit=crop",
-  "https://images.unsplash.com/photo-1503951914875-452162b0f3f1?w=600&h=600&fit=crop",
-  "https://images.unsplash.com/photo-1599351431202-1e0f0137899a?w=600&h=600&fit=crop",
-  "https://images.unsplash.com/photo-1622287162716-f311baa1a2b8?w=600&h=600&fit=crop",
+  "https://images.unsplash.com/photo-1544551763-46a013bb70d5?w=600&h=600&fit=crop",
+  "https://images.unsplash.com/photo-1530053969600-caed2596d242?w=600&h=600&fit=crop",
+  "https://images.unsplash.com/photo-1559628129-67cf63b72248?w=600&h=600&fit=crop",
+  "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=600&h=600&fit=crop",
+  "https://images.unsplash.com/photo-1517649763962-0c623066013b?w=600&h=600&fit=crop",
 ];
 
 const ProductGallery = () => {
@@ -34,7 +35,7 @@ const ProductGallery = () => {
     <div className="relative w-full aspect-square bg-card overflow-hidden">
       {/* Discount Badge */}
       <div className="absolute top-3 left-0 z-10 bg-shopee-red text-primary-foreground px-2 py-1 text-xs font-bold">
-        -45%
+        -34%
       </div>
 
       {/* Images Container */}
