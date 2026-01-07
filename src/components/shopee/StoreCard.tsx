@@ -4,7 +4,7 @@ const StoreCard = () => {
       <div className="flex items-center gap-3">
         {/* Store Avatar */}
         <div className="relative">
-          <img src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=100&h=100&fit=crop&crop=faces" alt="Loja" className="w-14 h-14 rounded-full object-cover border-2 border-primary" />
+          <img alt="Loja" className="w-14 h-14 rounded-full object-cover border-2 border-primary" src="/lovable-uploads/f6949b55-5746-4c6d-a30a-e701c014d9c9.png" />
           <span className="absolute -bottom-1 left-1/2 -translate-x-1/2 bg-primary text-primary-foreground text-[8px] px-1.5 py-0.5 rounded font-medium">
             Oficial
           </span>
