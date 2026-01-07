@@ -2,6 +2,10 @@ import React, { createContext, useContext, useState, ReactNode } from "react";
 import { addDays, format } from "date-fns";
 import { ptBR } from "date-fns/locale";
 
+// Import product images
+import aquavoltVermelho from "@/assets/aquavolt-vermelho.jpg";
+import aquavoltAzul from "@/assets/aquavolt-azul.jpg";
+
 interface LocationData {
   state: string;
   city: string;
@@ -50,6 +54,17 @@ interface CardData {
   cvv: string;
 }
 
+interface ColorOption {
+  id: number;
+  name: string;
+  image: string;
+}
+
+const colorOptions: ColorOption[] = [
+  { id: 1, name: "Vermelho/Preto", image: aquavoltVermelho },
+  { id: 2, name: "Azul/Preto", image: aquavoltAzul },
+];
+
 interface CartContextType {
   product: Product;
   location: LocationData;
@@ -70,17 +85,11 @@ interface CartContextType {
   setCardData: (data: CardData | null) => void;
   installments: number;
   setInstallments: (installments: number) => void;
+  selectedColor: number;
+  setSelectedColor: (color: number) => void;
+  quantity: number;
+  setQuantity: (quantity: number) => void;
 }
-
-const defaultProduct: Product = {
-  id: "1",
-  name: "Aquavolt - Kart Aquático 100% Elétrico",
-  image: "https://images.unsplash.com/photo-1544551763-46a013bb70d5?w=400&h=400&fit=crop",
-  price: 390.90,
-  originalPrice: 590.90,
-  variation: "Azul Oceano, Bateria 48V",
-  quantity: 1
-};
 
 const calculateShippingOptions = (): { standard: ShippingOption; express: ShippingOption } => {
   const today = new Date();
@@ -136,11 +145,25 @@ export const CartProvider = ({ children }: { children: ReactNode }) => {
   });
   const [cardData, setCardData] = useState<CardData | null>(null);
   const [installments, setInstallments] = useState(1);
+  const [selectedColor, setSelectedColor] = useState(1);
+  const [quantity, setQuantity] = useState(1);
 
   const shippingOptions = calculateShippingOptions();
   const selectedShipping = shippingOptions[shippingType];
 
-  const subtotal = defaultProduct.price * defaultProduct.quantity;
+  const selectedColorOption = colorOptions.find(c => c.id === selectedColor) || colorOptions[0];
+
+  const product: Product = {
+    id: "1",
+    name: "Aquavolt - Kart Aquático 100% Elétrico",
+    image: selectedColorOption.image,
+    price: 390.90,
+    originalPrice: 590.90,
+    variation: selectedColorOption.name,
+    quantity: quantity
+  };
+
+  const subtotal = product.price * quantity;
   const pixDiscount = paymentMethod === "pix" ? subtotal * 0.05 : 0;
   const totalPrice = subtotal + selectedShipping.price - pixDiscount;
   const totalPriceInCents = Math.round(totalPrice * 100);
@@ -148,7 +171,7 @@ export const CartProvider = ({ children }: { children: ReactNode }) => {
   return (
     <CartContext.Provider
       value={{
-        product: defaultProduct,
+        product,
         location,
         setLocation,
         selectedShipping,
@@ -167,6 +190,10 @@ export const CartProvider = ({ children }: { children: ReactNode }) => {
         setCardData,
         installments,
         setInstallments,
+        selectedColor,
+        setSelectedColor,
+        quantity,
+        setQuantity,
       }}
     >
       {children}

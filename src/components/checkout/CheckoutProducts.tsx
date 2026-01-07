@@ -1,4 +1,4 @@
-import { ChevronRight, Store, MessageCircle, Zap, Truck } from "lucide-react";
+import { ChevronRight, Store, MessageCircle, Zap, Truck, Minus, Plus } from "lucide-react";
 import { useState } from "react";
 import { useCart } from "@/contexts/CartContext";
 import {
@@ -10,19 +10,31 @@ import {
 } from "@/components/ui/sheet";
 
 const CheckoutProducts = () => {
-  const { product, selectedShipping, setSelectedShippingType, getShippingOptions } = useCart();
+  const { product, selectedShipping, setSelectedShippingType, getShippingOptions, quantity, setQuantity } = useCart();
   const [shippingSheetOpen, setShippingSheetOpen] = useState(false);
   const [messageSheetOpen, setMessageSheetOpen] = useState(false);
   const [message, setMessage] = useState("");
 
   const shippingOptions = getShippingOptions();
 
+  const handleDecreaseQuantity = () => {
+    if (quantity > 1) {
+      setQuantity(quantity - 1);
+    }
+  };
+
+  const handleIncreaseQuantity = () => {
+    if (quantity < 10) {
+      setQuantity(quantity + 1);
+    }
+  };
+
   return (
     <div className="bg-card mt-2">
       {/* Store Header */}
       <div className="flex items-center gap-2 p-3 border-b border-border">
         <Store className="w-4 h-4 text-foreground" />
-        <span className="font-medium text-sm text-foreground">Tech Store Oficial</span>
+        <span className="font-medium text-sm text-foreground">Aquavolt Brasil</span>
         <ChevronRight className="w-4 h-4 text-muted-foreground ml-auto" />
       </div>
 
@@ -44,9 +56,25 @@ const CheckoutProducts = () => {
             <span className="text-sm text-primary font-medium">
               R$ {product.price.toFixed(2).replace('.', ',')}
             </span>
-            <span className="text-sm text-muted-foreground">
-              x{product.quantity}
-            </span>
+            
+            {/* Quantity Selector */}
+            <div className="flex items-center gap-2">
+              <button 
+                onClick={handleDecreaseQuantity}
+                className="w-7 h-7 flex items-center justify-center border border-border rounded-md"
+                disabled={quantity <= 1}
+              >
+                <Minus className="w-3 h-3 text-foreground" />
+              </button>
+              <span className="text-sm text-foreground w-6 text-center">{quantity}</span>
+              <button 
+                onClick={handleIncreaseQuantity}
+                className="w-7 h-7 flex items-center justify-center border border-border rounded-md"
+                disabled={quantity >= 10}
+              >
+                <Plus className="w-3 h-3 text-foreground" />
+              </button>
+            </div>
           </div>
         </div>
       </div>
@@ -167,9 +195,9 @@ const CheckoutProducts = () => {
 
       {/* Order Total */}
       <div className="px-3 py-2 border-t border-border flex items-center justify-between">
-        <span className="text-sm text-foreground">Subtotal ({product.quantity} produto)</span>
+        <span className="text-sm text-foreground">Subtotal ({quantity} {quantity === 1 ? 'produto' : 'produtos'})</span>
         <span className="text-sm text-foreground font-medium">
-          R$ {product.price.toFixed(2).replace('.', ',')}
+          R$ {(product.price * quantity).toFixed(2).replace('.', ',')}
         </span>
       </div>
     </div>
