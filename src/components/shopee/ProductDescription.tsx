@@ -55,8 +55,27 @@ const ProductDescription = () => {
           {/* Banner */}
           <img src={aquavoltBanner} alt="AquaVolt Banner" className="w-full rounded-lg" />
           
+          {/* Wistia Video */}
+          <div className="w-full">
+            <div className="wistia_responsive_padding" style={{ padding: "100.0% 0 0 0", position: "relative" }}>
+              <div className="wistia_responsive_wrapper" style={{ height: "100%", left: 0, position: "absolute", top: 0, width: "100%" }}>
+                <iframe 
+                  src="https://fast.wistia.net/embed/iframe/x00b5mokfv?web_component=true&seo=true" 
+                  title="AquaVolt Video" 
+                  allow="autoplay; fullscreen" 
+                  frameBorder="0" 
+                  scrolling="no" 
+                  className="wistia_embed" 
+                  name="wistia_embed" 
+                  width="100%" 
+                  height="100%"
+                />
+              </div>
+            </div>
+          </div>
+          
           {/* Intro */}
-          <div className="space-y-2">
+          <div className="space-y-2 text-center">
             <h4 className="text-base font-bold text-foreground">AquaVolt Explicação</h4>
             <h5 className="text-sm font-semibold text-foreground">Experimente uma diversão sem precedentes no karting aquático</h5>
             <p>
@@ -68,7 +87,7 @@ const ProductDescription = () => {
           <img src={aquavoltPower} alt="AquaVolt Power" className="w-full rounded-lg" />
 
           {/* Power Section */}
-          <div className="space-y-2">
+          <div className="space-y-2 text-center">
             <h5 className="text-sm font-semibold text-foreground">AquaVolt: O Poder Interior</h5>
             <p>
               O AquaVolt, um impressionante <strong>barco de kart</strong>, vem com uma potência nominal de 15 kW que pode acelerar a uma velocidade máxima emocionante de 52 km/h. Essa velocidade notável corresponde muito à velocidade de um jet ski tradicional, prometendo uma experiência cativante de kart jet ski.
@@ -78,7 +97,7 @@ const ProductDescription = () => {
           <img src={aquavoltResistance} alt="AquaVolt Resistance" className="w-full rounded-lg" />
 
           {/* Resistance Section */}
-          <div className="space-y-2">
+          <div className="space-y-2 text-center">
             <h5 className="text-sm font-semibold text-foreground">Resistência do AquaVolt</h5>
             <p>
               O AquaVolt, um <strong>excelente kart aquático</strong>, oferece um impressionante tempo de pico de energia de 70-80 minutos. Além disso, o sistema de resfriamento ativo por imersão em água prolonga a diversão de alta octanagem sob o sol.
@@ -88,7 +107,7 @@ const ProductDescription = () => {
           <img src={aquavoltDurability} alt="AquaVolt Durability" className="w-full rounded-lg" />
 
           {/* Durability Section */}
-          <div className="space-y-2">
+          <div className="space-y-2 text-center">
             <h5 className="text-sm font-semibold text-foreground">AquaVolt: Projetado para Durabilidade e Desempenho</h5>
             <p>
               O AquaVolt é fabricado com uma combinação robusta de ABS, PC e EPP, assegurando <strong>resistência e leveza</strong>. Com um casco pesando apenas 45 kg e uma bateria de 23 kg, o AquaVolt oferece a emoção de um jet ski no universo dos karts de barco, combinando facilidade de uso e estilo impressionante.
@@ -98,7 +117,7 @@ const ProductDescription = () => {
           <img src={aquavoltNavigation} alt="AquaVolt Navigation" className="w-full rounded-lg" />
 
           {/* Navigation Section */}
-          <div className="space-y-2">
+          <div className="space-y-2 text-center">
             <h5 className="text-sm font-semibold text-foreground">Navegação Tranquila com o AquaVolt</h5>
             <p>
               O AquaVolt é equipado com sistema de <strong>troca de marchas alta e baixa</strong>, além de marcha ré, proporcionando uma manobrabilidade excepcional em águas abertas. Caso as hélices fiquem presas em algas aquáticas, uma simples mudança para marcha ré resolverá rapidamente o problema, garantindo uma navegação tranquila e sem interrupções.
@@ -108,7 +127,7 @@ const ProductDescription = () => {
           <img src={aquavoltAccelerator} alt="AquaVolt Accelerator" className="w-full rounded-lg" />
 
           {/* Safety Section */}
-          <div className="space-y-2">
+          <div className="space-y-2 text-center">
             <h5 className="text-sm font-semibold text-foreground">AquaVolt: Seguro e Estável</h5>
             <p>
               O AquaVolt conta com uma <strong>gaiola de proteção</strong> que assegura a estabilidade do barco e mantém um centro de gravidade baixo, tornando praticamente impossível a sua capotagem. Este recurso, inspirado no design de jatos americanos, adiciona uma camada extra de segurança.
@@ -118,7 +137,7 @@ const ProductDescription = () => {
           <img src={aquavoltSafety} alt="AquaVolt Safety" className="w-full rounded-lg" />
 
           {/* Style Section */}
-          <div className="space-y-2">
+          <div className="space-y-2 text-center">
             <h5 className="text-sm font-semibold text-foreground">Estética Única de Jet Kart</h5>
             <p>
               Do assento tipo concha ao volante estilizado disponível em três cores distintas, cada detalhe do AquaVolt reflete <strong>estilo e conforto</strong>. A cabine apresenta um piso com acabamento que imita madeira, enquanto o exterior exibe um elegante acabamento com pintura efeito piano-baked.
@@ -128,7 +147,7 @@ const ProductDescription = () => {
           <img src={aquavoltStyle} alt="AquaVolt Style" className="w-full rounded-lg" />
 
           {/* Charging Section */}
-          <div className="space-y-2">
+          <div className="space-y-2 text-center">
             <h5 className="text-sm font-semibold text-foreground">Carregamento Facilitado</h5>
             <p>
               O AquaVolt é compatível com várias especificações de carregador, oferecendo opções de 220 V e 110 V para atender às necessidades de regiões europeias e americanas. Sua bateria de lítio ternária carrega completamente em 3-4 horas e possui uma vida útil de até 800 ciclos de carga e descarga, garantindo <strong>eficiência e durabilidade a longo prazo.</strong>
@@ -138,7 +157,7 @@ const ProductDescription = () => {
           <img src={aquavoltCharging} alt="AquaVolt Charging" className="w-full rounded-lg" />
 
           {/* Support Section */}
-          <div className="space-y-2">
+          <div className="space-y-2 text-center">
             <h5 className="text-sm font-semibold text-foreground">Onde faço reparos caso precise?</h5>
             <p>
               <strong>Se precisar de reparos devido ao mau uso</strong>, por favor, entre em contato com nossa equipe de suporte através da página de contato. Eles irão conectá-lo a um mecânico náutico especializado próximo a você. Este profissional, recomendado pela Atacado Premium, é de total confiança e está preparado para ajudar com qualquer necessidade relacionada ao seu AquaVolt.
@@ -148,7 +167,7 @@ const ProductDescription = () => {
           <img src={aquavoltSupport} alt="AquaVolt Support" className="w-full rounded-lg" />
 
           {/* No License Section */}
-          <div className="space-y-2">
+          <div className="space-y-2 text-center">
             <h5 className="text-sm font-semibold text-foreground">Sem necessidade de habilitação náutica</h5>
             <p>
               Viva a emoção de pilotar o <strong>AquaVolt</strong>, o kart aquático 100% elétrico que <strong>não exige habilitação náutica!</strong> Para conduzir, é necessário <strong>ter mais de 17 anos e utilizar o colete salva-vidas</strong>. O AquaVolt acompanha um <strong>certificado de licença e autorização da Marinha do Brasil</strong>, que <strong>deve ser lido atentamente antes da navegação</strong> e pode ser apresentado em caso de fiscalização.
@@ -158,14 +177,14 @@ const ProductDescription = () => {
           <img src={aquavoltNoLicense} alt="Sem habilitação náutica" className="w-full rounded-lg" />
 
           {/* Transport Section */}
-          <div className="space-y-2">
+          <div className="space-y-2 text-center">
             <h5 className="text-sm font-semibold text-foreground">Fácil de ser Transportado</h5>
           </div>
 
           <img src={aquavoltTransport} alt="AquaVolt Transport" className="w-full rounded-lg" />
 
           {/* Specs Summary */}
-          <div className="space-y-2">
+          <div className="space-y-2 text-center">
             <h5 className="text-sm font-semibold text-foreground">Especificações do AquaVolt - Kart Aquático</h5>
             <ul className="list-disc pl-4 space-y-1">
               <li><strong>Potência:</strong> 15 kW</li>
