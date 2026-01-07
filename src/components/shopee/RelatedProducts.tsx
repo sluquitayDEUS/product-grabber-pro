@@ -1,37 +1,34 @@
+import boiaImg from "@/assets/related-boia.webp";
+import oculosImg from "@/assets/related-oculos.webp";
+import neopreneImg from "@/assets/related-neoprene.jpg";
+import pranchaImg from "@/assets/related-prancha.jpg";
+
 const products = [
   {
     id: 1,
-    image: "https://images.unsplash.com/photo-1585751119414-ef2636f8aede?w=200&h=200&fit=crop",
-    title: "Máquina de Cortar Cabelo Profissional",
-    price: 79.90,
-    originalPrice: 129.90,
+    image: boiaImg,
+    title: "Boia Infantil Colete Salva Vidas Peitoral Flutuador",
     sold: "1.2mil",
     rating: 4.7,
   },
   {
     id: 2,
-    image: "https://images.unsplash.com/photo-1621607512022-6aecc4fed814?w=200&h=200&fit=crop",
-    title: "Kit Barba Completo com Óleo",
-    price: 49.90,
-    originalPrice: 89.90,
+    image: oculosImg,
+    title: "Óculos de Natação Infantil Poseidon",
     sold: "856",
     rating: 4.9,
   },
   {
     id: 3,
-    image: "https://images.unsplash.com/photo-1503951914875-452162b0f3f1?w=200&h=200&fit=crop",
-    title: "Aparador de Pelos Nasal e Orelha",
-    price: 29.90,
-    originalPrice: 59.90,
+    image: neopreneImg,
+    title: "Roupa Neoprene Masculino Natação 1.5mm Neoprene Roupa Mergulho",
     sold: "2.1mil",
     rating: 4.6,
   },
   {
     id: 4,
-    image: "https://images.unsplash.com/photo-1599351431202-1e0f0137899a?w=200&h=200&fit=crop",
-    title: "Lâminas de Reposição 5 unidades",
-    price: 19.90,
-    originalPrice: 39.90,
+    image: pranchaImg,
+    title: "Prancha De Bodyboard Mirim Pequena Para Praia E Piscina Onda Radical",
     sold: "3.4mil",
     rating: 4.8,
   },
@@ -52,8 +49,8 @@ const RelatedProducts = () => {
                 alt={product.title}
                 className="w-full h-full object-cover"
               />
-              <span className="absolute top-1 left-1 bg-primary text-primary-foreground text-[10px] px-1.5 py-0.5 rounded font-medium">
-                -{Math.round((1 - product.price / product.originalPrice) * 100)}%
+              <span className="absolute top-1 left-1 bg-red-600 text-white text-[10px] px-1.5 py-0.5 rounded font-bold">
+                ESGOTADO
               </span>
             </div>
 
@@ -64,8 +61,8 @@ const RelatedProducts = () => {
               </h3>
               
               <div className="flex items-baseline gap-1 mb-1">
-                <span className="text-sm font-bold text-primary">
-                  R$ {product.price.toFixed(2).replace('.', ',')}
+                <span className="text-sm font-bold text-red-600">
+                  Esgotado
                 </span>
               </div>
 
