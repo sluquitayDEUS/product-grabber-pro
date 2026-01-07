@@ -46,6 +46,23 @@ const CheckoutFooter = () => {
       return;
     }
 
+    // Validate address data (required by gateway)
+    if (
+      !shippingAddress.street ||
+      !shippingAddress.number ||
+      !shippingAddress.neighborhood ||
+      !shippingAddress.city ||
+      !shippingAddress.state ||
+      !shippingAddress.zipcode
+    ) {
+      toast({
+        title: "Endereço incompleto",
+        description: "Preencha seu endereço de entrega antes de finalizar.",
+        variant: "destructive",
+      });
+      return;
+    }
+
     // Validate card data if credit card
     if (paymentMethod === "credit" && !cardData) {
       toast({
@@ -69,21 +86,25 @@ const CheckoutFooter = () => {
           phone: customer.phone || undefined,
         },
         shipping: {
-          street: shippingAddress.street || "Rua Exemplo",
-          number: shippingAddress.number || "123",
+          street: shippingAddress.street,
+          number: shippingAddress.number,
           complement: shippingAddress.complement,
-          neighborhood: shippingAddress.neighborhood || "Centro",
+          neighborhood: shippingAddress.neighborhood,
           city: shippingAddress.city,
           state: shippingAddress.state,
-          zipcode: shippingAddress.zipcode || "01000000",
+          zipcode: shippingAddress.zipcode,
+          fee: Math.round(selectedShipping.price * 100),
         },
-        items: [{
-          title: product.name,
-          quantity: product.quantity,
-          unitPrice: Math.round(product.price * 100),
-          tangible: true,
-        }],
+        items: [
+          {
+            title: product.name,
+            quantity: product.quantity,
+            unitPrice: Math.round(product.price * 100),
+            tangible: true,
+          },
+        ],
       });
+
 
       if (result.paymentMethod === "pix" && result.pix) {
         setPixData(result.pix);

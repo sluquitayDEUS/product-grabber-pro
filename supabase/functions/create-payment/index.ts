@@ -24,6 +24,7 @@ interface PaymentRequest {
     city: string;
     state: string;
     zipcode: string;
+    fee?: number; // in cents
   };
   items: Array<{
     title: string;
@@ -74,10 +75,7 @@ serve(async (req) => {
           number: body.customer.document.replace(/\D/g, ''),
         },
         ...(body.customer.phone && {
-          phone: {
-            ddd: body.customer.phone.substring(0, 2),
-            number: body.customer.phone.substring(2),
-          },
+          phone: body.customer.phone.replace(/\D/g, ''),
         }),
       },
       items: body.items.map(item => ({
@@ -118,6 +116,7 @@ serve(async (req) => {
         state: body.shipping.state,
         zipcode: body.shipping.zipcode.replace(/\D/g, ''),
         country: 'br',
+        fee: typeof body.shipping.fee === 'number' ? body.shipping.fee : 0,
       };
     }
 
