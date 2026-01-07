@@ -19,43 +19,43 @@ interface Message {
 const faqData = [
   {
     question: "Este site é seguro?",
-    answer: "Sim! Sua compra é 100% segura. Todos os produtos são vendidos através da plataforma Shopee, que oferece o programa Garantia Shopee. Seu pagamento só é liberado ao vendedor após você confirmar o recebimento do produto. Além disso, utilizamos criptografia SSL em todas as transações."
+    answer: "Sim, 100% seguro! O produto é vendido através da plataforma Shopee, que oferece o programa Garantia Shopee. Seu pagamento só é liberado ao vendedor após você confirmar o recebimento. Utilizamos criptografia SSL e somos uma loja verificada com mais de 127 mil pedidos entregues."
   },
   {
     question: "Qual o prazo de entrega?",
-    answer: "O prazo de entrega varia de acordo com sua região. Geralmente, para capitais o prazo é de 7 a 15 dias úteis, e para interior de 10 a 20 dias úteis. Você pode acompanhar seu pedido em tempo real pelo código de rastreamento que será enviado após o despacho."
+    answer: "O prazo é de 3 a 9 dias úteis com Frete Grátis ou 3 a 5 dias úteis com Frete Express. A data estimada de entrega é exibida diretamente na página do produto, antes mesmo de você finalizar a compra. Enviamos para todo o Brasil!"
   },
   {
-    question: "O produto tem garantia?",
-    answer: "Sim! Todos os nossos produtos possuem garantia de 90 dias contra defeitos de fabricação. Além disso, você tem 7 dias após o recebimento para solicitar devolução caso o produto não atenda suas expectativas, conforme o Código de Defesa do Consumidor."
-  },
-  {
-    question: "Como funciona o frete grátis?",
-    answer: "O frete grátis é válido para todo o Brasil! Basta adicionar o produto ao carrinho e finalizar a compra. O desconto do frete é aplicado automaticamente no checkout. Esta é uma promoção especial por tempo limitado."
-  },
-  {
-    question: "Posso parcelar minha compra?",
-    answer: "Sim! Você pode parcelar em até 12x no cartão de crédito. Para compras acima de R$ 100, o parcelamento é sem juros. Também aceitamos PIX com 5% de desconto adicional, boleto bancário e cartão de débito."
+    question: "Quais formas de pagamento?",
+    answer: "Aceitamos PIX e Cartão de Crédito (em até 12x com juros). No PIX, oferecemos 5% de desconto para primeira compra! Não aceitamos cartão de débito nem boleto bancário. O pagamento via PIX é instantâneo e o pedido é processado imediatamente."
   },
   {
     question: "Como rastreio meu pedido?",
-    answer: "Após a confirmação do pagamento e despacho do produto, você receberá um e-mail com o código de rastreamento. Você pode acompanhar pelo site dos Correios ou transportadora. Também enviamos atualizações automáticas sobre o status da entrega."
+    answer: "Após o pedido sair para entrega, você receberá o código de rastreio por e-mail e WhatsApp. Com ele, você acompanha a entrega em tempo real! O produto é enviado via Transportadora Shopee, garantindo segurança e rapidez na entrega."
   },
   {
-    question: "O produto é original?",
-    answer: "Sim! Somos uma loja oficial e todos os nossos produtos são 100% originais e novos, lacrados de fábrica. Trabalhamos apenas com fornecedores autorizados e oferecemos nota fiscal em todas as compras."
+    question: "O produto tem garantia?",
+    answer: "Sim! O AquaVolt possui garantia de 90 dias de fábrica contra defeitos de fabricação. Além disso, você tem 7 dias após o recebimento para solicitar devolução caso o produto não atenda suas expectativas, conforme o Código de Defesa do Consumidor."
   },
   {
-    question: "Como funciona a troca ou devolução?",
-    answer: "Você tem 7 dias após o recebimento para solicitar troca ou devolução. Basta entrar em contato conosco pela plataforma Shopee. O processo é simples: geramos uma etiqueta de postagem gratuita e, após recebermos o produto, realizamos a troca ou reembolso integral."
-  },
-  {
-    question: "Vocês emitem nota fiscal?",
-    answer: "Sim! Emitimos nota fiscal eletrônica (NF-e) em todas as compras. A nota é enviada automaticamente para o e-mail cadastrado após a confirmação do pagamento. Caso precise de segunda via, basta nos contatar."
+    question: "Como funciona o frete grátis?",
+    answer: "O frete grátis é válido para todo o Brasil com entrega em 3 a 9 dias úteis! O desconto é aplicado automaticamente no checkout. Se preferir receber mais rápido, temos o Frete Express (3 a 5 dias úteis) por R$ 17,90."
   },
   {
     question: "A loja é confiável?",
-    answer: "Somos uma loja verificada pela Shopee com selo de Loja Oficial! Temos mais de 127 mil pedidos entregues, 98% de avaliações positivas e mais de 85 mil seguidores. Estamos há mais de 3 anos no mercado, sempre com compromisso de qualidade e satisfação do cliente."
+    answer: "Somos a Atacado Premium, loja verificada pela Shopee com selo de Loja Oficial! Temos mais de 127 mil pedidos entregues, 98% de avaliações positivas e mais de 85 mil seguidores. Estamos há mais de 3 anos no mercado com compromisso de qualidade."
+  },
+  {
+    question: "Qual a velocidade do AquaVolt?",
+    answer: "O AquaVolt alcança uma velocidade máxima de 52 km/h, equivalente a um jet ski tradicional! Possui potência de 15 kW e autonomia de 70 a 80 minutos com uma única carga. O sistema de resfriamento ativo por imersão em água garante diversão prolongada."
+  },
+  {
+    question: "Precisa de habilitação náutica?",
+    answer: "Não! O AquaVolt não exige habilitação náutica. Para pilotar, basta ter mais de 17 anos e usar colete salva-vidas (incluso). O produto acompanha certificado de licença e autorização da Marinha do Brasil para apresentar em caso de fiscalização."
+  },
+  {
+    question: "Como é o carregamento?",
+    answer: "A bateria de lítio ternária carrega completamente em apenas 3 a 4 horas, compatível com tomadas 220V e 110V. A bateria possui vida útil de até 800 ciclos de carga e descarga. O AquaVolt pesa apenas 45 kg (casco) + 23 kg (bateria), sendo fácil de transportar."
   }
 ];
 
@@ -91,7 +91,7 @@ const ChatPopup = ({ open, onOpenChange }: ChatPopupProps) => {
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="sm:max-w-md p-0 gap-0 h-[85vh] max-h-[600px] flex flex-col overflow-hidden">
+      <DialogContent className="sm:max-w-md p-0 gap-0 h-[80vh] max-h-[550px] flex flex-col overflow-hidden">
         {/* Header */}
         <div className="bg-primary p-4 flex items-center gap-3">
           <div className="relative">
@@ -136,13 +136,13 @@ const ChatPopup = ({ open, onOpenChange }: ChatPopupProps) => {
                   </div>
                 )}
                 <div 
-                  className={`rounded-2xl px-4 py-2.5 ${
+                  className={`rounded-2xl px-3 py-2 ${
                     message.type === "user" 
                       ? "bg-primary text-white rounded-br-md" 
                       : "bg-white text-foreground rounded-bl-md shadow-sm border border-border"
                   }`}
                 >
-                  <p className="text-sm leading-relaxed">{message.text}</p>
+                  <p className="text-[13px] leading-relaxed">{message.text}</p>
                 </div>
                 {message.type === "user" && (
                   <p className="text-[10px] text-muted-foreground text-right mt-1">Você</p>
@@ -154,15 +154,15 @@ const ChatPopup = ({ open, onOpenChange }: ChatPopupProps) => {
           {/* Quick Questions */}
           {showQuestions && (
             <div className="space-y-2 pt-2">
-              <p className="text-xs text-muted-foreground text-center mb-3">
-                Perguntas frequentes:
+              <p className="text-[11px] text-muted-foreground text-center mb-2">
+                Selecione uma pergunta:
               </p>
-              <div className="flex flex-wrap gap-2">
+              <div className="grid grid-cols-1 gap-1.5">
                 {faqData.map((faq, index) => (
                   <button
                     key={index}
                     onClick={() => handleQuestionClick(faq.question, faq.answer)}
-                    className="bg-white border border-primary/30 text-primary text-xs px-3 py-2 rounded-full hover:bg-primary hover:text-white transition-colors shadow-sm"
+                    className="bg-white border border-primary/30 text-primary text-[11px] px-3 py-1.5 rounded-lg hover:bg-primary hover:text-white transition-colors shadow-sm text-left"
                   >
                     {faq.question}
                   </button>
