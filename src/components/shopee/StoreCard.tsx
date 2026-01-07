@@ -36,7 +36,7 @@ const StoreCard = () => {
         </div>
         <div className="w-px h-8 bg-border" />
         <div className="text-center">
-          <p className="text-sm font-medium text-primary">2.5mil</p>
+          <p className="text-sm font-medium text-primary">72</p>
           <p className="text-xs text-muted-foreground">Produtos</p>
         </div>
         <div className="w-px h-8 bg-border" />
