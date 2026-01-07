@@ -1,10 +1,8 @@
 import { ShieldCheck, Loader2 } from "lucide-react";
-import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useToast } from "@/hooks/use-toast";
 import { useCart } from "@/contexts/CartContext";
 import { usePayment } from "@/hooks/usePayment";
-import PixQRCodeModal from "./PixQRCodeModal";
 
 const CheckoutFooter = () => {
   const navigate = useNavigate();
@@ -13,7 +11,6 @@ const CheckoutFooter = () => {
     product, 
     selectedShipping, 
     paymentMethod, 
-    totalPrice, 
     totalPriceInCents,
     customer,
     shippingAddress,
@@ -22,13 +19,6 @@ const CheckoutFooter = () => {
     pixDiscount,
   } = useCart();
   const { processPayment, isLoading } = usePayment();
-
-  const [pixModalOpen, setPixModalOpen] = useState(false);
-  const [pixData, setPixData] = useState<{
-    qrCode: string;
-    qrCodeUrl: string;
-    expiresAt: string;
-  } | null>(null);
 
   const subtotal = product.price * product.quantity;
   const voucher = -5.00;
@@ -107,8 +97,14 @@ const CheckoutFooter = () => {
 
 
       if (result.paymentMethod === "pix" && result.pix) {
-        setPixData(result.pix);
-        setPixModalOpen(true);
+        // Navigate to dedicated Pix page
+        navigate("/pix-payment", {
+          state: {
+            qrCode: result.pix.qrCode,
+            amount: totalPriceInCents,
+            transactionId: result.transactionId,
+          },
+        });
       } else {
         toast({
           title: "Pedido realizado com sucesso!",
@@ -158,24 +154,6 @@ const CheckoutFooter = () => {
           </button>
         </div>
       </footer>
-
-      {pixData && (
-        <PixQRCodeModal
-          isOpen={pixModalOpen}
-          onClose={() => {
-            setPixModalOpen(false);
-            toast({
-              title: "Pedido realizado!",
-              description: "Aguardando confirmação do pagamento.",
-            });
-            navigate("/");
-          }}
-          qrCode={pixData.qrCode}
-          qrCodeUrl={pixData.qrCodeUrl}
-          expiresAt={pixData.expiresAt}
-          amount={totalPriceInCents}
-        />
-      )}
     </>
   );
 };

@@ -1,6 +1,7 @@
 import { MapPin, ChevronRight, AlertCircle, Loader2 } from "lucide-react";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { useCart } from "@/contexts/CartContext";
+import { validateCPF as validateCPFAlgorithm } from "@/lib/cpfValidator";
 import {
   Sheet,
   SheetContent,
@@ -81,7 +82,7 @@ const formatCEP = (value: string) => {
   return `${digits.slice(0, 5)}-${digits.slice(5)}`;
 };
 
-const validateCPF = (cpf: string) => cpf.replace(/\D/g, "").length === 11;
+const validateCPFFormat = (cpf: string) => cpf.replace(/\D/g, "").length === 11;
 const validateCEP = (cep: string) => cep.replace(/\D/g, "").length === 8;
 
 const CheckoutAddress = () => {
@@ -196,7 +197,7 @@ const CheckoutAddress = () => {
       if (!draft[field].trim()) newErrors[field] = true;
     });
 
-    if (draft.cpf && !validateCPF(draft.cpf)) newErrors.cpf = true;
+    if (draft.cpf && !validateCPFAlgorithm(draft.cpf)) newErrors.cpf = true;
     if (draft.email && !validateEmail(draft.email)) newErrors.email = true;
     if (draft.cep && !validateCEP(draft.cep)) newErrors.cep = true;
 
@@ -231,7 +232,7 @@ const CheckoutAddress = () => {
   const isAddressFilled =
     draft.name &&
     draft.email &&
-    validateCPF(draft.cpf) &&
+    validateCPFAlgorithm(draft.cpf) &&
     draft.street &&
     validateCEP(draft.cep) &&
     draft.city &&
@@ -331,15 +332,27 @@ const CheckoutAddress = () => {
                   id="cpf"
                   value={draft.cpf}
                   onChange={(e) => {
-                    setDraft({ ...draft, cpf: formatCPF(e.target.value) });
-                    setErrors({ ...errors, cpf: false });
+                    const formatted = formatCPF(e.target.value);
+                    setDraft({ ...draft, cpf: formatted });
+                    // Validate in real-time when CPF is complete
+                    const digits = formatted.replace(/\D/g, "");
+                    if (digits.length === 11) {
+                      setErrors((prev) => ({
+                        ...prev,
+                        cpf: !validateCPFAlgorithm(formatted),
+                      }));
+                    } else {
+                      setErrors((prev) => ({ ...prev, cpf: false }));
+                    }
                   }}
                   placeholder="000.000.000-00"
                   maxLength={14}
                   className={errors.cpf ? "border-destructive" : ""}
                 />
                 {errors.cpf && (
-                  <p className="text-xs text-destructive mt-1">CPF inválido</p>
+                  <p className="text-xs text-destructive mt-1">
+                    CPF inválido. Verifique os números digitados.
+                  </p>
                 )}
               </div>
 

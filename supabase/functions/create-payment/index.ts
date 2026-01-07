@@ -98,10 +98,10 @@ serve(async (req) => {
       furiaPayload.installments = body.installments || 1;
     }
 
-    // Add PIX expiration if PIX payment
+    // Add PIX expiration if PIX payment (15 minutes)
     if (body.paymentMethod === 'pix') {
       furiaPayload.pix = {
-        expiresIn: 3600, // 1 hour
+        expiresIn: 900, // 15 minutes
       };
     }
 
@@ -157,12 +157,11 @@ serve(async (req) => {
         transactionId: data.id,
         status: data.status,
         paymentMethod: body.paymentMethod,
-        // PIX specific data
+        // PIX specific data - note: API returns qrcode not qrCodeUrl
         ...(body.paymentMethod === 'pix' && data.pix && {
           pix: {
-            qrCode: data.pix.qrCode,
-            qrCodeUrl: data.pix.qrCodeUrl,
-            expiresAt: data.pix.expiresAt,
+            qrCode: data.pix.qrcode || data.pix.qrCode,
+            expiresAt: data.pix.expirationDate || data.pix.expiresAt,
           },
         }),
         // Credit card specific data
