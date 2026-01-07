@@ -1,12 +1,19 @@
 import { useState } from "react";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 
+// Import product images
+import aquavolt1 from "@/assets/aquavolt-1.webp";
+import aquavolt2 from "@/assets/aquavolt-2.webp";
+import aquavolt3 from "@/assets/aquavolt-3.webp";
+import aquavolt4 from "@/assets/aquavolt-4.webp";
+import aquavolt5 from "@/assets/aquavolt-5.webp";
+
 const images = [
-  "https://images.unsplash.com/photo-1544551763-46a013bb70d5?w=600&h=600&fit=crop",
-  "https://images.unsplash.com/photo-1530053969600-caed2596d242?w=600&h=600&fit=crop",
-  "https://images.unsplash.com/photo-1559628129-67cf63b72248?w=600&h=600&fit=crop",
-  "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=600&h=600&fit=crop",
-  "https://images.unsplash.com/photo-1517649763962-0c623066013b?w=600&h=600&fit=crop",
+  aquavolt1,
+  aquavolt2,
+  aquavolt3,
+  aquavolt4,
+  aquavolt5,
 ];
 
 const ProductGallery = () => {
@@ -35,7 +42,7 @@ const ProductGallery = () => {
     <div className="relative w-full aspect-square bg-card overflow-hidden">
       {/* Discount Badge */}
       <div className="absolute top-3 left-0 z-10 bg-shopee-red text-primary-foreground px-2 py-1 text-xs font-bold">
-        -34%
+        -40%
       </div>
 
       {/* Images Container */}
@@ -50,7 +57,7 @@ const ProductGallery = () => {
           <img
             key={index}
             src={img}
-            alt={`Produto ${index + 1}`}
+            alt={`AquaVolt - Kart Aquático Elétrico ${index + 1}`}
             className="w-full h-full object-cover flex-shrink-0"
           />
         ))}
