@@ -1,54 +1,153 @@
 import { useState } from "react";
-import { ThumbsUp, ChevronRight } from "lucide-react";
+import { ThumbsUp, ChevronRight, ChevronDown } from "lucide-react";
 
 const filters = ["Todas", "Com Foto", "5★", "4★", "3★", "2★", "1★"];
 
-const reviews = [
-  {
-    id: 1,
-    user: "M***a",
-    avatar: "https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=50&h=50&fit=crop&crop=faces",
-    rating: 5,
-    date: "03/01/2026",
-    variation: "Preto, 3 em 1",
-    comment: "Produto excelente! Chegou antes do prazo e veio muito bem embalado. A qualidade do acabamento é incrível, parece muito mais caro do que realmente é. Recomendo demais!",
-    images: [
-      "https://images.unsplash.com/photo-1621607512022-6aecc4fed814?w=100&h=100&fit=crop",
-      "https://images.unsplash.com/photo-1503951914875-452162b0f3f1?w=100&h=100&fit=crop",
-    ],
-    likes: 45,
-    sellerReply: "Muito obrigado pela avaliação! Ficamos felizes que tenha gostado do produto. Qualquer dúvida, estamos à disposição! 😊",
-  },
-  {
-    id: 2,
-    user: "R***o",
-    avatar: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=50&h=50&fit=crop&crop=faces",
-    rating: 4,
-    date: "02/01/2026",
-    variation: "Prata, 5 em 1",
-    comment: "Bom produto pelo preço. Faz tudo que promete. A bateria dura bastante. Tirando uma estrela porque o barulho é um pouco alto.",
-    images: [],
-    likes: 23,
-    sellerReply: null,
-  },
-  {
-    id: 3,
-    user: "C***s",
-    avatar: "https://images.unsplash.com/photo-1599566150163-29194dcabd36?w=50&h=50&fit=crop&crop=faces",
-    rating: 5,
-    date: "01/01/2026",
-    variation: "Preto, 7 em 1 Pro",
-    comment: "Sensacional! Comprei pra dar de presente pro meu pai e ele adorou. Produto de qualidade, bem acabado. Entrega super rápida!",
-    images: [
-      "https://images.unsplash.com/photo-1599351431202-1e0f0137899a?w=100&h=100&fit=crop",
-    ],
-    likes: 67,
-    sellerReply: null,
-  },
-];
+// Generate 120 reviews for the Aquavolt
+const generateReviews = () => {
+  const comments5Star = [
+    "Simplesmente INCRÍVEL! O Aquavolt superou todas as minhas expectativas. A sensação de deslizar na água é única!",
+    "Comprei pra usar no lago da fazenda e a família toda adorou. Silencioso e muito divertido!",
+    "Produto de altíssima qualidade. A bateria dura bastante e o desempenho é impressionante.",
+    "Melhor compra que já fiz! Meus filhos não querem sair da água. Super seguro e fácil de usar.",
+    "O design é lindo e a performance incrível. Chega a 45km/h tranquilamente!",
+    "Entrega super rápida e produto muito bem embalado. Montagem fácil, em 30 minutos estava na água!",
+    "Vale cada centavo! A experiência é única, parece um jet ski mas muito mais acessível.",
+    "Comprei pro meu marido de aniversário e ele amou! Virou a atração do condomínio.",
+    "Qualidade premium! Acabamento impecável, motor silencioso, bateria duradoura. Recomendo!",
+    "Finalmente um produto elétrico que funciona de verdade! Autonomia excelente e recarga rápida.",
+    "Perfeito para praias calmas e lagos. Muito estável, não capota mesmo em curvas fechadas.",
+    "Surpreendeu demais! Não esperava tanta qualidade por esse preço. Estou apaixonado!",
+    "Uso todo final de semana. Já fiz mais de 50 passeios e funciona como no primeiro dia.",
+    "O suporte técnico é excelente. Tive uma dúvida e me responderam em minutos!",
+    "Comprei 2, um pra mim e outro pro meu irmão. Agora fazemos corridas no lago!",
+  ];
+
+  const comments4Star = [
+    "Muito bom! Só tirei uma estrela porque a entrega demorou um pouco mais que o esperado.",
+    "Produto excelente, mas poderia vir com mais acessórios. No geral, super recomendo!",
+    "Ótimo custo-benefício. A bateria poderia durar um pouco mais, mas é muito divertido!",
+    "Gostei bastante. O único ponto é que o carregador esquenta um pouco.",
+    "Produto de qualidade. Tirando uma estrela pelo manual que poderia ser mais detalhado.",
+  ];
+
+  const comments3Star = [
+    "Produto ok. Funciona bem mas esperava um pouco mais de velocidade.",
+    "Bom produto, mas tive que fazer alguns ajustes na montagem. Poderia ser mais simples.",
+  ];
+
+  const avatars = [
+    "https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=50&h=50&fit=crop&crop=faces",
+    "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=50&h=50&fit=crop&crop=faces",
+    "https://images.unsplash.com/photo-1599566150163-29194dcabd36?w=50&h=50&fit=crop&crop=faces",
+    "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=50&h=50&fit=crop&crop=faces",
+    "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=50&h=50&fit=crop&crop=faces",
+    "https://images.unsplash.com/photo-1527980965255-d3b416303d12?w=50&h=50&fit=crop&crop=faces",
+    "https://images.unsplash.com/photo-1580489944761-15a19d654956?w=50&h=50&fit=crop&crop=faces",
+    "https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=50&h=50&fit=crop&crop=faces",
+  ];
+
+  const reviewImages = [
+    "https://images.unsplash.com/photo-1544551763-46a013bb70d5?w=100&h=100&fit=crop",
+    "https://images.unsplash.com/photo-1530053969600-caed2596d242?w=100&h=100&fit=crop",
+    "https://images.unsplash.com/photo-1559628129-67cf63b72248?w=100&h=100&fit=crop",
+    "https://images.unsplash.com/photo-1517649763962-0c623066013b?w=100&h=100&fit=crop",
+  ];
+
+  const variations = ["Azul Oceano, 48V", "Branco Polar, 72V Pro", "Verde Água, 48V", "Laranja Sunset, 96V Ultra"];
+  const names = ["A***o", "M***a", "R***o", "C***s", "J***a", "P***o", "L***a", "F***o", "B***a", "D***o", "G***a", "S***o", "T***a", "V***o", "N***a"];
+
+  const reviews = [];
+  let id = 1;
+
+  // Generate 90 five-star reviews
+  for (let i = 0; i < 90; i++) {
+    const hasImages = Math.random() > 0.6;
+    const hasSellerReply = Math.random() > 0.7;
+    const dayOffset = Math.floor(Math.random() * 60);
+    const date = new Date();
+    date.setDate(date.getDate() - dayOffset);
+
+    reviews.push({
+      id: id++,
+      user: names[Math.floor(Math.random() * names.length)],
+      avatar: avatars[Math.floor(Math.random() * avatars.length)],
+      rating: 5,
+      date: date.toLocaleDateString("pt-BR"),
+      variation: variations[Math.floor(Math.random() * variations.length)],
+      comment: comments5Star[Math.floor(Math.random() * comments5Star.length)],
+      images: hasImages ? reviewImages.slice(0, Math.floor(Math.random() * 3) + 1) : [],
+      likes: Math.floor(Math.random() * 150) + 10,
+      sellerReply: hasSellerReply ? "Muito obrigado pela avaliação! Ficamos muito felizes que você está aproveitando o Aquavolt! 🌊⚡" : null,
+    });
+  }
+
+  // Generate 25 four-star reviews
+  for (let i = 0; i < 25; i++) {
+    const dayOffset = Math.floor(Math.random() * 60);
+    const date = new Date();
+    date.setDate(date.getDate() - dayOffset);
+
+    reviews.push({
+      id: id++,
+      user: names[Math.floor(Math.random() * names.length)],
+      avatar: avatars[Math.floor(Math.random() * avatars.length)],
+      rating: 4,
+      date: date.toLocaleDateString("pt-BR"),
+      variation: variations[Math.floor(Math.random() * variations.length)],
+      comment: comments4Star[Math.floor(Math.random() * comments4Star.length)],
+      images: [],
+      likes: Math.floor(Math.random() * 50) + 5,
+      sellerReply: null,
+    });
+  }
+
+  // Generate 5 three-star reviews
+  for (let i = 0; i < 5; i++) {
+    const dayOffset = Math.floor(Math.random() * 60);
+    const date = new Date();
+    date.setDate(date.getDate() - dayOffset);
+
+    reviews.push({
+      id: id++,
+      user: names[Math.floor(Math.random() * names.length)],
+      avatar: avatars[Math.floor(Math.random() * avatars.length)],
+      rating: 3,
+      date: date.toLocaleDateString("pt-BR"),
+      variation: variations[Math.floor(Math.random() * variations.length)],
+      comment: comments3Star[Math.floor(Math.random() * comments3Star.length)],
+      images: [],
+      likes: Math.floor(Math.random() * 20) + 1,
+      sellerReply: null,
+    });
+  }
+
+  // Shuffle reviews
+  return reviews.sort(() => Math.random() - 0.5);
+};
+
+const allReviews = generateReviews();
 
 const ProductReviews = () => {
   const [activeFilter, setActiveFilter] = useState("Todas");
+  const [showAll, setShowAll] = useState(false);
+
+  const getFilteredReviews = () => {
+    let filtered = allReviews;
+    
+    if (activeFilter === "Com Foto") {
+      filtered = allReviews.filter(r => r.images.length > 0);
+    } else if (activeFilter.includes("★")) {
+      const rating = parseInt(activeFilter);
+      filtered = allReviews.filter(r => r.rating === rating);
+    }
+
+    return filtered;
+  };
+
+  const filteredReviews = getFilteredReviews();
+  const displayedReviews = showAll ? filteredReviews : filteredReviews.slice(0, 20);
+  const remainingCount = filteredReviews.length - 20;
 
   const renderStars = (rating: number) => {
     return (
@@ -66,29 +165,35 @@ const ProductReviews = () => {
     );
   };
 
+  // Calculate average rating
+  const avgRating = (allReviews.reduce((sum, r) => sum + r.rating, 0) / allReviews.length).toFixed(1);
+
   return (
     <div className="bg-card mt-2">
       {/* Header */}
       <div className="flex items-center justify-between px-3 py-3 border-b border-border">
         <div className="flex items-center gap-2">
           <h2 className="text-sm font-medium text-foreground">Avaliações do Produto</h2>
-          <span className="text-xs text-muted-foreground">(1.248)</span>
+          <span className="text-xs text-muted-foreground">({allReviews.length})</span>
         </div>
-        <div className="flex items-center gap-1 text-primary">
-          <span className="text-sm">Ver Todas</span>
+        <button 
+          onClick={() => setShowAll(!showAll)}
+          className="flex items-center gap-1 text-primary"
+        >
+          <span className="text-sm">{showAll ? "Ver menos" : "Ver Todas"}</span>
           <ChevronRight className="w-4 h-4" />
-        </div>
+        </button>
       </div>
 
       {/* Rating Summary */}
       <div className="flex items-center gap-3 px-3 py-3 border-b border-border">
         <div className="flex items-baseline gap-1">
-          <span className="text-2xl font-bold text-primary">4.8</span>
+          <span className="text-2xl font-bold text-primary">{avgRating}</span>
           <span className="text-xs text-muted-foreground">/5</span>
         </div>
         <div>
           {renderStars(5)}
-          <p className="text-xs text-muted-foreground mt-0.5">1.248 avaliações</p>
+          <p className="text-xs text-muted-foreground mt-0.5">{allReviews.length} avaliações</p>
         </div>
       </div>
 
@@ -97,7 +202,10 @@ const ProductReviews = () => {
         {filters.map((filter) => (
           <button
             key={filter}
-            onClick={() => setActiveFilter(filter)}
+            onClick={() => {
+              setActiveFilter(filter);
+              setShowAll(false);
+            }}
             className={`flex-shrink-0 px-3 py-1.5 rounded-full text-xs transition-all ${
               activeFilter === filter
                 ? "bg-shopee-light text-primary border border-primary"
@@ -111,7 +219,7 @@ const ProductReviews = () => {
 
       {/* Reviews List */}
       <div className="divide-y divide-border">
-        {reviews.map((review) => (
+        {displayedReviews.map((review) => (
           <div key={review.id} className="px-3 py-4">
             {/* User Info */}
             <div className="flex items-center gap-2 mb-2">
@@ -169,6 +277,17 @@ const ProductReviews = () => {
           </div>
         ))}
       </div>
+
+      {/* Load More Button */}
+      {!showAll && remainingCount > 0 && (
+        <button
+          onClick={() => setShowAll(true)}
+          className="w-full py-4 border-t border-border flex items-center justify-center gap-2 text-primary text-sm font-medium"
+        >
+          <span>Ver mais {remainingCount} avaliações</span>
+          <ChevronDown className="w-4 h-4" />
+        </button>
+      )}
     </div>
   );
 };

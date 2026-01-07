@@ -74,11 +74,11 @@ interface CartContextType {
 
 const defaultProduct: Product = {
   id: "1",
-  name: "Máquina de Barbear 3 em 1 Profissional Elétrica Recarregável USB",
-  image: "https://images.unsplash.com/photo-1621607512214-68297480165e?w=400&h=400&fit=crop",
-  price: 39.90,
-  originalPrice: 89.90,
-  variation: "Preto, 3 lâminas",
+  name: "Aquavolt - Kart Aquático 100% Elétrico",
+  image: "https://images.unsplash.com/photo-1544551763-46a013bb70d5?w=400&h=400&fit=crop",
+  price: 390.90,
+  originalPrice: 590.90,
+  variation: "Azul Oceano, Bateria 48V",
   quantity: 1
 };
 

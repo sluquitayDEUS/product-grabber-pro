@@ -2,12 +2,14 @@ import { useState } from "react";
 import { ChevronDown, ChevronUp } from "lucide-react";
 
 const specs = [
-  { label: "Marca", value: "TechPro" },
-  { label: "Material", value: "Aço Inoxidável + ABS" },
-  { label: "Voltagem", value: "Bivolt (USB)" },
-  { label: "Bateria", value: "600mAh Li-ion" },
-  { label: "Peso", value: "180g" },
-  { label: "Garantia", value: "12 meses" },
+  { label: "Marca", value: "Aquavolt" },
+  { label: "Material", value: "Fibra de Carbono + ABS Náutico" },
+  { label: "Motor", value: "100% Elétrico 5000W" },
+  { label: "Bateria", value: "Lítio 48V 20Ah" },
+  { label: "Velocidade", value: "Até 45 km/h" },
+  { label: "Autonomia", value: "60-90 minutos" },
+  { label: "Peso", value: "45kg" },
+  { label: "Garantia", value: "24 meses" },
 ];
 
 const ProductDescription = () => {
@@ -32,31 +34,37 @@ const ProductDescription = () => {
         <h3 className="text-sm font-medium text-foreground mb-2">Descrição</h3>
         <div className={`text-xs text-muted-foreground leading-relaxed ${!isExpanded && "line-clamp-4"}`}>
           <p className="mb-2">
-            🔥 MÁQUINA DE BARBEAR 3 EM 1 - O PRESENTE PERFEITO!
+            🌊 AQUAVOLT - O KART AQUÁTICO DO FUTURO!
           </p>
           <p className="mb-2">
-            ✅ Barbeador elétrico profissional com 3 funções: barbear, aparar e modelar
+            ✅ 100% elétrico e silencioso - sem emissão de poluentes
           </p>
           <p className="mb-2">
-            ✅ Lâminas de aço inoxidável de alta qualidade para um corte preciso e suave
+            ✅ Motor de 5000W de alta performance para máxima adrenalina
           </p>
           <p className="mb-2">
-            ✅ Design ergonômico e portátil - perfeito para viagens
+            ✅ Atinge até 45 km/h na água com total segurança
           </p>
           <p className="mb-2">
-            ✅ Bateria recarregável via USB - até 90 minutos de uso contínuo
+            ✅ Bateria de lítio com autonomia de 60-90 minutos
           </p>
           <p className="mb-2">
-            ✅ À prova d'água IPX6 - pode ser usado no banho
+            ✅ Design hidrodinâmico em fibra de carbono ultra leve
           </p>
           <p className="mb-2">
-            ✅ Indicador LED de bateria
+            ✅ Sistema de estabilização automática anti-capotamento
           </p>
           <p className="mb-2">
-            ✅ Baixo ruído - motor silencioso de alta potência
+            ✅ Carregamento rápido em apenas 3 horas
+          </p>
+          <p className="mb-2">
+            ✅ Ideal para lagos, represas e praias calmas
+          </p>
+          <p className="mb-2">
+            ✅ Fácil transporte - cabe no porta-malas do carro
           </p>
           <p>
-            📦 O pacote inclui: 1x Máquina principal, 3x Cabeças intercambiáveis, 1x Cabo USB, 1x Escova de limpeza, 1x Manual
+            📦 O pacote inclui: 1x Aquavolt completo, 1x Bateria 48V 20Ah, 1x Carregador inteligente, 1x Colete salva-vidas, 1x Manual completo, 1x Kit de ferramentas
           </p>
         </div>
         

@@ -2,15 +2,16 @@ import { useState } from "react";
 import { ChevronRight } from "lucide-react";
 
 const colors = [
-  { id: 1, name: "Preto", color: "#1a1a1a" },
-  { id: 2, name: "Prata", color: "#C0C0C0" },
-  { id: 3, name: "Dourado", color: "#FFD700" },
+  { id: 1, name: "Azul Oceano", color: "#0077be" },
+  { id: 2, name: "Branco Polar", color: "#f5f5f5" },
+  { id: 3, name: "Verde Água", color: "#20b2aa" },
+  { id: 4, name: "Laranja Sunset", color: "#ff6b35" },
 ];
 
 const models = [
-  { id: 1, name: "3 em 1" },
-  { id: 2, name: "5 em 1" },
-  { id: 3, name: "7 em 1 Pro" },
+  { id: 1, name: "Bateria 48V" },
+  { id: 2, name: "Bateria 72V Pro" },
+  { id: 3, name: "Bateria 96V Ultra" },
 ];
 
 const ProductVariations = () => {

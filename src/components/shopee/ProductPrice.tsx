@@ -12,16 +12,16 @@ const ProductPrice = () => {
       <div className="bg-card p-3">
         {/* Price Row */}
         <div className="flex items-baseline gap-2 mb-2">
-          <span className="text-2xl font-bold text-primary">R$ 89,90</span>
-          <span className="text-sm text-muted-foreground line-through">R$ 164,90</span>
+          <span className="text-2xl font-bold text-primary">R$ 390,90</span>
+          <span className="text-sm text-muted-foreground line-through">R$ 590,90</span>
           <span className="bg-primary text-primary-foreground text-xs px-1.5 py-0.5 rounded font-medium">
-            -45%
+            -34%
           </span>
         </div>
 
         {/* Installments */}
         <p className="text-xs text-muted-foreground mb-3">
-          ou 12x de R$ 8,49
+          ou 12x de R$ 34,56
         </p>
 
         {/* Benefits */}

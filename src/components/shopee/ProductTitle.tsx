@@ -10,7 +10,7 @@ const ProductTitle = () => {
         {/* Title */}
         <div className="flex-1">
           <h1 className="text-sm font-medium text-foreground leading-tight mb-2">
-            Máquina De Barbear e Aparador Pelos Elétrico 3 Em 1 Barbeador Recarregável USB Sem Fio Portátil Masculino
+            Aquavolt - Kart Aquático 100% Elétrico Jet Ski Individual Esportivo Bateria 48V Alta Performance Sustentável
           </h1>
           
           {/* Stats */}
