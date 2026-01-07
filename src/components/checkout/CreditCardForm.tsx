@@ -78,12 +78,19 @@ const CreditCardForm = ({
     return (value / 100).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
   };
 
+  const INTEREST_RATE = 0.06; // 6% interest
+  
   const installmentOptions = Array.from({ length: 12 }, (_, i) => {
     const num = i + 1;
-    const value = totalAmount / num;
+    // 1x has no interest, 2x+ has 6% interest
+    const hasInterest = num > 1;
+    const totalWithInterest = hasInterest ? totalAmount * (1 + INTEREST_RATE) : totalAmount;
+    const value = totalWithInterest / num;
     return {
       value: num,
-      label: `${num}x de ${formatCurrency(value)} sem juros`,
+      label: hasInterest 
+        ? `${num}x de ${formatCurrency(value)} (com juros)`
+        : `${num}x de ${formatCurrency(value)} sem juros`,
     };
   });
 
