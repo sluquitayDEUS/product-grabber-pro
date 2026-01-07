@@ -8,12 +8,16 @@ import {
   SheetTitle,
   SheetTrigger,
 } from "@/components/ui/sheet";
+import StorePopup from "@/components/shopee/StorePopup";
+import ChatPopup from "@/components/checkout/ChatPopup";
 
 const CheckoutProducts = () => {
   const { product, selectedShipping, setSelectedShippingType, getShippingOptions, quantity, setQuantity } = useCart();
   const [shippingSheetOpen, setShippingSheetOpen] = useState(false);
   const [messageSheetOpen, setMessageSheetOpen] = useState(false);
   const [message, setMessage] = useState("");
+  const [showStorePopup, setShowStorePopup] = useState(false);
+  const [showChatPopup, setShowChatPopup] = useState(false);
 
   const shippingOptions = getShippingOptions();
 
@@ -32,11 +36,17 @@ const CheckoutProducts = () => {
   return (
     <div className="bg-card mt-2">
       {/* Store Header */}
-      <div className="flex items-center gap-2 p-3 border-b border-border">
+      <button 
+        onClick={() => setShowStorePopup(true)}
+        className="w-full flex items-center gap-2 p-3 border-b border-border hover:bg-muted/50 transition-colors"
+      >
         <Store className="w-4 h-4 text-foreground" />
-        <span className="font-medium text-sm text-foreground">Aquavolt Brasil</span>
+        <span className="font-medium text-sm text-foreground">Atacado Premium</span>
         <ChevronRight className="w-4 h-4 text-muted-foreground ml-auto" />
-      </div>
+      </button>
+
+      <StorePopup open={showStorePopup} onOpenChange={setShowStorePopup} />
+      <ChatPopup open={showChatPopup} onOpenChange={setShowChatPopup} />
 
       {/* Product Item */}
       <div className="p-3 flex gap-3">
