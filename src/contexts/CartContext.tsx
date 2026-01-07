@@ -85,8 +85,8 @@ interface CartContextType {
   setCardData: (data: CardData | null) => void;
   installments: number;
   setInstallments: (installments: number) => void;
-  selectedColor: number;
-  setSelectedColor: (color: number) => void;
+  selectedColor: number | null;
+  setSelectedColor: (color: number | null) => void;
   quantity: number;
   setQuantity: (quantity: number) => void;
 }
@@ -145,13 +145,13 @@ export const CartProvider = ({ children }: { children: ReactNode }) => {
   });
   const [cardData, setCardData] = useState<CardData | null>(null);
   const [installments, setInstallments] = useState(1);
-  const [selectedColor, setSelectedColor] = useState(1);
+  const [selectedColor, setSelectedColor] = useState<number | null>(null);
   const [quantity, setQuantity] = useState(1);
 
   const shippingOptions = calculateShippingOptions();
   const selectedShipping = shippingOptions[shippingType];
 
-  const selectedColorOption = colorOptions.find(c => c.id === selectedColor) || colorOptions[0];
+  const selectedColorOption = selectedColor ? colorOptions.find(c => c.id === selectedColor) || colorOptions[0] : colorOptions[0];
 
   const product: Product = {
     id: "1",

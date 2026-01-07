@@ -1,18 +1,43 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { MessageCircle, ShoppingCart } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import ChatPopup from "./ChatPopup";
+import { useCart } from "@/contexts/CartContext";
 
 const ProductFooter = () => {
   const navigate = useNavigate();
   const [showChatPopup, setShowChatPopup] = useState(false);
+  const [showColorWarning, setShowColorWarning] = useState(false);
+  const { selectedColor } = useCart();
+
+  useEffect(() => {
+    if (showColorWarning) {
+      const timer = setTimeout(() => {
+        setShowColorWarning(false);
+      }, 3100);
+      return () => clearTimeout(timer);
+    }
+  }, [showColorWarning]);
 
   const goToCheckout = () => {
+    if (!selectedColor) {
+      setShowColorWarning(true);
+      return;
+    }
     navigate("/checkout");
   };
 
   return (
     <>
+      {/* Color Warning Toast */}
+      {showColorWarning && (
+        <div className="fixed bottom-16 left-1/2 -translate-x-1/2 z-[60] animate-in fade-in slide-in-from-bottom-2 duration-200">
+          <div className="bg-foreground text-background px-4 py-2 rounded-lg shadow-lg text-sm font-medium">
+            Selecione uma cor para continuar
+          </div>
+        </div>
+      )}
+
       <footer className="fixed bottom-0 left-0 right-0 bg-card border-t border-border z-50">
         <div className="flex items-center h-14">
           {/* Chat Button */}
