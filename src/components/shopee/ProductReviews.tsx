@@ -1,7 +1,31 @@
 import { useState } from "react";
 import { ThumbsUp, ChevronRight, ChevronDown } from "lucide-react";
 
+// Import review images
+import review1 from "@/assets/aquavolt-1.webp";
+import review2 from "@/assets/aquavolt-2.webp";
+import review3 from "@/assets/aquavolt-3.webp";
+
 const filters = ["Todas", "Com Foto", "5★", "4★", "3★", "2★", "1★"];
+
+// Seller replies - varied responses
+const sellerReplies = [
+  "Muito obrigado pela avaliação! Ficamos muito felizes que você está aproveitando o Aquavolt! 🌊⚡",
+  "Agradecemos o feedback! É muito bom saber que o AquaVolt está proporcionando momentos incríveis! 🚤",
+  "Obrigado pelo carinho! Desejamos muitas aventuras aquáticas com seu AquaVolt! 🌊",
+  "Que alegria ler isso! O AquaVolt foi feito para proporcionar diversão sem limites! ⚡",
+  "Ficamos emocionados com sua avaliação! Aproveite cada momento na água! 🏄‍♂️",
+  "Muito obrigado! É gratificante saber que superamos suas expectativas! 🌟",
+  "Agradecemos imensamente! Seu feedback nos motiva a continuar entregando qualidade! 💪",
+  "Que feedback maravilhoso! O AquaVolt é diversão garantida para toda família! 👨‍👩‍👧‍👦",
+  "Obrigado pela confiança! Estamos sempre à disposição para qualquer dúvida! 📞",
+  "Ficamos felizes demais! Boas aventuras aquáticas para você! 🌊⚡",
+  "Muito obrigado pelo 5 estrelas! Você merece o melhor em diversão aquática! 🏆",
+  "Agradecemos a preferência! O AquaVolt é sinônimo de qualidade e diversão! ✨",
+  "Que ótimo saber! Continue aproveitando seu AquaVolt ao máximo! 🚀",
+  "Obrigado por compartilhar! Sua satisfação é nossa maior recompensa! 💙",
+  "Incrível feedback! O AquaVolt foi pensado para momentos como esse! 🎉",
+];
 
 // Generate 120 reviews for the Aquavolt
 const generateReviews = () => {
@@ -47,28 +71,27 @@ const generateReviews = () => {
     "https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=50&h=50&fit=crop&crop=faces",
   ];
 
-  const reviewImages = [
-    "https://images.unsplash.com/photo-1544551763-46a013bb70d5?w=100&h=100&fit=crop",
-    "https://images.unsplash.com/photo-1530053969600-caed2596d242?w=100&h=100&fit=crop",
-    "https://images.unsplash.com/photo-1559628129-67cf63b72248?w=100&h=100&fit=crop",
-    "https://images.unsplash.com/photo-1517649763962-0c623066013b?w=100&h=100&fit=crop",
-  ];
+  // Only 3 review images from the site
+  const reviewImages = [review1, review2, review3];
 
   const variations = ["Azul Oceano, 48V", "Branco Polar, 72V Pro", "Verde Água, 48V", "Laranja Sunset, 96V Ultra"];
   const names = ["A***o", "M***a", "R***o", "C***s", "J***a", "P***o", "L***a", "F***o", "B***a", "D***o", "G***a", "S***o", "T***a", "V***o", "N***a"];
 
   const reviews = [];
   let id = 1;
+  let imageReviewsCount = 0;
 
   // Generate 90 five-star reviews
   for (let i = 0; i < 90; i++) {
-    const hasImages = Math.random() > 0.6;
-    const hasSellerReply = Math.random() > 0.7;
+    // Only first 3 reviews with images (one image each)
+    const hasImages = imageReviewsCount < 3;
+    // 85% chance of seller reply
+    const hasSellerReply = Math.random() < 0.85;
     const dayOffset = Math.floor(Math.random() * 60);
     const date = new Date();
     date.setDate(date.getDate() - dayOffset);
 
-    reviews.push({
+    const reviewData: any = {
       id: id++,
       user: names[Math.floor(Math.random() * names.length)],
       avatar: avatars[Math.floor(Math.random() * avatars.length)],
@@ -76,14 +99,18 @@ const generateReviews = () => {
       date: date.toLocaleDateString("pt-BR"),
       variation: variations[Math.floor(Math.random() * variations.length)],
       comment: comments5Star[Math.floor(Math.random() * comments5Star.length)],
-      images: hasImages ? reviewImages.slice(0, Math.floor(Math.random() * 3) + 1) : [],
+      images: hasImages ? [reviewImages[imageReviewsCount]] : [],
       likes: Math.floor(Math.random() * 150) + 10,
-      sellerReply: hasSellerReply ? "Muito obrigado pela avaliação! Ficamos muito felizes que você está aproveitando o Aquavolt! 🌊⚡" : null,
-    });
+      sellerReply: hasSellerReply ? sellerReplies[Math.floor(Math.random() * sellerReplies.length)] : null,
+    };
+
+    if (hasImages) imageReviewsCount++;
+    reviews.push(reviewData);
   }
 
   // Generate 25 four-star reviews
   for (let i = 0; i < 25; i++) {
+    const hasSellerReply = Math.random() < 0.85;
     const dayOffset = Math.floor(Math.random() * 60);
     const date = new Date();
     date.setDate(date.getDate() - dayOffset);
@@ -98,12 +125,13 @@ const generateReviews = () => {
       comment: comments4Star[Math.floor(Math.random() * comments4Star.length)],
       images: [],
       likes: Math.floor(Math.random() * 50) + 5,
-      sellerReply: null,
+      sellerReply: hasSellerReply ? sellerReplies[Math.floor(Math.random() * sellerReplies.length)] : null,
     });
   }
 
   // Generate 5 three-star reviews
   for (let i = 0; i < 5; i++) {
+    const hasSellerReply = Math.random() < 0.85;
     const dayOffset = Math.floor(Math.random() * 60);
     const date = new Date();
     date.setDate(date.getDate() - dayOffset);
@@ -118,12 +146,15 @@ const generateReviews = () => {
       comment: comments3Star[Math.floor(Math.random() * comments3Star.length)],
       images: [],
       likes: Math.floor(Math.random() * 20) + 1,
-      sellerReply: null,
+      sellerReply: hasSellerReply ? sellerReplies[Math.floor(Math.random() * sellerReplies.length)] : null,
     });
   }
 
-  // Shuffle reviews
-  return reviews.sort(() => Math.random() - 0.5);
+  // Shuffle reviews but keep image reviews in first positions
+  const imageReviews = reviews.filter(r => r.images.length > 0);
+  const textReviews = reviews.filter(r => r.images.length === 0).sort(() => Math.random() - 0.5);
+  
+  return [...imageReviews, ...textReviews];
 };
 
 const allReviews = generateReviews();
@@ -250,12 +281,12 @@ const ProductReviews = () => {
             {/* Images */}
             {review.images.length > 0 && (
               <div className="flex gap-2 mb-3">
-                {review.images.map((img, index) => (
+                {review.images.map((img: string, index: number) => (
                   <img
                     key={index}
                     src={img}
                     alt={`Review ${index + 1}`}
-                    className="w-16 h-16 rounded-lg object-cover"
+                    className="w-20 h-20 rounded-lg object-cover"
                   />
                 ))}
               </div>
