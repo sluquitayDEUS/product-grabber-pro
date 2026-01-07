@@ -1,5 +1,5 @@
-import { MapPin, ChevronRight, AlertCircle } from "lucide-react";
-import { useEffect, useMemo, useState } from "react";
+import { MapPin, ChevronRight, AlertCircle, Loader2 } from "lucide-react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { useCart } from "@/contexts/CartContext";
 import {
   Sheet,
@@ -96,6 +96,8 @@ const CheckoutAddress = () => {
 
   const [sheetOpen, setSheetOpen] = useState(false);
   const [errors, setErrors] = useState<Record<string, boolean>>({});
+  const [loadingCep, setLoadingCep] = useState(false);
+  const sheetContentRef = useRef<HTMLDivElement>(null);
 
   const initialDraft: Draft = useMemo(
     () => ({
@@ -116,9 +118,60 @@ const CheckoutAddress = () => {
 
   const [draft, setDraft] = useState<Draft>(initialDraft);
 
+  // Reset draft and scroll to top when sheet opens
   useEffect(() => {
-    if (sheetOpen) setDraft(initialDraft);
+    if (sheetOpen) {
+      setDraft(initialDraft);
+      // Scroll to top after a small delay to ensure content is rendered
+      setTimeout(() => {
+        sheetContentRef.current?.scrollTo({ top: 0 });
+      }, 50);
+    }
   }, [sheetOpen, initialDraft]);
+
+  // Fetch address from ViaCEP when CEP is complete
+  const fetchAddressFromCep = useCallback(async (cep: string) => {
+    const digits = cep.replace(/\D/g, "");
+    if (digits.length !== 8) return;
+
+    setLoadingCep(true);
+    try {
+      const response = await fetch(`https://viacep.com.br/ws/${digits}/json/`);
+      const data = await response.json();
+
+      if (!data.erro) {
+        setDraft((prev) => ({
+          ...prev,
+          street: data.logradouro || prev.street,
+          neighborhood: data.bairro || prev.neighborhood,
+          city: data.localidade || prev.city,
+          state: data.uf || prev.state,
+        }));
+        setErrors((prev) => ({
+          ...prev,
+          street: false,
+          neighborhood: false,
+          city: false,
+          state: false,
+        }));
+      }
+    } catch (err) {
+      console.error("ViaCEP error:", err);
+    } finally {
+      setLoadingCep(false);
+    }
+  }, []);
+
+  const handleCepChange = (value: string) => {
+    const formatted = formatCEP(value);
+    setDraft({ ...draft, cep: formatted });
+    setErrors({ ...errors, cep: false });
+
+    // Auto-fetch when CEP is complete
+    if (formatted.replace(/\D/g, "").length === 8) {
+      fetchAddressFromCep(formatted);
+    }
+  };
 
   const validateEmail = (email: string) =>
     /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
@@ -230,7 +283,7 @@ const CheckoutAddress = () => {
           </button>
         </SheetTrigger>
 
-        <SheetContent side="bottom" className="rounded-t-xl h-[85vh] overflow-y-auto">
+        <SheetContent ref={sheetContentRef} side="bottom" className="rounded-t-xl h-[85vh] overflow-y-auto">
           <SheetHeader>
             <SheetTitle>Dados + Endereço</SheetTitle>
           </SheetHeader>
@@ -312,16 +365,18 @@ const CheckoutAddress = () => {
 
             <div>
               <Label htmlFor="cep">CEP *</Label>
-              <Input
-                id="cep"
-                value={draft.cep}
-                onChange={(e) => {
-                  setDraft({ ...draft, cep: formatCEP(e.target.value) });
-                  setErrors({ ...errors, cep: false });
-                }}
-                placeholder="00000-000"
-                className={errors.cep ? "border-destructive" : ""}
-              />
+              <div className="relative">
+                <Input
+                  id="cep"
+                  value={draft.cep}
+                  onChange={(e) => handleCepChange(e.target.value)}
+                  placeholder="00000-000"
+                  className={errors.cep ? "border-destructive" : ""}
+                />
+                {loadingCep && (
+                  <Loader2 className="absolute right-3 top-1/2 -translate-y-1/2 w-4 h-4 animate-spin text-muted-foreground" />
+                )}
+              </div>
               {errors.cep && (
                 <p className="text-xs text-destructive mt-1">CEP inválido</p>
               )}
