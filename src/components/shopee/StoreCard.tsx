@@ -1,16 +1,10 @@
 import { MessageCircle, Store } from "lucide-react";
-
 const StoreCard = () => {
-  return (
-    <div className="bg-card px-3 py-4 mt-2">
+  return <div className="bg-card px-3 py-4 mt-2">
       <div className="flex items-center gap-3">
         {/* Store Avatar */}
         <div className="relative">
-          <img
-            src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=100&h=100&fit=crop&crop=faces"
-            alt="Loja"
-            className="w-14 h-14 rounded-full object-cover border-2 border-primary"
-          />
+          <img src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=100&h=100&fit=crop&crop=faces" alt="Loja" className="w-14 h-14 rounded-full object-cover border-2 border-primary" />
           <span className="absolute -bottom-1 left-1/2 -translate-x-1/2 bg-primary text-primary-foreground text-[8px] px-1.5 py-0.5 rounded font-medium">
             Oficial
           </span>
@@ -18,7 +12,7 @@ const StoreCard = () => {
 
         {/* Store Info */}
         <div className="flex-1">
-          <h3 className="text-sm font-medium text-foreground">TechBrasil Oficial</h3>
+          <h3 className="text-sm font-medium text-foreground">Atacado Premium</h3>
           <p className="text-xs text-muted-foreground">Online há 3 minutos</p>
           
           <div className="flex items-center gap-4 mt-1">
@@ -63,8 +57,6 @@ const StoreCard = () => {
           Ver Loja
         </button>
       </div>
-    </div>
-  );
+    </div>;
 };
-
 export default StoreCard;
