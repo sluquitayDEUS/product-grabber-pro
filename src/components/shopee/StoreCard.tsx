@@ -1,9 +1,11 @@
 import { useState } from "react";
 import { MessageCircle, Store } from "lucide-react";
 import StorePopup from "./StorePopup";
+import ChatPopup from "./ChatPopup";
 
 const StoreCard = () => {
   const [showStorePopup, setShowStorePopup] = useState(false);
+  const [showChatPopup, setShowChatPopup] = useState(false);
 
   return (
     <>
@@ -55,7 +57,10 @@ const StoreCard = () => {
 
         {/* Action Buttons */}
         <div className="flex gap-2 mt-4">
-          <button className="flex-1 flex items-center justify-center gap-2 py-2 border border-primary text-primary rounded-lg text-sm">
+          <button 
+            onClick={() => setShowChatPopup(true)}
+            className="flex-1 flex items-center justify-center gap-2 py-2 border border-primary text-primary rounded-lg text-sm"
+          >
             <MessageCircle className="w-4 h-4" />
             Chat
           </button>
@@ -70,6 +75,7 @@ const StoreCard = () => {
       </div>
 
       <StorePopup open={showStorePopup} onOpenChange={setShowStorePopup} />
+      <ChatPopup open={showChatPopup} onOpenChange={setShowChatPopup} />
     </>
   );
 };
