@@ -43,6 +43,7 @@ interface PaymentData {
     city: string;
     state: string;
     zipcode: string;
+    fee?: number; // in cents
   };
   items: Array<{
     title: string;

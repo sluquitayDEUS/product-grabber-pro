@@ -1,5 +1,5 @@
 import { MapPin, ChevronRight, AlertCircle } from "lucide-react";
-import { useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { useCart } from "@/contexts/CartContext";
 import {
   Sheet,
@@ -12,56 +12,133 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 
 const brazilianStates = [
-  "Acre", "Alagoas", "Amapá", "Amazonas", "Bahia", "Ceará", "Distrito Federal",
-  "Espírito Santo", "Goiás", "Maranhão", "Mato Grosso", "Mato Grosso do Sul",
-  "Minas Gerais", "Pará", "Paraíba", "Paraná", "Pernambuco", "Piauí",
-  "Rio de Janeiro", "Rio Grande do Norte", "Rio Grande do Sul", "Rondônia",
-  "Roraima", "Santa Catarina", "São Paulo", "Sergipe", "Tocantins"
+  "AC",
+  "AL",
+  "AP",
+  "AM",
+  "BA",
+  "CE",
+  "DF",
+  "ES",
+  "GO",
+  "MA",
+  "MT",
+  "MS",
+  "MG",
+  "PA",
+  "PB",
+  "PR",
+  "PE",
+  "PI",
+  "RJ",
+  "RN",
+  "RS",
+  "RO",
+  "RR",
+  "SC",
+  "SP",
+  "SE",
+  "TO",
 ];
 
+type Draft = {
+  name: string;
+  cpf: string;
+  phone: string;
+  street: string;
+  number: string;
+  complement: string;
+  neighborhood: string;
+  city: string;
+  state: string;
+  cep: string;
+};
+
+const formatCPF = (value: string) => {
+  const digits = value.replace(/\D/g, "").slice(0, 11);
+  return digits
+    .replace(/(\d{3})(\d)/, "$1.$2")
+    .replace(/(\d{3})(\d)/, "$1.$2")
+    .replace(/(\d{3})(\d{1,2})$/, "$1-$2");
+};
+
+const formatPhone = (value: string) => {
+  const digits = value.replace(/\D/g, "").slice(0, 11);
+  if (digits.length <= 10) {
+    return digits
+      .replace(/(\d{2})(\d)/, "($1) $2")
+      .replace(/(\d{4})(\d)/, "$1-$2");
+  }
+  return digits
+    .replace(/(\d{2})(\d)/, "($1) $2")
+    .replace(/(\d{5})(\d)/, "$1-$2");
+};
+
+const formatCEP = (value: string) => {
+  const digits = value.replace(/\D/g, "").slice(0, 8);
+  if (digits.length <= 5) return digits;
+  return `${digits.slice(0, 5)}-${digits.slice(5)}`;
+};
+
+const validateCPF = (cpf: string) => cpf.replace(/\D/g, "").length === 11;
+const validateCEP = (cep: string) => cep.replace(/\D/g, "").length === 8;
+
 const CheckoutAddress = () => {
-  const { location, setLocation } = useCart();
+  const {
+    location,
+    setLocation,
+    customer,
+    setCustomer,
+    shippingAddress,
+    setShippingAddress,
+  } = useCart();
+
   const [sheetOpen, setSheetOpen] = useState(false);
   const [errors, setErrors] = useState<Record<string, boolean>>({});
-  const [addressData, setAddressData] = useState({
-    name: "",
-    cpf: "",
-    phone: "",
-    street: "",
-    number: "",
-    complement: "",
-    neighborhood: "",
-    city: location.city,
-    state: location.state,
-    cep: ""
-  });
 
-  const validateCPF = (cpf: string) => {
-    const cleaned = cpf.replace(/\D/g, '');
-    return cleaned.length === 11;
-  };
+  const initialDraft: Draft = useMemo(
+    () => ({
+      name: customer.name ?? "",
+      cpf: customer.document ?? "",
+      phone: customer.phone ?? "",
+      street: shippingAddress.street ?? "",
+      number: shippingAddress.number ?? "",
+      complement: shippingAddress.complement ?? "",
+      neighborhood: shippingAddress.neighborhood ?? "",
+      city: shippingAddress.city || location.city,
+      state: shippingAddress.state || location.state,
+      cep: shippingAddress.zipcode ?? "",
+    }),
+    [customer, shippingAddress, location]
+  );
 
-  const formatCPF = (value: string) => {
-    const cleaned = value.replace(/\D/g, '');
-    if (cleaned.length <= 3) return cleaned;
-    if (cleaned.length <= 6) return `${cleaned.slice(0, 3)}.${cleaned.slice(3)}`;
-    if (cleaned.length <= 9) return `${cleaned.slice(0, 3)}.${cleaned.slice(3, 6)}.${cleaned.slice(6)}`;
-    return `${cleaned.slice(0, 3)}.${cleaned.slice(3, 6)}.${cleaned.slice(6, 9)}-${cleaned.slice(9, 11)}`;
-  };
+  const [draft, setDraft] = useState<Draft>(initialDraft);
+
+  useEffect(() => {
+    if (sheetOpen) setDraft(initialDraft);
+  }, [sheetOpen, initialDraft]);
 
   const handleSave = () => {
-    const requiredFields = ['name', 'cpf', 'phone', 'street', 'number', 'neighborhood', 'city', 'state', 'cep'];
+    const requiredFields: Array<keyof Draft> = [
+      "name",
+      "cpf",
+      "phone",
+      "street",
+      "number",
+      "neighborhood",
+      "city",
+      "state",
+      "cep",
+    ];
+
     const newErrors: Record<string, boolean> = {};
-    
-    requiredFields.forEach(field => {
-      if (!addressData[field as keyof typeof addressData].trim()) {
-        newErrors[field] = true;
-      }
+
+    requiredFields.forEach((field) => {
+      if (!draft[field].trim()) newErrors[field] = true;
     });
 
-    if (addressData.cpf && !validateCPF(addressData.cpf)) {
-      newErrors.cpf = true;
-    }
+    if (draft.cpf && !validateCPF(draft.cpf)) newErrors.cpf = true;
+    if (draft.cep && !validateCEP(draft.cep)) newErrors.cep = true;
 
     if (Object.keys(newErrors).length > 0) {
       setErrors(newErrors);
@@ -69,18 +146,45 @@ const CheckoutAddress = () => {
     }
 
     setErrors({});
-    setLocation({ city: addressData.city, state: addressData.state });
+
+    setCustomer({
+      name: draft.name,
+      email: customer.email, // e-mail continua no checkout
+      document: draft.cpf,
+      phone: draft.phone,
+    });
+
+    setShippingAddress({
+      street: draft.street,
+      number: draft.number,
+      complement: draft.complement,
+      neighborhood: draft.neighborhood,
+      city: draft.city,
+      state: draft.state,
+      zipcode: draft.cep,
+    });
+
+    setLocation({ city: draft.city, state: draft.state });
     setSheetOpen(false);
   };
 
-  const isAddressFilled = addressData.name && addressData.street && addressData.cep;
+  const isAddressFilled =
+    draft.name &&
+    draft.street &&
+    validateCEP(draft.cep) &&
+    draft.city &&
+    draft.state;
 
   return (
     <div className="bg-card">
-      {/* Orange top border decoration */}
-      <div className="h-3 bg-gradient-to-r from-primary via-orange-300 to-primary opacity-30" 
-           style={{ backgroundImage: 'repeating-linear-gradient(90deg, #EE4D2D 0px, #EE4D2D 10px, #F8B500 10px, #F8B500 20px)' }} />
-      
+      <div
+        className="h-3 bg-gradient-to-r from-primary via-orange-300 to-primary opacity-30"
+        style={{
+          backgroundImage:
+            "repeating-linear-gradient(90deg, #EE4D2D 0px, #EE4D2D 10px, #F8B500 10px, #F8B500 20px)",
+        }}
+      />
+
       <Sheet open={sheetOpen} onOpenChange={setSheetOpen}>
         <SheetTrigger asChild>
           <button className="w-full p-3 flex items-start gap-3">
@@ -89,192 +193,235 @@ const CheckoutAddress = () => {
               {isAddressFilled ? (
                 <>
                   <div className="flex items-center gap-2 mb-1">
-                    <span className="font-medium text-sm text-foreground">{addressData.name}</span>
-                    <span className="text-muted-foreground text-sm">{addressData.phone}</span>
+                    <span className="font-medium text-sm text-foreground">
+                      {draft.name}
+                    </span>
+                    <span className="text-muted-foreground text-sm">
+                      {draft.phone}
+                    </span>
                   </div>
                   <p className="text-sm text-muted-foreground leading-relaxed">
-                    {addressData.street}, {addressData.number} {addressData.complement && `- ${addressData.complement}`}
+                    {draft.street}, {draft.number}{" "}
+                    {draft.complement && `- ${draft.complement}`}
                   </p>
                   <p className="text-sm text-muted-foreground">
-                    {addressData.neighborhood}, {addressData.city} - {addressData.state}, {addressData.cep}
+                    {draft.neighborhood}, {draft.city} - {draft.state}, {draft.cep}
                   </p>
                 </>
               ) : (
                 <div className="flex items-center gap-2 text-primary">
                   <AlertCircle className="w-4 h-4" />
-                  <span className="text-sm font-medium">Adicionar endereço de entrega</span>
+                  <span className="text-sm font-medium">
+                    Adicionar endereço de entrega
+                  </span>
                 </div>
               )}
             </div>
             <ChevronRight className="w-5 h-5 text-muted-foreground flex-shrink-0 mt-2" />
           </button>
         </SheetTrigger>
+
         <SheetContent side="bottom" className="rounded-t-xl h-[85vh] overflow-y-auto">
           <SheetHeader>
-            <SheetTitle>Endereço de Entrega</SheetTitle>
+            <SheetTitle>Dados + Endereço</SheetTitle>
           </SheetHeader>
+
           <div className="mt-4 space-y-4">
             <div>
               <Label htmlFor="name">Nome Completo *</Label>
               <Input
                 id="name"
-                value={addressData.name}
+                value={draft.name}
                 onChange={(e) => {
-                  setAddressData({ ...addressData, name: e.target.value });
+                  setDraft({ ...draft, name: e.target.value });
                   setErrors({ ...errors, name: false });
                 }}
                 placeholder="Digite seu nome completo"
-                className={errors.name ? 'border-destructive' : ''}
+                className={errors.name ? "border-destructive" : ""}
               />
-              {errors.name && <p className="text-xs text-destructive mt-1">Nome é obrigatório</p>}
+              {errors.name && (
+                <p className="text-xs text-destructive mt-1">Nome é obrigatório</p>
+              )}
             </div>
+
             <div className="grid grid-cols-2 gap-3">
               <div>
                 <Label htmlFor="cpf">CPF *</Label>
                 <Input
                   id="cpf"
-                  value={addressData.cpf}
+                  value={draft.cpf}
                   onChange={(e) => {
-                    setAddressData({ ...addressData, cpf: formatCPF(e.target.value) });
+                    setDraft({ ...draft, cpf: formatCPF(e.target.value) });
                     setErrors({ ...errors, cpf: false });
                   }}
                   placeholder="000.000.000-00"
                   maxLength={14}
-                  className={errors.cpf ? 'border-destructive' : ''}
+                  className={errors.cpf ? "border-destructive" : ""}
                 />
-                {errors.cpf && <p className="text-xs text-destructive mt-1">CPF inválido</p>}
+                {errors.cpf && (
+                  <p className="text-xs text-destructive mt-1">CPF inválido</p>
+                )}
               </div>
+
               <div>
                 <Label htmlFor="phone">Telefone *</Label>
                 <Input
                   id="phone"
-                  value={addressData.phone}
+                  value={draft.phone}
                   onChange={(e) => {
-                    setAddressData({ ...addressData, phone: e.target.value });
+                    setDraft({ ...draft, phone: formatPhone(e.target.value) });
                     setErrors({ ...errors, phone: false });
                   }}
                   placeholder="(00) 00000-0000"
-                  className={errors.phone ? 'border-destructive' : ''}
+                  className={errors.phone ? "border-destructive" : ""}
                 />
-                {errors.phone && <p className="text-xs text-destructive mt-1">Telefone é obrigatório</p>}
+                {errors.phone && (
+                  <p className="text-xs text-destructive mt-1">
+                    Telefone é obrigatório
+                  </p>
+                )}
               </div>
             </div>
+
             <div>
               <Label htmlFor="cep">CEP *</Label>
               <Input
                 id="cep"
-                value={addressData.cep}
+                value={draft.cep}
                 onChange={(e) => {
-                  setAddressData({ ...addressData, cep: e.target.value });
+                  setDraft({ ...draft, cep: formatCEP(e.target.value) });
                   setErrors({ ...errors, cep: false });
                 }}
                 placeholder="00000-000"
-                className={errors.cep ? 'border-destructive' : ''}
+                className={errors.cep ? "border-destructive" : ""}
               />
-              {errors.cep && <p className="text-xs text-destructive mt-1">CEP é obrigatório</p>}
+              {errors.cep && (
+                <p className="text-xs text-destructive mt-1">CEP inválido</p>
+              )}
             </div>
+
             <div className="grid grid-cols-3 gap-3">
               <div className="col-span-2">
                 <Label htmlFor="street">Rua *</Label>
                 <Input
                   id="street"
-                  value={addressData.street}
+                  value={draft.street}
                   onChange={(e) => {
-                    setAddressData({ ...addressData, street: e.target.value });
+                    setDraft({ ...draft, street: e.target.value });
                     setErrors({ ...errors, street: false });
                   }}
                   placeholder="Nome da rua"
-                  className={errors.street ? 'border-destructive' : ''}
+                  className={errors.street ? "border-destructive" : ""}
                 />
-                {errors.street && <p className="text-xs text-destructive mt-1">Rua é obrigatória</p>}
+                {errors.street && (
+                  <p className="text-xs text-destructive mt-1">Rua é obrigatória</p>
+                )}
               </div>
               <div>
                 <Label htmlFor="number">Número *</Label>
                 <Input
                   id="number"
-                  value={addressData.number}
+                  value={draft.number}
                   onChange={(e) => {
-                    setAddressData({ ...addressData, number: e.target.value });
+                    setDraft({ ...draft, number: e.target.value });
                     setErrors({ ...errors, number: false });
                   }}
                   placeholder="Nº"
-                  className={errors.number ? 'border-destructive' : ''}
+                  className={errors.number ? "border-destructive" : ""}
                 />
-                {errors.number && <p className="text-xs text-destructive mt-1">Obrigatório</p>}
+                {errors.number && (
+                  <p className="text-xs text-destructive mt-1">Obrigatório</p>
+                )}
               </div>
             </div>
+
             <div>
               <Label htmlFor="complement">Complemento</Label>
               <Input
                 id="complement"
-                value={addressData.complement}
-                onChange={(e) => setAddressData({ ...addressData, complement: e.target.value })}
+                value={draft.complement}
+                onChange={(e) => setDraft({ ...draft, complement: e.target.value })}
                 placeholder="Apto, bloco, etc. (opcional)"
               />
             </div>
+
             <div>
               <Label htmlFor="neighborhood">Bairro *</Label>
               <Input
                 id="neighborhood"
-                value={addressData.neighborhood}
+                value={draft.neighborhood}
                 onChange={(e) => {
-                  setAddressData({ ...addressData, neighborhood: e.target.value });
+                  setDraft({ ...draft, neighborhood: e.target.value });
                   setErrors({ ...errors, neighborhood: false });
                 }}
                 placeholder="Nome do bairro"
-                className={errors.neighborhood ? 'border-destructive' : ''}
+                className={errors.neighborhood ? "border-destructive" : ""}
               />
-              {errors.neighborhood && <p className="text-xs text-destructive mt-1">Bairro é obrigatório</p>}
+              {errors.neighborhood && (
+                <p className="text-xs text-destructive mt-1">Bairro é obrigatório</p>
+              )}
             </div>
+
             <div className="grid grid-cols-2 gap-3">
               <div>
                 <Label htmlFor="city">Cidade *</Label>
                 <Input
                   id="city"
-                  value={addressData.city}
+                  value={draft.city}
                   onChange={(e) => {
-                    setAddressData({ ...addressData, city: e.target.value });
+                    setDraft({ ...draft, city: e.target.value });
                     setErrors({ ...errors, city: false });
                   }}
                   placeholder="Nome da cidade"
-                  className={errors.city ? 'border-destructive' : ''}
+                  className={errors.city ? "border-destructive" : ""}
                 />
-                {errors.city && <p className="text-xs text-destructive mt-1">Cidade é obrigatória</p>}
+                {errors.city && (
+                  <p className="text-xs text-destructive mt-1">Cidade é obrigatória</p>
+                )}
               </div>
               <div>
                 <Label htmlFor="state">Estado *</Label>
                 <select
                   id="state"
-                  value={addressData.state}
+                  value={draft.state}
                   onChange={(e) => {
-                    setAddressData({ ...addressData, state: e.target.value });
+                    setDraft({ ...draft, state: e.target.value });
                     setErrors({ ...errors, state: false });
                   }}
-                  className={`w-full h-10 px-3 border rounded-md text-sm bg-background ${errors.state ? 'border-destructive' : 'border-input'}`}
+                  className={`w-full h-10 px-3 border rounded-md text-sm bg-background ${
+                    errors.state ? "border-destructive" : "border-input"
+                  }`}
                 >
                   <option value="">Selecione</option>
-                  {brazilianStates.map((state) => (
-                    <option key={state} value={state}>
-                      {state}
+                  {brazilianStates.map((uf) => (
+                    <option key={uf} value={uf}>
+                      {uf}
                     </option>
                   ))}
                 </select>
-                {errors.state && <p className="text-xs text-destructive mt-1">Estado é obrigatório</p>}
+                {errors.state && (
+                  <p className="text-xs text-destructive mt-1">Estado é obrigatório</p>
+                )}
               </div>
             </div>
+
             <button
               onClick={handleSave}
               className="w-full bg-primary text-primary-foreground py-3 rounded-lg font-medium mt-4"
             >
-              Salvar Endereço
+              Salvar
             </button>
           </div>
         </SheetContent>
       </Sheet>
 
-      {/* Orange bottom border decoration */}
-      <div className="h-3 bg-gradient-to-r from-primary via-orange-300 to-primary opacity-30" 
-           style={{ backgroundImage: 'repeating-linear-gradient(90deg, #EE4D2D 0px, #EE4D2D 10px, #F8B500 10px, #F8B500 20px)' }} />
+      <div
+        className="h-3 bg-gradient-to-r from-primary via-orange-300 to-primary opacity-30"
+        style={{
+          backgroundImage:
+            "repeating-linear-gradient(90deg, #EE4D2D 0px, #EE4D2D 10px, #F8B500 10px, #F8B500 20px)",
+        }}
+      />
     </div>
   );
 };
