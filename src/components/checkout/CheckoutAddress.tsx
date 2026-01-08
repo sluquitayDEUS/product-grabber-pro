@@ -1,5 +1,5 @@
 import { MapPin, ChevronRight, AlertCircle, Loader2 } from "lucide-react";
-import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState, forwardRef, useImperativeHandle } from "react";
 import { useCart } from "@/contexts/CartContext";
 import { validateCPF as validateCPFAlgorithm } from "@/lib/cpfValidator";
 import {
@@ -13,33 +13,9 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 
 const brazilianStates = [
-  "AC",
-  "AL",
-  "AP",
-  "AM",
-  "BA",
-  "CE",
-  "DF",
-  "ES",
-  "GO",
-  "MA",
-  "MT",
-  "MS",
-  "MG",
-  "PA",
-  "PB",
-  "PR",
-  "PE",
-  "PI",
-  "RJ",
-  "RN",
-  "RS",
-  "RO",
-  "RR",
-  "SC",
-  "SP",
-  "SE",
-  "TO",
+  "AC", "AL", "AP", "AM", "BA", "CE", "DF", "ES", "GO", "MA",
+  "MT", "MS", "MG", "PA", "PB", "PR", "PE", "PI", "RJ", "RN",
+  "RS", "RO", "RR", "SC", "SP", "SE", "TO",
 ];
 
 type Draft = {
@@ -82,10 +58,14 @@ const formatCEP = (value: string) => {
   return `${digits.slice(0, 5)}-${digits.slice(5)}`;
 };
 
-const validateCPFFormat = (cpf: string) => cpf.replace(/\D/g, "").length === 11;
 const validateCEP = (cep: string) => cep.replace(/\D/g, "").length === 8;
 
-const CheckoutAddress = () => {
+export interface CheckoutAddressRef {
+  scrollAndHighlight: () => void;
+  openSheet: () => void;
+}
+
+const CheckoutAddress = forwardRef<CheckoutAddressRef>((_, ref) => {
   const {
     location,
     setLocation,
@@ -98,7 +78,18 @@ const CheckoutAddress = () => {
   const [sheetOpen, setSheetOpen] = useState(false);
   const [errors, setErrors] = useState<Record<string, boolean>>({});
   const [loadingCep, setLoadingCep] = useState(false);
+  const [isHighlighted, setIsHighlighted] = useState(false);
+  const containerRef = useRef<HTMLDivElement>(null);
   const sheetContentRef = useRef<HTMLDivElement>(null);
+
+  useImperativeHandle(ref, () => ({
+    scrollAndHighlight: () => {
+      containerRef.current?.scrollIntoView({ behavior: "smooth", block: "center" });
+      setIsHighlighted(true);
+      setTimeout(() => setIsHighlighted(false), 2000);
+    },
+    openSheet: () => setSheetOpen(true),
+  }));
 
   const initialDraft: Draft = useMemo(
     () => ({
@@ -123,7 +114,6 @@ const CheckoutAddress = () => {
   useEffect(() => {
     if (sheetOpen) {
       setDraft(initialDraft);
-      // Scroll to top after a small delay to ensure content is rendered
       setTimeout(() => {
         sheetContentRef.current?.scrollTo({ top: 0 });
       }, 50);
@@ -132,7 +122,6 @@ const CheckoutAddress = () => {
 
   const [cepNotFound, setCepNotFound] = useState(false);
 
-  // Fetch address from ViaCEP when CEP is complete
   const fetchAddressFromCep = useCallback(async (cep: string) => {
     const digits = cep.replace(/\D/g, "");
     if (digits.length !== 8) return;
@@ -144,7 +133,6 @@ const CheckoutAddress = () => {
       const data = await response.json();
 
       if (data.erro) {
-        // CEP not found
         setCepNotFound(true);
         setErrors((prev) => ({ ...prev, cep: true }));
       } else {
@@ -178,7 +166,6 @@ const CheckoutAddress = () => {
     setErrors({ ...errors, cep: false });
     setCepNotFound(false);
 
-    // Auto-fetch when CEP is complete
     if (formatted.replace(/\D/g, "").length === 8) {
       fetchAddressFromCep(formatted);
     }
@@ -189,16 +176,8 @@ const CheckoutAddress = () => {
 
   const handleSave = () => {
     const requiredFields: Array<keyof Draft> = [
-      "name",
-      "email",
-      "cpf",
-      "phone",
-      "street",
-      "number",
-      "neighborhood",
-      "city",
-      "state",
-      "cep",
+      "name", "email", "cpf", "phone", "street", "number",
+      "neighborhood", "city", "state", "cep",
     ];
 
     const newErrors: Record<string, boolean> = {};
@@ -240,16 +219,16 @@ const CheckoutAddress = () => {
   };
 
   const isAddressFilled =
-    draft.name &&
-    draft.email &&
-    validateCPFAlgorithm(draft.cpf) &&
-    draft.street &&
-    validateCEP(draft.cep) &&
-    draft.city &&
-    draft.state;
+    shippingAddress.street &&
+    shippingAddress.zipcode &&
+    shippingAddress.city &&
+    shippingAddress.state &&
+    customer.name &&
+    customer.email &&
+    validateCPFAlgorithm(customer.document);
 
   return (
-    <div className="bg-card">
+    <div ref={containerRef} className="bg-card">
       <div
         className="h-3 bg-gradient-to-r from-primary via-orange-300 to-primary opacity-30"
         style={{
@@ -260,29 +239,31 @@ const CheckoutAddress = () => {
 
       <Sheet open={sheetOpen} onOpenChange={setSheetOpen}>
         <SheetTrigger asChild>
-          <button className="w-full p-3 flex items-start gap-3">
+          <button className={`w-full p-3 flex items-start gap-3 transition-all ${
+            isHighlighted ? "ring-2 ring-destructive rounded-lg bg-destructive/5" : ""
+          }`}>
             <MapPin className="w-5 h-5 text-primary flex-shrink-0 mt-0.5" />
             <div className="flex-1 text-left">
               {isAddressFilled ? (
                 <>
                   <div className="flex items-center gap-2 mb-1">
                     <span className="font-medium text-sm text-foreground">
-                      {draft.name}
+                      {customer.name}
                     </span>
                     <span className="text-muted-foreground text-sm">
-                      {draft.phone}
+                      {customer.phone}
                     </span>
                   </div>
                   <p className="text-sm text-muted-foreground leading-relaxed">
-                    {draft.street}, {draft.number}{" "}
-                    {draft.complement && `- ${draft.complement}`}
+                    {shippingAddress.street}, {shippingAddress.number}{" "}
+                    {shippingAddress.complement && `- ${shippingAddress.complement}`}
                   </p>
                   <p className="text-sm text-muted-foreground">
-                    {draft.neighborhood}, {draft.city} - {draft.state}, {draft.cep}
+                    {shippingAddress.neighborhood}, {shippingAddress.city} - {shippingAddress.state}, {shippingAddress.zipcode}
                   </p>
                 </>
               ) : (
-                <div className="flex items-center gap-2 text-primary">
+                <div className={`flex items-center gap-2 ${isHighlighted ? "text-destructive" : "text-primary"}`}>
                   <AlertCircle className="w-4 h-4" />
                   <span className="text-sm font-medium">
                     Adicionar endereço de entrega
@@ -344,7 +325,6 @@ const CheckoutAddress = () => {
                   onChange={(e) => {
                     const formatted = formatCPF(e.target.value);
                     setDraft({ ...draft, cpf: formatted });
-                    // Validate in real-time when CPF is complete
                     const digits = formatted.replace(/\D/g, "");
                     if (digits.length === 11) {
                       setErrors((prev) => ({
@@ -531,6 +511,8 @@ const CheckoutAddress = () => {
       />
     </div>
   );
-};
+});
+
+CheckoutAddress.displayName = "CheckoutAddress";
 
 export default CheckoutAddress;

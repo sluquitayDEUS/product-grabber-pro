@@ -18,6 +18,7 @@ const CheckoutProducts = () => {
   const [message, setMessage] = useState("");
   const [showStorePopup, setShowStorePopup] = useState(false);
   const [showChatPopup, setShowChatPopup] = useState(false);
+  const [showQuantityWarning, setShowQuantityWarning] = useState(false);
 
   const shippingOptions = getShippingOptions();
 
@@ -28,9 +29,12 @@ const CheckoutProducts = () => {
   };
 
   const handleIncreaseQuantity = () => {
-    if (quantity < 10) {
-      setQuantity(quantity + 1);
+    if (quantity >= 2) {
+      setShowQuantityWarning(true);
+      setTimeout(() => setShowQuantityWarning(false), 3100);
+      return;
     }
+    setQuantity(quantity + 1);
   };
 
   return (
@@ -68,22 +72,29 @@ const CheckoutProducts = () => {
             </span>
             
             {/* Quantity Selector */}
-            <div className="flex items-center gap-2">
-              <button 
-                onClick={handleDecreaseQuantity}
-                className="w-7 h-7 flex items-center justify-center border border-border rounded-md"
-                disabled={quantity <= 1}
-              >
-                <Minus className="w-3 h-3 text-foreground" />
-              </button>
-              <span className="text-sm text-foreground w-6 text-center">{quantity}</span>
-              <button 
-                onClick={handleIncreaseQuantity}
-                className="w-7 h-7 flex items-center justify-center border border-border rounded-md"
-                disabled={quantity >= 10}
-              >
-                <Plus className="w-3 h-3 text-foreground" />
-              </button>
+            <div className="flex flex-col items-end gap-1">
+              <div className="flex items-center gap-2">
+                <button 
+                  onClick={handleDecreaseQuantity}
+                  className="w-7 h-7 flex items-center justify-center border border-border rounded-md"
+                  disabled={quantity <= 1}
+                >
+                  <Minus className="w-3 h-3 text-foreground" />
+                </button>
+                <span className="text-sm text-foreground w-6 text-center">{quantity}</span>
+                <button 
+                  onClick={handleIncreaseQuantity}
+                  className="w-7 h-7 flex items-center justify-center border border-border rounded-md"
+                  disabled={quantity >= 2}
+                >
+                  <Plus className="w-3 h-3 text-foreground" />
+                </button>
+              </div>
+              {showQuantityWarning && (
+                <span className="text-[10px] text-destructive animate-pulse">
+                  Máximo 2 unidades por pessoa
+                </span>
+              )}
             </div>
           </div>
         </div>

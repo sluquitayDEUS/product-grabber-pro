@@ -1,6 +1,8 @@
-import { useRef } from "react";
+import { useRef, useState } from "react";
 import ProductHeader from "@/components/shopee/ProductHeader";
 import ProductGallery from "@/components/shopee/ProductGallery";
+import ProductThumbnails from "@/components/shopee/ProductThumbnails";
+import FlashSaleTimer from "@/components/shopee/FlashSaleTimer";
 import ProductPrice from "@/components/shopee/ProductPrice";
 import ProductTitle from "@/components/shopee/ProductTitle";
 import ProductVariations, { ProductVariationsRef } from "@/components/shopee/ProductVariations";
@@ -13,6 +15,7 @@ import ProductFooter from "@/components/shopee/ProductFooter";
 
 const Index = () => {
   const variationsRef = useRef<ProductVariationsRef>(null);
+  const [galleryIndex, setGalleryIndex] = useState(0);
 
   const handleNoColorSelected = () => {
     variationsRef.current?.scrollAndHighlight();
@@ -21,7 +24,9 @@ const Index = () => {
   return (
     <div className="min-h-screen bg-background pb-14 max-w-md mx-auto">
       <ProductHeader />
-      <ProductGallery />
+      <ProductGallery currentIndex={galleryIndex} onIndexChange={setGalleryIndex} />
+      <ProductThumbnails selectedIndex={galleryIndex} onSelect={setGalleryIndex} />
+      <FlashSaleTimer />
       <ProductPrice />
       <ProductTitle />
       <ProductVariations ref={variationsRef} />

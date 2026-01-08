@@ -1,7 +1,7 @@
-import { useState } from "react";
+import { useState, useRef } from "react";
 import { MessageCircle } from "lucide-react";
 import CheckoutHeader from "@/components/checkout/CheckoutHeader";
-import CheckoutAddress from "@/components/checkout/CheckoutAddress";
+import CheckoutAddress, { CheckoutAddressRef } from "@/components/checkout/CheckoutAddress";
 import CheckoutProducts from "@/components/checkout/CheckoutProducts";
 import CheckoutVoucher from "@/components/checkout/CheckoutVoucher";
 import CheckoutPayment from "@/components/checkout/CheckoutPayment";
@@ -11,16 +11,21 @@ import ChatPopup from "@/components/checkout/ChatPopup";
 
 const Checkout = () => {
   const [showChatPopup, setShowChatPopup] = useState(false);
+  const addressRef = useRef<CheckoutAddressRef>(null);
+
+  const handleAddressInvalid = () => {
+    addressRef.current?.scrollAndHighlight();
+  };
 
   return (
     <div className="min-h-screen bg-background pb-28 max-w-md mx-auto">
       <CheckoutHeader />
-      <CheckoutAddress />
+      <CheckoutAddress ref={addressRef} />
       <CheckoutProducts />
       <CheckoutVoucher />
       <CheckoutPayment />
       <CheckoutSummary />
-      <CheckoutFooter />
+      <CheckoutFooter onAddressInvalid={handleAddressInvalid} />
       
       {/* Floating Chat Button */}
       <button
@@ -37,4 +42,3 @@ const Checkout = () => {
 };
 
 export default Checkout;
-
