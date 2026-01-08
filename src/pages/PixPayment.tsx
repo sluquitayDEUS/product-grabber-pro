@@ -294,9 +294,9 @@ const PixPayment = () => {
           <div className="flex items-start gap-3">
             <Package className="w-5 h-5 text-primary flex-shrink-0 mt-0.5" />
             <div>
-              <p className="font-semibold text-sm text-foreground">Envio Imediato</p>
+              <p className="font-semibold text-sm text-foreground">Envio Rápido</p>
               <p className="text-xs text-muted-foreground mt-1">
-                Assim que o pagamento for confirmado, seu pedido será separado e enviado em até 24h úteis.
+                Assim que o pagamento for confirmado, seu pedido será separado e enviado em até 72h.
               </p>
             </div>
           </div>
