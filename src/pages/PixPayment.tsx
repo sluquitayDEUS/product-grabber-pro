@@ -1,4 +1,4 @@
-import { Copy, Check, Clock, ShieldCheck, ArrowLeft, CheckCircle2 } from "lucide-react";
+import { Copy, Check, Clock, ShieldCheck, ArrowLeft, CheckCircle2, Store, BadgeCheck, Truck, Lock, CreditCard, Smartphone, Star, Package } from "lucide-react";
 import { useState, useEffect } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
@@ -9,6 +9,7 @@ const PixPayment = () => {
   const navigate = useNavigate();
   const [copied, setCopied] = useState(false);
   const [timeLeft, setTimeLeft] = useState(15 * 60); // 15 minutes in seconds
+  const [pulseTimer, setPulseTimer] = useState(false);
 
   // Get data from navigation state
   const { qrCode, amount, transactionId } = location.state || {};
@@ -25,6 +26,10 @@ const PixPayment = () => {
         if (prev <= 1) {
           clearInterval(timer);
           return 0;
+        }
+        // Pulse effect when time is running low (less than 5 minutes)
+        if (prev <= 300) {
+          setPulseTimer(true);
         }
         return prev - 1;
       });
@@ -57,54 +62,101 @@ const PixPayment = () => {
   };
 
   const isExpired = timeLeft === 0;
+  const isLowTime = timeLeft <= 300 && timeLeft > 0;
 
   if (!qrCode) {
     return null;
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-background to-muted/30">
-      {/* Header */}
-      <header className="bg-primary text-primary-foreground py-4 px-4 flex items-center gap-3 sticky top-0 z-50">
-        <button onClick={() => navigate("/")} className="p-1">
+    <div className="min-h-screen bg-gradient-to-b from-green-50 to-background">
+      {/* Header with Pix branding */}
+      <header className="bg-[#32BCAD] text-white py-4 px-4 flex items-center gap-3 sticky top-0 z-50 shadow-md">
+        <button onClick={() => navigate("/")} className="p-1 hover:bg-white/10 rounded-full transition-colors">
           <ArrowLeft className="w-5 h-5" />
         </button>
-        <h1 className="text-lg font-semibold">Pagamento Pix</h1>
+        <div className="flex items-center gap-2 flex-1">
+          <div className="bg-white rounded-lg p-1.5">
+            <svg width="24" height="24" viewBox="0 0 512 512" fill="none">
+              <path d="M112.57 391.19c20.056 0 38.928-7.808 53.12-22l76.693-76.692c5.385-5.404 14.765-5.384 20.15 0l76.989 76.989c14.191 14.172 33.045 21.98 53.12 21.98h15.098l-97.138 97.139c-30.326 30.344-79.505 30.344-109.85 0l-97.415-97.416h9.232z" fill="#32BCAD"/>
+              <path d="M401.051 120.471h-15.098c-20.075 0-38.929 7.808-53.12 22l-76.97 76.989c-5.551 5.53-14.6 5.55-20.15 0l-76.711-76.693c-14.192-14.191-33.046-22-53.12-22h-9.214l97.397-97.397c30.344-30.345 79.523-30.345 109.867 0l97.119 97.101z" fill="#32BCAD"/>
+              <path d="M498.363 206.098l-63.96-63.96c3.15 8.355 4.896 17.37 4.896 26.815 0 20.075-7.808 38.929-22 53.12l-76.97 76.99c-2.794 2.775-6.44 4.162-10.094 4.162-3.636 0-7.282-1.387-10.076-4.161l-76.712-76.693c-14.19-14.192-33.044-22.02-53.101-22.02-20.056 0-38.91 7.828-53.12 22.02l-76.97 76.989c-14.191 14.172-22 33.026-22 53.12 0 9.463 1.746 18.477 4.915 26.832l-63.977-63.977c-30.345-30.344-30.345-79.523 0-109.867l63.96-63.96c-3.15-8.355-4.896-17.37-4.896-26.815 0-20.075 7.808-38.929 22-53.12l76.97-76.99c14.191-14.172 33.045-22 53.12-22 20.056 0 38.91 7.828 53.12 22.02l76.97 76.989c5.55 5.55 14.6 5.53 20.15 0l76.97-76.99c14.192-14.172 33.046-22 53.12-22 9.463 0 18.477 1.746 26.832 4.915l-63.977-63.977c-30.344-30.345-79.523-30.345-109.867 0" fill="#32BCAD"/>
+            </svg>
+          </div>
+          <div>
+            <h1 className="text-lg font-bold">Pagamento Pix</h1>
+            <p className="text-xs text-white/80">Aprovação instantânea</p>
+          </div>
+        </div>
+        <Lock className="w-5 h-5 text-white/80" />
       </header>
 
-      <div className="max-w-md mx-auto p-4 space-y-6">
-        {/* Timer Card */}
-        <div className={`rounded-2xl p-4 text-center ${isExpired ? "bg-destructive/10 border border-destructive/20" : "bg-primary/5 border border-primary/20"}`}>
-          <div className="flex items-center justify-center gap-2 mb-1">
-            <Clock className={`w-5 h-5 ${isExpired ? "text-destructive" : "text-primary"}`} />
-            <span className={`text-sm font-medium ${isExpired ? "text-destructive" : "text-primary"}`}>
-              {isExpired ? "Tempo expirado" : "Pague em até"}
-            </span>
+      <div className="max-w-md mx-auto p-4 space-y-4">
+        {/* Success Status Banner */}
+        <div className="bg-gradient-to-r from-[#32BCAD] to-[#2da69a] rounded-2xl p-4 text-white shadow-lg">
+          <div className="flex items-center gap-3">
+            <div className="bg-white/20 rounded-full p-2">
+              <CheckCircle2 className="w-6 h-6" />
+            </div>
+            <div>
+              <p className="font-bold text-lg">Pix gerado com sucesso!</p>
+              <p className="text-sm text-white/90">Escaneie o QR Code ou copie o código</p>
+            </div>
           </div>
-          <p className={`text-3xl font-bold tabular-nums ${isExpired ? "text-destructive" : "text-primary"}`}>
-            {formatTime(timeLeft)}
-          </p>
         </div>
 
-        {/* Amount Card */}
-        <div className="bg-card rounded-2xl p-6 shadow-lg border">
-          <p className="text-sm text-muted-foreground text-center">Valor a pagar</p>
-          <p className="text-4xl font-bold text-primary text-center mt-1">
-            {formatCurrency(amount)}
-          </p>
+        {/* Timer + Amount Card Combined */}
+        <div className="bg-card rounded-2xl shadow-lg border overflow-hidden">
+          <div className={`p-4 text-center border-b ${isExpired ? "bg-destructive/10" : isLowTime ? "bg-amber-50" : "bg-[#32BCAD]/5"}`}>
+            <div className="flex items-center justify-center gap-2 mb-1">
+              <Clock className={`w-5 h-5 ${isExpired ? "text-destructive" : isLowTime ? "text-amber-500" : "text-[#32BCAD]"} ${pulseTimer && !isExpired ? "animate-pulse" : ""}`} />
+              <span className={`text-sm font-medium ${isExpired ? "text-destructive" : isLowTime ? "text-amber-600" : "text-[#32BCAD]"}`}>
+                {isExpired ? "Tempo expirado - Gere um novo Pix" : "Pague em até"}
+              </span>
+            </div>
+            <p className={`text-4xl font-bold tabular-nums ${isExpired ? "text-destructive" : isLowTime ? "text-amber-500" : "text-[#32BCAD]"}`}>
+              {formatTime(timeLeft)}
+            </p>
+            {isLowTime && !isExpired && (
+              <p className="text-xs text-amber-600 mt-1 animate-pulse">⚠️ Tempo acabando! Finalize agora</p>
+            )}
+          </div>
+          
+          <div className="p-5 text-center">
+            <p className="text-sm text-muted-foreground">Valor total com desconto Pix</p>
+            <p className="text-4xl font-bold text-[#32BCAD] mt-1">
+              {formatCurrency(amount)}
+            </p>
+            <div className="flex items-center justify-center gap-2 mt-2">
+              <span className="bg-green-100 text-green-700 text-xs px-2 py-1 rounded-full font-medium">
+                ✓ Desconto aplicado
+              </span>
+            </div>
+          </div>
         </div>
 
         {/* QR Code Card */}
         <div className="bg-card rounded-2xl p-6 shadow-lg border">
           <div className="flex justify-center mb-4">
-            <div className="bg-white p-4 rounded-xl border-2 border-primary/20">
+            <div className={`bg-white p-4 rounded-xl border-2 ${isExpired ? "border-gray-200" : "border-[#32BCAD]/30"} relative`}>
               <QRCodeSVG
                 value={qrCode}
                 size={200}
                 level="H"
                 includeMargin={false}
                 className={isExpired ? "opacity-30" : ""}
+                fgColor="#32BCAD"
               />
+              {!isExpired && (
+                <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
+                  <div className="bg-white rounded-lg p-1 shadow-sm">
+                    <svg width="32" height="32" viewBox="0 0 512 512" fill="none">
+                      <path d="M112.57 391.19c20.056 0 38.928-7.808 53.12-22l76.693-76.692c5.385-5.404 14.765-5.384 20.15 0l76.989 76.989c14.191 14.172 33.045 21.98 53.12 21.98h15.098l-97.138 97.139c-30.326 30.344-79.505 30.344-109.85 0l-97.415-97.416h9.232z" fill="#32BCAD"/>
+                      <path d="M401.051 120.471h-15.098c-20.075 0-38.929 7.808-53.12 22l-76.97 76.989c-5.551 5.53-14.6 5.55-20.15 0l-76.711-76.693c-14.192-14.191-33.046-22-53.12-22h-9.214l97.397-97.397c30.344-30.345 79.523-30.345 109.867 0l97.119 97.101z" fill="#32BCAD"/>
+                    </svg>
+                  </div>
+                </div>
+              )}
             </div>
           </div>
 
@@ -112,13 +164,16 @@ const PixPayment = () => {
           <Button
             onClick={handleCopyCode}
             disabled={isExpired}
-            className="w-full h-12 text-base font-semibold gap-2"
-            variant={copied ? "outline" : "default"}
+            className={`w-full h-14 text-base font-bold gap-2 rounded-xl transition-all ${
+              copied 
+                ? "bg-green-500 hover:bg-green-600" 
+                : "bg-[#32BCAD] hover:bg-[#2da69a]"
+            }`}
           >
             {copied ? (
               <>
-                <Check className="w-5 h-5 text-green-500" />
-                Código copiado!
+                <Check className="w-5 h-5" />
+                Código Pix copiado!
               </>
             ) : (
               <>
@@ -127,80 +182,138 @@ const PixPayment = () => {
               </>
             )}
           </Button>
+
+          {copied && (
+            <p className="text-center text-sm text-green-600 mt-2 animate-in fade-in">
+              ✓ Cole no app do seu banco para pagar
+            </p>
+          )}
         </div>
 
         {/* Instructions Card */}
-        <div className="bg-card rounded-2xl p-6 shadow-lg border">
-          <h3 className="font-semibold text-lg mb-4 flex items-center gap-2">
-            <span className="bg-primary/10 text-primary rounded-full p-1">
-              <CheckCircle2 className="w-5 h-5" />
-            </span>
-            Como pagar com Pix Copia e Cola
+        <div className="bg-card rounded-2xl p-5 shadow-lg border">
+          <h3 className="font-bold text-base mb-4 flex items-center gap-2">
+            <Smartphone className="w-5 h-5 text-[#32BCAD]" />
+            Como pagar com Pix
           </h3>
           
-          <div className="space-y-4">
-            <div className="flex gap-3">
-              <div className="flex-shrink-0 w-8 h-8 rounded-full bg-primary text-primary-foreground flex items-center justify-center font-bold text-sm">
-                1
+          <div className="space-y-3">
+            {[
+              { step: 1, title: "Abra o app do banco", desc: "Acesse a área Pix do seu aplicativo" },
+              { step: 2, title: "Escolha Pix Copia e Cola", desc: "Ou escaneie o QR Code acima" },
+              { step: 3, title: "Cole o código copiado", desc: "Confirme os dados do pagamento" },
+              { step: 4, title: "Pronto! Aprovação imediata", desc: "Você receberá a confirmação por email" },
+            ].map((item) => (
+              <div key={item.step} className="flex gap-3 items-start">
+                <div className="flex-shrink-0 w-7 h-7 rounded-full bg-[#32BCAD] text-white flex items-center justify-center font-bold text-sm">
+                  {item.step}
+                </div>
+                <div className="flex-1">
+                  <p className="font-semibold text-sm">{item.title}</p>
+                  <p className="text-xs text-muted-foreground">{item.desc}</p>
+                </div>
               </div>
-              <div>
-                <p className="font-medium">Abra o app do seu banco</p>
-                <p className="text-sm text-muted-foreground">
-                  Acesse a área Pix no aplicativo do seu banco ou carteira digital
-                </p>
-              </div>
-            </div>
+            ))}
+          </div>
+        </div>
 
-            <div className="flex gap-3">
-              <div className="flex-shrink-0 w-8 h-8 rounded-full bg-primary text-primary-foreground flex items-center justify-center font-bold text-sm">
-                2
+        {/* Trust Badges */}
+        <div className="bg-gradient-to-r from-slate-50 to-slate-100 rounded-2xl p-4 border">
+          <div className="grid grid-cols-3 gap-3 text-center">
+            <div className="flex flex-col items-center gap-1">
+              <div className="bg-green-100 rounded-full p-2">
+                <ShieldCheck className="w-5 h-5 text-green-600" />
               </div>
-              <div>
-                <p className="font-medium">Escolha "Pix Copia e Cola"</p>
-                <p className="text-sm text-muted-foreground">
-                  Procure a opção para pagar com código Pix ou QR Code
-                </p>
-              </div>
+              <span className="text-xs font-medium text-foreground">Compra Segura</span>
             </div>
-
-            <div className="flex gap-3">
-              <div className="flex-shrink-0 w-8 h-8 rounded-full bg-primary text-primary-foreground flex items-center justify-center font-bold text-sm">
-                3
+            <div className="flex flex-col items-center gap-1">
+              <div className="bg-blue-100 rounded-full p-2">
+                <Truck className="w-5 h-5 text-blue-600" />
               </div>
-              <div>
-                <p className="font-medium">Cole o código ou escaneie</p>
-                <p className="text-sm text-muted-foreground">
-                  Cole o código copiado acima ou escaneie o QR Code
-                </p>
-              </div>
+              <span className="text-xs font-medium text-foreground">Frete Grátis</span>
             </div>
-
-            <div className="flex gap-3">
-              <div className="flex-shrink-0 w-8 h-8 rounded-full bg-primary text-primary-foreground flex items-center justify-center font-bold text-sm">
-                4
+            <div className="flex flex-col items-center gap-1">
+              <div className="bg-amber-100 rounded-full p-2">
+                <BadgeCheck className="w-5 h-5 text-amber-600" />
               </div>
-              <div>
-                <p className="font-medium">Confirme e pronto!</p>
-                <p className="text-sm text-muted-foreground">
-                  Verifique os dados e confirme o pagamento
-                </p>
-              </div>
+              <span className="text-xs font-medium text-foreground">Garantia</span>
             </div>
           </div>
         </div>
 
-        {/* Security Badge */}
-        <div className="flex items-center justify-center gap-2 text-muted-foreground py-4">
-          <ShieldCheck className="w-5 h-5 text-green-600" />
-          <span className="text-sm">Pagamento 100% seguro via Pix</span>
+        {/* Store Credibility */}
+        <div className="bg-card rounded-2xl p-4 shadow-lg border">
+          <div className="flex items-center gap-3 mb-3">
+            <div className="bg-primary/10 rounded-full p-2">
+              <Store className="w-5 h-5 text-primary" />
+            </div>
+            <div>
+              <p className="font-bold text-sm">Atacado Premium</p>
+              <div className="flex items-center gap-1">
+                <Star className="w-3 h-3 fill-amber-400 text-amber-400" />
+                <span className="text-xs text-muted-foreground">4.9 • Loja Oficial</span>
+              </div>
+            </div>
+            <div className="ml-auto">
+              <span className="bg-green-100 text-green-700 text-xs px-2 py-1 rounded-full font-medium">
+                ✓ Verificada
+              </span>
+            </div>
+          </div>
+          
+          <div className="grid grid-cols-3 gap-2 pt-3 border-t">
+            <div className="text-center">
+              <p className="font-bold text-primary text-lg">127k+</p>
+              <p className="text-xs text-muted-foreground">Vendas</p>
+            </div>
+            <div className="text-center border-x">
+              <p className="font-bold text-primary text-lg">98%</p>
+              <p className="text-xs text-muted-foreground">Satisfação</p>
+            </div>
+            <div className="text-center">
+              <p className="font-bold text-primary text-lg">89k+</p>
+              <p className="text-xs text-muted-foreground">Avaliações</p>
+            </div>
+          </div>
+        </div>
+
+        {/* Payment Security Info */}
+        <div className="bg-green-50 rounded-2xl p-4 border border-green-200">
+          <div className="flex items-start gap-3">
+            <Lock className="w-5 h-5 text-green-600 flex-shrink-0 mt-0.5" />
+            <div>
+              <p className="font-semibold text-sm text-green-800">Pagamento 100% Seguro</p>
+              <p className="text-xs text-green-700 mt-1">
+                Seu pagamento Pix é processado pelo Banco Central do Brasil com criptografia de ponta a ponta. Nenhum dado bancário é armazenado.
+              </p>
+            </div>
+          </div>
+        </div>
+
+        {/* Delivery Info */}
+        <div className="bg-blue-50 rounded-2xl p-4 border border-blue-200">
+          <div className="flex items-start gap-3">
+            <Package className="w-5 h-5 text-blue-600 flex-shrink-0 mt-0.5" />
+            <div>
+              <p className="font-semibold text-sm text-blue-800">Envio Imediato</p>
+              <p className="text-xs text-blue-700 mt-1">
+                Assim que o pagamento for confirmado, seu pedido será separado e enviado em até 24h úteis.
+              </p>
+            </div>
+          </div>
         </div>
 
         {/* Transaction ID */}
         {transactionId && (
-          <p className="text-xs text-center text-muted-foreground">
-            ID da transação: {transactionId}
-          </p>
+          <div className="text-center py-2">
+            <p className="text-xs text-muted-foreground">
+              Código da transação: <span className="font-mono">{transactionId}</span>
+            </p>
+          </div>
         )}
+
+        {/* Bottom spacing */}
+        <div className="h-4" />
       </div>
     </div>
   );
