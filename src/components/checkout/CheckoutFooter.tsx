@@ -118,7 +118,7 @@ const CheckoutFooter = ({
   };
   return <>
       {/* Warning message for address */}
-      {showAddressWarning && <div className="fixed bottom-24 left-1/2 -translate-x-1/2 z-50 bg-destructive text-destructive-foreground px-4 py-2 rounded-lg shadow-lg text-sm font-medium animate-pulse mx-[10px]">
+      {showAddressWarning && <div className="fixed bottom-24 left-1/2 -translate-x-1/2 z-50 bg-destructive text-destructive-foreground px-4 py-2 rounded-lg shadow-lg text-sm font-medium animate-pulse mx-0">
           Preencha o endereço de entrega
         </div>}
       
