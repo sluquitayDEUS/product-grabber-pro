@@ -12,6 +12,7 @@ import ProductDescription from "@/components/shopee/ProductDescription";
 import ProductReviews from "@/components/shopee/ProductReviews";
 import RelatedProducts from "@/components/shopee/RelatedProducts";
 import ProductFooter from "@/components/shopee/ProductFooter";
+import ProductPageFooter from "@/components/shopee/ProductPageFooter";
 import ScrollToTopButton from "@/components/shopee/ScrollToTopButton";
 import { useAbandonedCart } from "@/hooks/useAbandonedCart";
 import { useMetaPixel } from "@/hooks/useMetaPixel";
@@ -51,6 +52,7 @@ const Index = () => {
       <ProductDescription />
       <ProductReviews />
       <RelatedProducts />
+      <ProductPageFooter />
       <ProductFooter onNoColorSelected={handleNoColorSelected} />
       <ScrollToTopButton />
     </div>
