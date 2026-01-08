@@ -1,5 +1,6 @@
 import { ChevronRight } from "lucide-react";
 import { useCart } from "@/contexts/CartContext";
+import { forwardRef, useImperativeHandle, useRef, useState, useEffect } from "react";
 
 // Import color images
 import aquavoltVermelho from "@/assets/aquavolt-vermelho.jpg";
@@ -10,11 +11,36 @@ const colors = [
   { id: 2, name: "Azul/Preto", color: "#0ea5e9", image: aquavoltAzul },
 ];
 
-const ProductVariations = () => {
+export interface ProductVariationsRef {
+  scrollAndHighlight: () => void;
+}
+
+const ProductVariations = forwardRef<ProductVariationsRef>((_, ref) => {
   const { selectedColor, setSelectedColor } = useCart();
+  const containerRef = useRef<HTMLDivElement>(null);
+  const [isHighlighted, setIsHighlighted] = useState(false);
+
+  useImperativeHandle(ref, () => ({
+    scrollAndHighlight: () => {
+      containerRef.current?.scrollIntoView({ behavior: "smooth", block: "center" });
+      setIsHighlighted(true);
+    }
+  }));
+
+  useEffect(() => {
+    if (isHighlighted) {
+      const timer = setTimeout(() => setIsHighlighted(false), 2000);
+      return () => clearTimeout(timer);
+    }
+  }, [isHighlighted]);
 
   return (
-    <div className="bg-card px-3 py-3 mt-2">
+    <div 
+      ref={containerRef}
+      className={`bg-card px-3 py-3 mt-2 transition-all duration-300 ${
+        isHighlighted ? "ring-2 ring-red-500 ring-offset-2" : ""
+      }`}
+    >
       <div className="flex items-center justify-between mb-3">
         <span className="text-sm font-medium text-foreground">Variações</span>
         <ChevronRight className="w-4 h-4 text-muted-foreground" />
@@ -47,6 +73,8 @@ const ProductVariations = () => {
       </div>
     </div>
   );
-};
+});
+
+ProductVariations.displayName = "ProductVariations";
 
 export default ProductVariations;

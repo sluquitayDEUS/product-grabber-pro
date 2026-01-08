@@ -4,7 +4,11 @@ import { useNavigate } from "react-router-dom";
 import ChatPopup from "./ChatPopup";
 import { useCart } from "@/contexts/CartContext";
 
-const ProductFooter = () => {
+interface ProductFooterProps {
+  onNoColorSelected?: () => void;
+}
+
+const ProductFooter = ({ onNoColorSelected }: ProductFooterProps) => {
   const navigate = useNavigate();
   const [showChatPopup, setShowChatPopup] = useState(false);
   const [showColorWarning, setShowColorWarning] = useState(false);
@@ -22,6 +26,7 @@ const ProductFooter = () => {
   const goToCheckout = () => {
     if (!selectedColor) {
       setShowColorWarning(true);
+      onNoColorSelected?.();
       return;
     }
     navigate("/checkout");
