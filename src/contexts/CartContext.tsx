@@ -75,6 +75,7 @@ interface CartContextType {
   paymentMethod: string;
   setPaymentMethod: (method: string) => void;
   pixDiscount: number;
+  voucherDiscount: number;
   totalPrice: number;
   totalPriceInCents: number;
   customer: CustomerData;
@@ -170,7 +171,9 @@ export const CartProvider = ({ children }: { children: ReactNode }) => {
   // PIX discount: 5% for 1 unit, 12% for 2 units
   const pixDiscountRate = paymentMethod === "pix" ? (quantity >= 2 ? 0.12 : 0.05) : 0;
   const pixDiscount = subtotal * pixDiscountRate;
-  const totalPrice = subtotal + selectedShipping.price - pixDiscount;
+  // Voucher discount: fixed R$5
+  const voucherDiscount = 5;
+  const totalPrice = subtotal + selectedShipping.price - pixDiscount - voucherDiscount;
   const totalPriceInCents = Math.round(totalPrice * 100);
   return (
     <CartContext.Provider
@@ -184,6 +187,7 @@ export const CartProvider = ({ children }: { children: ReactNode }) => {
         paymentMethod,
         setPaymentMethod,
         pixDiscount,
+        voucherDiscount,
         totalPrice,
         totalPriceInCents,
         customer,
