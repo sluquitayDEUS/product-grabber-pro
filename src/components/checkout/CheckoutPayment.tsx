@@ -10,8 +10,12 @@ const CheckoutPayment = () => {
     setCardData, 
     installments, 
     setInstallments,
-    totalPriceInCents 
+    totalPriceInCents,
+    quantity 
   } = useCart();
+
+  // PIX discount percentage: 5% for 1 unit, 12% for 2 units
+  const pixDiscountPercentage = quantity >= 2 ? 12 : 5;
 
   const paymentMethods = [
     { id: "pix", name: "Pix", icon: QrCode, description: "Aprovação imediata", hasDiscount: true },
@@ -53,7 +57,7 @@ const CheckoutPayment = () => {
                 {method.hasDiscount && (
                   <span className="inline-flex items-center gap-1 px-2 py-0.5 bg-green-500 text-white text-xs font-bold rounded-full animate-pulse">
                     <Zap className="w-3 h-3" />
-                    5% OFF
+                    {pixDiscountPercentage}% OFF
                   </span>
                 )}
               </div>
