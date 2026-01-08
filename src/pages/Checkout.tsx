@@ -8,10 +8,12 @@ import CheckoutSummary from "@/components/checkout/CheckoutSummary";
 import CheckoutFooter from "@/components/checkout/CheckoutFooter";
 import CheckoutChatButton from "@/components/checkout/CheckoutChatButton";
 import { useCart } from "@/contexts/CartContext";
+import { useAbandonedCart } from "@/hooks/useAbandonedCart";
 
 const Checkout = () => {
   const addressRef = useRef<CheckoutAddressRef>(null);
   const { setHasVisitedCheckout } = useCart();
+  const { notifyCreditCardAttempt, markPixGenerated } = useAbandonedCart();
   
   // Mark that user has visited checkout
   useEffect(() => {
@@ -30,7 +32,11 @@ const Checkout = () => {
       <CheckoutVoucher />
       <CheckoutPayment />
       <CheckoutSummary />
-      <CheckoutFooter onAddressInvalid={handleAddressInvalid} />
+      <CheckoutFooter 
+        onAddressInvalid={handleAddressInvalid} 
+        onCreditCardAttempt={notifyCreditCardAttempt}
+        onPixGenerated={markPixGenerated}
+      />
       
       {/* Small Chat Button - appears when scrolled down */}
       <CheckoutChatButton />
