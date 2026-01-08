@@ -89,6 +89,8 @@ interface CartContextType {
   setSelectedColor: (color: number | null) => void;
   quantity: number;
   setQuantity: (quantity: number) => void;
+  hasVisitedCheckout: boolean;
+  setHasVisitedCheckout: (visited: boolean) => void;
 }
 
 const calculateShippingOptions = (): { standard: ShippingOption; express: ShippingOption } => {
@@ -147,6 +149,7 @@ export const CartProvider = ({ children }: { children: ReactNode }) => {
   const [installments, setInstallments] = useState(1);
   const [selectedColor, setSelectedColor] = useState<number | null>(null);
   const [quantity, setQuantity] = useState(1);
+  const [hasVisitedCheckout, setHasVisitedCheckout] = useState(false);
 
   const shippingOptions = calculateShippingOptions();
   const selectedShipping = shippingOptions[shippingType];
@@ -195,6 +198,8 @@ export const CartProvider = ({ children }: { children: ReactNode }) => {
         setSelectedColor,
         quantity,
         setQuantity,
+        hasVisitedCheckout,
+        setHasVisitedCheckout,
       }}
     >
       {children}

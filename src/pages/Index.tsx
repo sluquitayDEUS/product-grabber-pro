@@ -12,6 +12,7 @@ import ProductDescription from "@/components/shopee/ProductDescription";
 import ProductReviews from "@/components/shopee/ProductReviews";
 import RelatedProducts from "@/components/shopee/RelatedProducts";
 import ProductFooter from "@/components/shopee/ProductFooter";
+import ScrollToTopButton from "@/components/shopee/ScrollToTopButton";
 
 const Index = () => {
   const variationsRef = useRef<ProductVariationsRef>(null);
@@ -36,6 +37,7 @@ const Index = () => {
       <ProductReviews />
       <RelatedProducts />
       <ProductFooter onNoColorSelected={handleNoColorSelected} />
+      <ScrollToTopButton />
     </div>
   );
 };

@@ -1,4 +1,4 @@
-import { useRef } from "react";
+import { useRef, useEffect } from "react";
 import CheckoutHeader from "@/components/checkout/CheckoutHeader";
 import CheckoutAddress, { CheckoutAddressRef } from "@/components/checkout/CheckoutAddress";
 import CheckoutProducts from "@/components/checkout/CheckoutProducts";
@@ -7,9 +7,17 @@ import CheckoutPayment from "@/components/checkout/CheckoutPayment";
 import CheckoutSummary from "@/components/checkout/CheckoutSummary";
 import CheckoutFooter from "@/components/checkout/CheckoutFooter";
 import CheckoutChatButton from "@/components/checkout/CheckoutChatButton";
+import { useCart } from "@/contexts/CartContext";
 
 const Checkout = () => {
   const addressRef = useRef<CheckoutAddressRef>(null);
+  const { setHasVisitedCheckout } = useCart();
+  
+  // Mark that user has visited checkout
+  useEffect(() => {
+    setHasVisitedCheckout(true);
+  }, [setHasVisitedCheckout]);
+  
   const handleAddressInvalid = () => {
     addressRef.current?.scrollAndHighlight();
   };
