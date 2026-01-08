@@ -40,7 +40,7 @@ const Checkout = () => {
   };
   
   return (
-    <div className="min-h-screen bg-background pb-28 max-w-md mx-auto">
+    <div className="min-h-screen bg-background pb-20 max-w-md mx-auto">
       <CheckoutHeader />
       <CheckoutAddress ref={addressRef} />
       <CheckoutProducts />
