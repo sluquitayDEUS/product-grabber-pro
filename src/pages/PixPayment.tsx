@@ -1,4 +1,4 @@
-import { Copy, Check, Clock, ShieldCheck, ArrowLeft, CheckCircle2, Store, BadgeCheck, Truck, Lock, CreditCard, Smartphone, Star, Package } from "lucide-react";
+import { Copy, Check, Clock, ShieldCheck, ArrowLeft, CheckCircle2, Store, BadgeCheck, Truck, Lock, Smartphone, Star, Package } from "lucide-react";
 import { useState, useEffect } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
@@ -69,9 +69,9 @@ const PixPayment = () => {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-green-50 to-background">
-      {/* Header with Pix branding */}
-      <header className="bg-[#32BCAD] text-white py-4 px-4 flex items-center gap-3 sticky top-0 z-50 shadow-md">
+    <div className="min-h-screen bg-background">
+      {/* Header */}
+      <header className="bg-primary text-primary-foreground py-4 px-4 flex items-center gap-3 sticky top-0 z-50 shadow-md">
         <button onClick={() => navigate("/")} className="p-1 hover:bg-white/10 rounded-full transition-colors">
           <ArrowLeft className="w-5 h-5" />
         </button>
@@ -85,15 +85,15 @@ const PixPayment = () => {
           </div>
           <div>
             <h1 className="text-lg font-bold">Pagamento Pix</h1>
-            <p className="text-xs text-white/80">Aprovação instantânea</p>
+            <p className="text-xs text-primary-foreground/80">Aprovação instantânea</p>
           </div>
         </div>
-        <Lock className="w-5 h-5 text-white/80" />
+        <Lock className="w-5 h-5 text-primary-foreground/80" />
       </header>
 
       <div className="max-w-md mx-auto p-4 space-y-4">
         {/* Success Status Banner */}
-        <div className="bg-gradient-to-r from-[#32BCAD] to-[#2da69a] rounded-2xl p-4 text-white shadow-lg">
+        <div className="bg-gradient-to-r from-primary to-primary/90 rounded-2xl p-4 text-white shadow-lg">
           <div className="flex items-center gap-3">
             <div className="bg-white/20 rounded-full p-2">
               <CheckCircle2 className="w-6 h-6" />
@@ -107,14 +107,14 @@ const PixPayment = () => {
 
         {/* Timer + Amount Card Combined */}
         <div className="bg-card rounded-2xl shadow-lg border overflow-hidden">
-          <div className={`p-4 text-center border-b ${isExpired ? "bg-destructive/10" : isLowTime ? "bg-amber-50" : "bg-[#32BCAD]/5"}`}>
+          <div className={`p-4 text-center border-b ${isExpired ? "bg-destructive/10" : isLowTime ? "bg-amber-50" : "bg-primary/5"}`}>
             <div className="flex items-center justify-center gap-2 mb-1">
-              <Clock className={`w-5 h-5 ${isExpired ? "text-destructive" : isLowTime ? "text-amber-500" : "text-[#32BCAD]"} ${pulseTimer && !isExpired ? "animate-pulse" : ""}`} />
-              <span className={`text-sm font-medium ${isExpired ? "text-destructive" : isLowTime ? "text-amber-600" : "text-[#32BCAD]"}`}>
+              <Clock className={`w-5 h-5 ${isExpired ? "text-destructive" : isLowTime ? "text-amber-500" : "text-primary"} ${pulseTimer && !isExpired ? "animate-pulse" : ""}`} />
+              <span className={`text-sm font-medium ${isExpired ? "text-destructive" : isLowTime ? "text-amber-600" : "text-primary"}`}>
                 {isExpired ? "Tempo expirado - Gere um novo Pix" : "Pague em até"}
               </span>
             </div>
-            <p className={`text-4xl font-bold tabular-nums ${isExpired ? "text-destructive" : isLowTime ? "text-amber-500" : "text-[#32BCAD]"}`}>
+            <p className={`text-4xl font-bold tabular-nums ${isExpired ? "text-destructive" : isLowTime ? "text-amber-500" : "text-primary"}`}>
               {formatTime(timeLeft)}
             </p>
             {isLowTime && !isExpired && (
@@ -124,11 +124,11 @@ const PixPayment = () => {
           
           <div className="p-5 text-center">
             <p className="text-sm text-muted-foreground">Valor total com desconto Pix</p>
-            <p className="text-4xl font-bold text-[#32BCAD] mt-1">
+            <p className="text-4xl font-bold text-primary mt-1">
               {formatCurrency(amount)}
             </p>
             <div className="flex items-center justify-center gap-2 mt-2">
-              <span className="bg-green-100 text-green-700 text-xs px-2 py-1 rounded-full font-medium">
+              <span className="bg-shopee-light text-primary text-xs px-2 py-1 rounded-full font-medium">
                 ✓ Desconto aplicado
               </span>
             </div>
@@ -138,14 +138,13 @@ const PixPayment = () => {
         {/* QR Code Card */}
         <div className="bg-card rounded-2xl p-6 shadow-lg border">
           <div className="flex justify-center mb-4">
-            <div className={`bg-white p-4 rounded-xl border-2 ${isExpired ? "border-gray-200" : "border-[#32BCAD]/30"} relative`}>
+            <div className={`bg-white p-4 rounded-xl border-2 ${isExpired ? "border-gray-200" : "border-primary/30"} relative`}>
               <QRCodeSVG
                 value={qrCode}
                 size={200}
                 level="H"
                 includeMargin={false}
                 className={isExpired ? "opacity-30" : ""}
-                fgColor="#32BCAD"
               />
               {!isExpired && (
                 <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
@@ -166,8 +165,8 @@ const PixPayment = () => {
             disabled={isExpired}
             className={`w-full h-14 text-base font-bold gap-2 rounded-xl transition-all ${
               copied 
-                ? "bg-green-500 hover:bg-green-600" 
-                : "bg-[#32BCAD] hover:bg-[#2da69a]"
+                ? "bg-shopee-success hover:bg-shopee-success/90" 
+                : "bg-primary hover:bg-primary/90"
             }`}
           >
             {copied ? (
@@ -184,7 +183,7 @@ const PixPayment = () => {
           </Button>
 
           {copied && (
-            <p className="text-center text-sm text-green-600 mt-2 animate-in fade-in">
+            <p className="text-center text-sm text-shopee-success mt-2 animate-in fade-in">
               ✓ Cole no app do seu banco para pagar
             </p>
           )}
@@ -193,7 +192,7 @@ const PixPayment = () => {
         {/* Instructions Card */}
         <div className="bg-card rounded-2xl p-5 shadow-lg border">
           <h3 className="font-bold text-base mb-4 flex items-center gap-2">
-            <Smartphone className="w-5 h-5 text-[#32BCAD]" />
+            <Smartphone className="w-5 h-5 text-primary" />
             Como pagar com Pix
           </h3>
           
@@ -205,7 +204,7 @@ const PixPayment = () => {
               { step: 4, title: "Pronto! Aprovação imediata", desc: "Você receberá a confirmação por email" },
             ].map((item) => (
               <div key={item.step} className="flex gap-3 items-start">
-                <div className="flex-shrink-0 w-7 h-7 rounded-full bg-[#32BCAD] text-white flex items-center justify-center font-bold text-sm">
+                <div className="flex-shrink-0 w-7 h-7 rounded-full bg-primary text-primary-foreground flex items-center justify-center font-bold text-sm">
                   {item.step}
                 </div>
                 <div className="flex-1">
@@ -218,23 +217,23 @@ const PixPayment = () => {
         </div>
 
         {/* Trust Badges */}
-        <div className="bg-gradient-to-r from-slate-50 to-slate-100 rounded-2xl p-4 border">
+        <div className="bg-shopee-light rounded-2xl p-4 border border-primary/20">
           <div className="grid grid-cols-3 gap-3 text-center">
             <div className="flex flex-col items-center gap-1">
-              <div className="bg-green-100 rounded-full p-2">
-                <ShieldCheck className="w-5 h-5 text-green-600" />
+              <div className="bg-primary/10 rounded-full p-2">
+                <ShieldCheck className="w-5 h-5 text-primary" />
               </div>
               <span className="text-xs font-medium text-foreground">Compra Segura</span>
             </div>
             <div className="flex flex-col items-center gap-1">
-              <div className="bg-blue-100 rounded-full p-2">
-                <Truck className="w-5 h-5 text-blue-600" />
+              <div className="bg-primary/10 rounded-full p-2">
+                <Truck className="w-5 h-5 text-primary" />
               </div>
               <span className="text-xs font-medium text-foreground">Frete Grátis</span>
             </div>
             <div className="flex flex-col items-center gap-1">
-              <div className="bg-amber-100 rounded-full p-2">
-                <BadgeCheck className="w-5 h-5 text-amber-600" />
+              <div className="bg-primary/10 rounded-full p-2">
+                <BadgeCheck className="w-5 h-5 text-primary" />
               </div>
               <span className="text-xs font-medium text-foreground">Garantia</span>
             </div>
@@ -255,7 +254,7 @@ const PixPayment = () => {
               </div>
             </div>
             <div className="ml-auto">
-              <span className="bg-green-100 text-green-700 text-xs px-2 py-1 rounded-full font-medium">
+              <span className="bg-shopee-light text-primary text-xs px-2 py-1 rounded-full font-medium">
                 ✓ Verificada
               </span>
             </div>
@@ -278,12 +277,12 @@ const PixPayment = () => {
         </div>
 
         {/* Payment Security Info */}
-        <div className="bg-green-50 rounded-2xl p-4 border border-green-200">
+        <div className="bg-shopee-light rounded-2xl p-4 border border-primary/20">
           <div className="flex items-start gap-3">
-            <Lock className="w-5 h-5 text-green-600 flex-shrink-0 mt-0.5" />
+            <Lock className="w-5 h-5 text-primary flex-shrink-0 mt-0.5" />
             <div>
-              <p className="font-semibold text-sm text-green-800">Pagamento 100% Seguro</p>
-              <p className="text-xs text-green-700 mt-1">
+              <p className="font-semibold text-sm text-foreground">Pagamento 100% Seguro</p>
+              <p className="text-xs text-muted-foreground mt-1">
                 Seu pagamento Pix é processado pelo Banco Central do Brasil com criptografia de ponta a ponta. Nenhum dado bancário é armazenado.
               </p>
             </div>
@@ -291,12 +290,12 @@ const PixPayment = () => {
         </div>
 
         {/* Delivery Info */}
-        <div className="bg-blue-50 rounded-2xl p-4 border border-blue-200">
+        <div className="bg-shopee-light rounded-2xl p-4 border border-primary/20">
           <div className="flex items-start gap-3">
-            <Package className="w-5 h-5 text-blue-600 flex-shrink-0 mt-0.5" />
+            <Package className="w-5 h-5 text-primary flex-shrink-0 mt-0.5" />
             <div>
-              <p className="font-semibold text-sm text-blue-800">Envio Imediato</p>
-              <p className="text-xs text-blue-700 mt-1">
+              <p className="font-semibold text-sm text-foreground">Envio Imediato</p>
+              <p className="text-xs text-muted-foreground mt-1">
                 Assim que o pagamento for confirmado, seu pedido será separado e enviado em até 24h úteis.
               </p>
             </div>
