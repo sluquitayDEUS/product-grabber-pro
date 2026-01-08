@@ -1,4 +1,4 @@
-import { useState, memo, lazy, Suspense } from "react";
+import { useState, memo } from "react";
 import { ChevronDown, ChevronUp } from "lucide-react";
 import LazyImage from "@/components/ui/lazy-image";
 
