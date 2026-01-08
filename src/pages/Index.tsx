@@ -39,20 +39,22 @@ const Index = () => {
   };
 
   return (
-    <div className="min-h-screen bg-background pb-14 max-w-md mx-auto">
-      <ProductHeader />
-      <ProductGallery currentIndex={galleryIndex} onIndexChange={setGalleryIndex} />
-      <ProductThumbnails selectedIndex={galleryIndex} onSelect={setGalleryIndex} />
-      <FlashSaleTimer />
-      <ProductPrice />
-      <ProductTitle />
-      <ProductVariations ref={variationsRef} />
-      <ProductShipping />
-      <StoreCard />
-      <ProductDescription />
-      <ProductReviews />
-      <RelatedProducts />
-      <ProductPageFooter />
+    <div className="min-h-screen bg-background">
+      <div className="max-w-md mx-auto pb-14">
+        <ProductHeader />
+        <ProductGallery currentIndex={galleryIndex} onIndexChange={setGalleryIndex} />
+        <ProductThumbnails selectedIndex={galleryIndex} onSelect={setGalleryIndex} />
+        <FlashSaleTimer />
+        <ProductPrice />
+        <ProductTitle />
+        <ProductVariations ref={variationsRef} />
+        <ProductShipping />
+        <StoreCard />
+        <ProductDescription />
+        <ProductReviews />
+        <RelatedProducts />
+        <ProductPageFooter />
+      </div>
       <ProductFooter onNoColorSelected={handleNoColorSelected} />
       <ScrollToTopButton />
     </div>
