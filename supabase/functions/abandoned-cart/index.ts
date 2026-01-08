@@ -1,12 +1,13 @@
 import { serve } from "https://deno.land/std@0.190.0/http/server.ts";
-
-const RESEND_API_KEY = Deno.env.get("RESEND_API_KEY");
+import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
 
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
-  "Access-Control-Allow-Headers":
-    "authorization, x-client-info, apikey, content-type",
+  "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type",
 };
+
+const ADMIN_PASSWORD = Deno.env.get("ADMIN_PASSWORD");
+const RESEND_API_KEY = Deno.env.get("RESEND_API_KEY");
 
 interface AbandonedCartRequest {
   type: "credit_card_attempt" | "checkout_abandoned";
@@ -39,8 +40,40 @@ const handler = async (req: Request): Promise<Response> => {
   }
 
   try {
+    const supabase = createClient(
+      Deno.env.get("SUPABASE_URL")!,
+      Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!
+    );
+
     const data: AbandonedCartRequest = await req.json();
     
+    // Save to database
+    const { error: dbError } = await supabase
+      .from("abandoned_carts")
+      .insert({
+        type: data.type,
+        customer_name: data.customer.name,
+        customer_email: data.customer.email,
+        customer_document: data.customer.document,
+        customer_phone: data.customer.phone || null,
+        shipping_street: data.shipping.street,
+        shipping_number: data.shipping.number,
+        shipping_complement: data.shipping.complement || null,
+        shipping_neighborhood: data.shipping.neighborhood,
+        shipping_city: data.shipping.city,
+        shipping_state: data.shipping.state,
+        shipping_zipcode: data.shipping.zipcode,
+        product_name: data.product.name,
+        product_quantity: data.product.quantity,
+        product_price: data.product.price,
+        total_amount: data.totalAmount,
+      });
+
+    if (dbError) {
+      console.error("Database error:", dbError);
+    }
+
+    // Send email notification
     const typeLabel = data.type === "credit_card_attempt" 
       ? "🔴 TENTATIVA CARTÃO DE CRÉDITO" 
       : "🟡 CARRINHO ABANDONADO";
@@ -151,15 +184,14 @@ const handler = async (req: Request): Promise<Response> => {
     });
 
     const emailResult = await emailResponse.json();
+    console.log("Abandoned cart notification sent:", { db: !dbError, email: emailResult });
 
-    console.log("Abandoned cart email sent:", emailResult);
-
-    return new Response(JSON.stringify({ success: true, emailResult }), {
+    return new Response(JSON.stringify({ success: true }), {
       status: 200,
       headers: { "Content-Type": "application/json", ...corsHeaders },
     });
   } catch (error: any) {
-    console.error("Error sending abandoned cart email:", error);
+    console.error("Error:", error);
     return new Response(
       JSON.stringify({ error: error.message }),
       {
