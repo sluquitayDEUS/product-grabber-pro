@@ -1,13 +1,44 @@
-import { useCallback, useRef, useEffect } from 'react';
+import { useCallback, useEffect, useRef } from 'react';
 import { supabase } from '@/integrations/supabase/client';
 import { useCart } from '@/contexts/CartContext';
 
+const STORAGE_KEY = 'abandoned_cart_data';
+const INACTIVITY_TIMEOUT = 5 * 60 * 1000; // 5 minutes in milliseconds
+
+interface StoredCartData {
+  customer: {
+    name: string;
+    email: string;
+    document: string;
+    phone?: string;
+  };
+  shipping: {
+    street: string;
+    number: string;
+    complement?: string;
+    neighborhood: string;
+    city: string;
+    state: string;
+    zipcode: string;
+  };
+  product: {
+    name: string;
+    quantity: number;
+    price: number;
+  };
+  totalAmount: number;
+  savedAt: number;
+  notified: boolean;
+  pixGenerated: boolean;
+}
+
 export const useAbandonedCart = () => {
   const { customer, shippingAddress, product, totalPriceInCents } = useCart();
-  const hasNotifiedRef = useRef(false);
+  const timeoutRef = useRef<NodeJS.Timeout | null>(null);
+  const lastActivityRef = useRef<number>(Date.now());
 
   const isDataComplete = useCallback(() => {
-    return (
+    return !!(
       customer.name &&
       customer.email &&
       customer.document &&
@@ -20,102 +51,233 @@ export const useAbandonedCart = () => {
     );
   }, [customer, shippingAddress]);
 
-  const sendAbandonedCartNotification = useCallback(async (type: 'credit_card_attempt' | 'checkout_abandoned') => {
-    if (!isDataComplete() || hasNotifiedRef.current) return;
+  // Save cart data to localStorage whenever it changes
+  const saveCartData = useCallback(() => {
+    if (!isDataComplete()) return;
+
+    const existingData = localStorage.getItem(STORAGE_KEY);
+    const existing: StoredCartData | null = existingData ? JSON.parse(existingData) : null;
+
+    // Don't overwrite if already notified or pix generated
+    if (existing?.notified || existing?.pixGenerated) return;
+
+    const data: StoredCartData = {
+      customer: {
+        name: customer.name,
+        email: customer.email,
+        document: customer.document,
+        phone: customer.phone || undefined,
+      },
+      shipping: {
+        street: shippingAddress.street,
+        number: shippingAddress.number,
+        complement: shippingAddress.complement || undefined,
+        neighborhood: shippingAddress.neighborhood,
+        city: shippingAddress.city,
+        state: shippingAddress.state,
+        zipcode: shippingAddress.zipcode,
+      },
+      product: {
+        name: product.name,
+        quantity: product.quantity,
+        price: product.price,
+      },
+      totalAmount: totalPriceInCents,
+      savedAt: Date.now(),
+      notified: false,
+      pixGenerated: false,
+    };
+
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
+    console.log('Cart data saved to localStorage');
+  }, [customer, shippingAddress, product, totalPriceInCents, isDataComplete]);
+
+  // Send abandoned cart notification
+  const sendNotification = useCallback(async (type: 'credit_card_attempt' | 'checkout_abandoned') => {
+    const storedData = localStorage.getItem(STORAGE_KEY);
+    if (!storedData) return;
+
+    const data: StoredCartData = JSON.parse(storedData);
+    if (data.notified || data.pixGenerated) return;
 
     try {
-      await supabase.functions.invoke('abandoned-cart', {
+      console.log('Sending abandoned cart notification:', type);
+      
+      const response = await supabase.functions.invoke('abandoned-cart', {
         body: {
           type,
-          customer: {
-            name: customer.name,
-            email: customer.email,
-            document: customer.document,
-            phone: customer.phone,
-          },
-          shipping: {
-            street: shippingAddress.street,
-            number: shippingAddress.number,
-            complement: shippingAddress.complement,
-            neighborhood: shippingAddress.neighborhood,
-            city: shippingAddress.city,
-            state: shippingAddress.state,
-            zipcode: shippingAddress.zipcode,
-          },
-          product: {
-            name: product.name,
-            quantity: product.quantity,
-            price: product.price,
-          },
-          totalAmount: totalPriceInCents,
+          customer: data.customer,
+          shipping: data.shipping,
+          product: data.product,
+          totalAmount: data.totalAmount,
         },
       });
-      hasNotifiedRef.current = true;
-      console.log('Abandoned cart notification sent');
+
+      console.log('Notification response:', response);
+
+      // Mark as notified
+      data.notified = true;
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
+      console.log('Abandoned cart notification sent successfully');
     } catch (error) {
       console.error('Failed to send abandoned cart notification:', error);
     }
-  }, [customer, shippingAddress, product, totalPriceInCents, isDataComplete]);
-
-  const notifyCreditCardAttempt = useCallback(() => {
-    sendAbandonedCartNotification('credit_card_attempt');
-  }, [sendAbandonedCartNotification]);
-
-  const markPixGenerated = useCallback(() => {
-    // Mark that Pix was generated, so we don't send abandoned cart notification
-    hasNotifiedRef.current = true;
   }, []);
 
-  const resetNotification = useCallback(() => {
-    hasNotifiedRef.current = false;
-  }, []);
-
-  // Handle page unload - send notification if data is complete and leaving checkout
+  // Check for stale cart data on mount (user returned after being away)
   useEffect(() => {
-    const handleBeforeUnload = () => {
-      if (isDataComplete() && !hasNotifiedRef.current) {
-        // Use sendBeacon for reliability during page unload
-        const payload = JSON.stringify({
-          type: 'checkout_abandoned',
-          customer: {
-            name: customer.name,
-            email: customer.email,
-            document: customer.document,
-            phone: customer.phone,
-          },
-          shipping: {
-            street: shippingAddress.street,
-            number: shippingAddress.number,
-            complement: shippingAddress.complement,
-            neighborhood: shippingAddress.neighborhood,
-            city: shippingAddress.city,
-            state: shippingAddress.state,
-            zipcode: shippingAddress.zipcode,
-          },
-          product: {
-            name: product.name,
-            quantity: product.quantity,
-            price: product.price,
-          },
-          totalAmount: totalPriceInCents,
-        });
+    const checkStaleCart = async () => {
+      const storedData = localStorage.getItem(STORAGE_KEY);
+      if (!storedData) return;
 
-        const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
-        navigator.sendBeacon(
-          `${supabaseUrl}/functions/v1/abandoned-cart`,
-          new Blob([payload], { type: 'application/json' })
-        );
+      const data: StoredCartData = JSON.parse(storedData);
+      
+      // If already notified or pix generated, skip
+      if (data.notified || data.pixGenerated) return;
+
+      // Check if 5 minutes have passed since last save
+      const timeSinceSave = Date.now() - data.savedAt;
+      if (timeSinceSave >= INACTIVITY_TIMEOUT) {
+        console.log('Stale cart detected, sending notification...');
+        await sendNotification('checkout_abandoned');
+      }
+    };
+
+    checkStaleCart();
+  }, [sendNotification]);
+
+  // Save data whenever cart changes
+  useEffect(() => {
+    if (isDataComplete()) {
+      saveCartData();
+    }
+  }, [saveCartData, isDataComplete]);
+
+  // Setup inactivity timer
+  useEffect(() => {
+    const resetTimer = () => {
+      lastActivityRef.current = Date.now();
+      
+      // Update savedAt in storage
+      const storedData = localStorage.getItem(STORAGE_KEY);
+      if (storedData) {
+        const data: StoredCartData = JSON.parse(storedData);
+        if (!data.notified && !data.pixGenerated) {
+          data.savedAt = Date.now();
+          localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
+        }
+      }
+
+      // Clear existing timeout
+      if (timeoutRef.current) {
+        clearTimeout(timeoutRef.current);
+      }
+
+      // Set new timeout for 5 minutes
+      timeoutRef.current = setTimeout(async () => {
+        const stored = localStorage.getItem(STORAGE_KEY);
+        if (stored) {
+          const cartData: StoredCartData = JSON.parse(stored);
+          if (!cartData.notified && !cartData.pixGenerated) {
+            console.log('Inactivity timeout reached, sending notification...');
+            await sendNotification('checkout_abandoned');
+          }
+        }
+      }, INACTIVITY_TIMEOUT);
+    };
+
+    // Track user activity
+    const events = ['mousedown', 'mousemove', 'keydown', 'scroll', 'touchstart', 'click'];
+    
+    events.forEach(event => {
+      document.addEventListener(event, resetTimer, { passive: true });
+    });
+
+    // Initial timer setup
+    resetTimer();
+
+    // Handle visibility change (tab switch, minimize)
+    const handleVisibilityChange = () => {
+      if (document.hidden) {
+        // User left the tab, save current timestamp
+        const storedData = localStorage.getItem(STORAGE_KEY);
+        if (storedData) {
+          const data: StoredCartData = JSON.parse(storedData);
+          if (!data.notified && !data.pixGenerated) {
+            data.savedAt = Date.now();
+            localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
+          }
+        }
+      } else {
+        // User came back, check if 5 minutes passed
+        const storedData = localStorage.getItem(STORAGE_KEY);
+        if (storedData) {
+          const data: StoredCartData = JSON.parse(storedData);
+          if (!data.notified && !data.pixGenerated) {
+            const timeSinceSave = Date.now() - data.savedAt;
+            if (timeSinceSave >= INACTIVITY_TIMEOUT) {
+              sendNotification('checkout_abandoned');
+            } else {
+              // Reset timer for remaining time
+              resetTimer();
+            }
+          }
+        }
+      }
+    };
+
+    document.addEventListener('visibilitychange', handleVisibilityChange);
+
+    // Handle page unload
+    const handleBeforeUnload = () => {
+      const storedData = localStorage.getItem(STORAGE_KEY);
+      if (storedData) {
+        const data: StoredCartData = JSON.parse(storedData);
+        if (!data.notified && !data.pixGenerated) {
+          data.savedAt = Date.now();
+          localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
+        }
       }
     };
 
     window.addEventListener('beforeunload', handleBeforeUnload);
-    return () => window.removeEventListener('beforeunload', handleBeforeUnload);
-  }, [customer, shippingAddress, product, totalPriceInCents, isDataComplete]);
+
+    return () => {
+      events.forEach(event => {
+        document.removeEventListener(event, resetTimer);
+      });
+      document.removeEventListener('visibilitychange', handleVisibilityChange);
+      window.removeEventListener('beforeunload', handleBeforeUnload);
+      if (timeoutRef.current) {
+        clearTimeout(timeoutRef.current);
+      }
+    };
+  }, [sendNotification]);
+
+  const notifyCreditCardAttempt = useCallback(() => {
+    sendNotification('credit_card_attempt');
+  }, [sendNotification]);
+
+  const markPixGenerated = useCallback(() => {
+    const storedData = localStorage.getItem(STORAGE_KEY);
+    if (storedData) {
+      const data: StoredCartData = JSON.parse(storedData);
+      data.pixGenerated = true;
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
+    }
+    console.log('Pix generated, cart will not be marked as abandoned');
+  }, []);
+
+  const clearAbandonedCart = useCallback(() => {
+    localStorage.removeItem(STORAGE_KEY);
+    console.log('Abandoned cart data cleared');
+  }, []);
 
   return {
     notifyCreditCardAttempt,
     markPixGenerated,
-    resetNotification,
+    clearAbandonedCart,
     isDataComplete,
+    saveCartData,
   };
 };
