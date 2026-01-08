@@ -40,7 +40,7 @@ const Index = () => {
 
   return (
     <div className="min-h-screen bg-background">
-      <div className="max-w-md mx-auto pb-14">
+      <div className="max-w-md mx-auto">
         <ProductHeader />
         <ProductGallery currentIndex={galleryIndex} onIndexChange={setGalleryIndex} />
         <ProductThumbnails selectedIndex={galleryIndex} onSelect={setGalleryIndex} />

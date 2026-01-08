@@ -7,7 +7,7 @@ const ProductPageFooter = () => {
   };
 
   return (
-    <footer className="bg-[#222222] text-white py-4 px-4 mb-14">
+    <footer className="bg-[#222222] text-white pt-4 pb-14 px-4">
       {/* Links de políticas */}
       <div className="flex justify-center items-center gap-3 text-xs mb-4 border-b border-white/20 pb-4">
         <Link to="/politica-privacidade" className="hover:underline text-white/90">
