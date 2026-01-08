@@ -3,6 +3,7 @@ import { useState, useEffect } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { QRCodeSVG } from "qrcode.react";
+import { useAbandonedCart } from "@/hooks/useAbandonedCart";
 
 const PixPayment = () => {
   const location = useLocation();
@@ -10,6 +11,7 @@ const PixPayment = () => {
   const [copied, setCopied] = useState(false);
   const [timeLeft, setTimeLeft] = useState(15 * 60); // 15 minutes in seconds
   const [pulseTimer, setPulseTimer] = useState(false);
+  const { markPixGenerated, clearAbandonedCart } = useAbandonedCart();
 
   // Get data from navigation state
   const { qrCode, amount, transactionId } = location.state || {};
@@ -19,6 +21,10 @@ const PixPayment = () => {
       navigate("/");
       return;
     }
+
+    // Mark Pix as generated and clear abandoned cart tracking
+    markPixGenerated();
+    clearAbandonedCart();
 
     // Countdown timer
     const timer = setInterval(() => {

@@ -3,10 +3,12 @@ import { useLocation, useNavigate } from "react-router-dom";
 import { useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import confetti from "canvas-confetti";
+import { useAbandonedCart } from "@/hooks/useAbandonedCart";
 
 const OrderSuccess = () => {
   const location = useLocation();
   const navigate = useNavigate();
+  const { clearAbandonedCart } = useAbandonedCart();
 
   // Get order data from navigation state
   const { orderId, amount, paymentMethod } = location.state || {};
@@ -17,6 +19,9 @@ const OrderSuccess = () => {
       navigate("/");
       return;
     }
+
+    // Clear abandoned cart data since order was successful
+    clearAbandonedCart();
 
     // Trigger confetti celebration
     const duration = 3 * 1000;

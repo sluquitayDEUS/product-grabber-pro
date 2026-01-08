@@ -1,4 +1,4 @@
-import { useRef, useState } from "react";
+import { useRef, useState, useEffect } from "react";
 import ProductHeader from "@/components/shopee/ProductHeader";
 import ProductGallery from "@/components/shopee/ProductGallery";
 import ProductThumbnails from "@/components/shopee/ProductThumbnails";
@@ -13,10 +13,14 @@ import ProductReviews from "@/components/shopee/ProductReviews";
 import RelatedProducts from "@/components/shopee/RelatedProducts";
 import ProductFooter from "@/components/shopee/ProductFooter";
 import ScrollToTopButton from "@/components/shopee/ScrollToTopButton";
+import { useAbandonedCart } from "@/hooks/useAbandonedCart";
 
 const Index = () => {
   const variationsRef = useRef<ProductVariationsRef>(null);
   const [galleryIndex, setGalleryIndex] = useState(0);
+  
+  // Initialize abandoned cart tracking (checks for stale carts on page load)
+  useAbandonedCart();
 
   const handleNoColorSelected = () => {
     variationsRef.current?.scrollAndHighlight();
