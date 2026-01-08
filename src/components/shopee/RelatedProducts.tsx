@@ -1,3 +1,5 @@
+import { memo } from "react";
+import LazyImage from "@/components/ui/lazy-image";
 import boiaImg from "@/assets/related-boia.webp";
 import oculosImg from "@/assets/related-oculos.webp";
 import neopreneImg from "@/assets/related-neoprene.jpg";
@@ -34,7 +36,7 @@ const products = [
   },
 ];
 
-const RelatedProducts = () => {
+const RelatedProducts = memo(() => {
   return (
     <div className="bg-card mt-2 py-4">
       <h2 className="text-sm font-medium text-foreground px-3 mb-3">Produtos Relacionados</h2>
@@ -44,7 +46,7 @@ const RelatedProducts = () => {
           <div key={product.id} className="bg-card border border-border rounded-lg overflow-hidden">
             {/* Image */}
             <div className="relative aspect-square">
-              <img
+              <LazyImage
                 src={product.image}
                 alt={product.title}
                 className="w-full h-full object-cover"
@@ -81,6 +83,8 @@ const RelatedProducts = () => {
       </div>
     </div>
   );
-};
+});
+
+RelatedProducts.displayName = "RelatedProducts";
 
 export default RelatedProducts;
