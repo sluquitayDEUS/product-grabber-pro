@@ -31,17 +31,13 @@ const CheckoutChatButton = () => {
 
   useEffect(() => {
     const handleScroll = () => {
-      const scrollHeight = document.documentElement.scrollHeight;
+      // Only show after user has scrolled at least 100px
       const scrollTop = window.scrollY;
-      const clientHeight = window.innerHeight;
-      
-      // Show when scrolled past 60% of the page
-      const scrollPercentage = (scrollTop + clientHeight) / scrollHeight;
-      setIsVisible(scrollPercentage > 0.6);
+      setIsVisible(scrollTop > 100);
     };
 
     window.addEventListener("scroll", handleScroll);
-    handleScroll(); // Check initial position
+    // Don't check initial position - start hidden
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
@@ -58,11 +54,11 @@ const CheckoutChatButton = () => {
 
   return (
     <>
-      {/* Small floating chat button - bottom left */}
+      {/* Small floating chat button - above footer */}
       {!isOpen && (
         <button
           onClick={() => setIsOpen(true)}
-          className="fixed bottom-[72px] left-2 w-9 h-9 bg-[#EE4D2D] text-white rounded-full flex items-center justify-center shadow-lg z-40 hover:scale-105 transition-transform"
+          className="fixed bottom-28 left-2 w-9 h-9 bg-[#EE4D2D] text-white rounded-full flex items-center justify-center shadow-lg z-[60] hover:scale-105 transition-transform"
           aria-label="Abrir chat"
         >
           <MessageCircle className="w-4 h-4" />
@@ -71,7 +67,7 @@ const CheckoutChatButton = () => {
 
       {/* Chat popup - small and compact */}
       {isOpen && (
-        <div className="fixed bottom-32 left-3 w-64 max-h-72 bg-card rounded-lg shadow-xl z-50 overflow-hidden border border-border animate-in fade-in slide-in-from-bottom-2 duration-200">
+        <div className="fixed bottom-36 left-2 w-60 max-h-64 bg-card rounded-lg shadow-xl z-[60] overflow-hidden border border-border animate-in fade-in slide-in-from-bottom-2 duration-200">
           {/* Header */}
           <div className="flex items-center justify-between p-2 bg-[#EE4D2D] text-white">
             <div className="flex items-center gap-2">
