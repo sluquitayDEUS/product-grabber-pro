@@ -164,10 +164,11 @@ export const CartProvider = ({ children }: { children: ReactNode }) => {
   };
 
   const subtotal = product.price * quantity;
-  const pixDiscount = paymentMethod === "pix" ? subtotal * 0.05 : 0;
+  // PIX discount: 5% for 1 unit, 12% for 2 units
+  const pixDiscountRate = paymentMethod === "pix" ? (quantity >= 2 ? 0.12 : 0.05) : 0;
+  const pixDiscount = subtotal * pixDiscountRate;
   const totalPrice = subtotal + selectedShipping.price - pixDiscount;
   const totalPriceInCents = Math.round(totalPrice * 100);
-
   return (
     <CartContext.Provider
       value={{

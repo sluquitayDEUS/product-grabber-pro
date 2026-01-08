@@ -3,8 +3,14 @@ import { useNavigate } from "react-router-dom";
 import { useToast } from "@/hooks/use-toast";
 import { useCart } from "@/contexts/CartContext";
 import { usePayment } from "@/hooks/usePayment";
+import { validateCPF } from "@/lib/cpfValidator";
+import { useState } from "react";
 
-const CheckoutFooter = () => {
+interface CheckoutFooterProps {
+  onAddressInvalid?: () => void;
+}
+
+const CheckoutFooter = ({ onAddressInvalid }: CheckoutFooterProps) => {
   const navigate = useNavigate();
   const { toast } = useToast();
   const { 
@@ -17,39 +23,37 @@ const CheckoutFooter = () => {
     cardData,
     installments,
     pixDiscount,
+    quantity,
   } = useCart();
   const { processPayment, isLoading } = usePayment();
+  const [showAddressWarning, setShowAddressWarning] = useState(false);
 
   const subtotal = product.price * product.quantity;
   const voucher = -5.00;
   const coins = -0.50;
   const total = subtotal + selectedShipping.price + voucher + coins - pixDiscount;
 
-  const handleConfirmOrder = async () => {
-    // Validate customer data
-    if (!customer.name || !customer.email || !customer.document) {
-      toast({
-        title: "Dados incompletos",
-        description: "Preencha seus dados pessoais antes de finalizar.",
-        variant: "destructive",
-      });
-      return;
-    }
+  const isAddressValid = () => {
+    return (
+      customer.name &&
+      customer.email &&
+      customer.document &&
+      validateCPF(customer.document) &&
+      shippingAddress.street &&
+      shippingAddress.number &&
+      shippingAddress.neighborhood &&
+      shippingAddress.city &&
+      shippingAddress.state &&
+      shippingAddress.zipcode
+    );
+  };
 
-    // Validate address data (required by gateway)
-    if (
-      !shippingAddress.street ||
-      !shippingAddress.number ||
-      !shippingAddress.neighborhood ||
-      !shippingAddress.city ||
-      !shippingAddress.state ||
-      !shippingAddress.zipcode
-    ) {
-      toast({
-        title: "Endereço incompleto",
-        description: "Preencha seu endereço de entrega antes de finalizar.",
-        variant: "destructive",
-      });
+  const handleConfirmOrder = async () => {
+    // Validate address first
+    if (!isAddressValid()) {
+      setShowAddressWarning(true);
+      setTimeout(() => setShowAddressWarning(false), 3100);
+      onAddressInvalid?.();
       return;
     }
 
@@ -95,9 +99,7 @@ const CheckoutFooter = () => {
         ],
       });
 
-
       if (result.paymentMethod === "pix" && result.pix) {
-        // Navigate to dedicated Pix page
         navigate("/pix-payment", {
           state: {
             qrCode: result.pix.qrCode,
@@ -106,7 +108,6 @@ const CheckoutFooter = () => {
           },
         });
       } else if (result.paymentMethod === "credit_card" && result.status === "paid") {
-        // Credit card approved - navigate to success page
         navigate("/order-success", {
           state: {
             orderId: result.transactionId,
@@ -131,6 +132,13 @@ const CheckoutFooter = () => {
 
   return (
     <>
+      {/* Warning message for address */}
+      {showAddressWarning && (
+        <div className="fixed bottom-24 left-1/2 -translate-x-1/2 z-50 bg-destructive text-destructive-foreground px-4 py-2 rounded-lg shadow-lg text-sm font-medium animate-pulse">
+          Preencha o endereço de entrega
+        </div>
+      )}
+      
       <footer className="fixed bottom-0 left-0 right-0 bg-card border-t border-border z-50">
         {/* Terms */}
         <div className="px-3 py-2 border-b border-border flex items-center gap-2">

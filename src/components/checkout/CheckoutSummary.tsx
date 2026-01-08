@@ -2,9 +2,11 @@ import { ChevronDown } from "lucide-react";
 import { useCart } from "@/contexts/CartContext";
 
 const CheckoutSummary = () => {
-  const { product, selectedShipping, paymentMethod, pixDiscount, totalPrice } = useCart();
+  const { product, selectedShipping, paymentMethod, pixDiscount, totalPrice, quantity } = useCart();
   
   const subtotal = product.price * product.quantity;
+  // Determine discount percentage based on quantity
+  const discountPercentage = quantity >= 2 ? 12 : 5;
 
   return (
     <div className="bg-card mt-2 mb-20">
@@ -26,7 +28,7 @@ const CheckoutSummary = () => {
         </div>
         {paymentMethod === "pix" && pixDiscount > 0 && (
           <div className="flex justify-between items-center bg-green-50 -mx-3 px-3 py-2">
-            <span className="text-sm font-medium text-green-700">🎉 Desconto Pix (5%)</span>
+            <span className="text-sm font-medium text-green-700">🎉 Desconto Pix ({discountPercentage}%)</span>
             <span className="text-sm font-bold text-green-600">-R$ {pixDiscount.toFixed(2).replace('.', ',')}</span>
           </div>
         )}
