@@ -58,26 +58,27 @@ const ProductDescription = () => {
           {/* Intro */}
           <div className="space-y-2 text-center">
             <h4 className="text-base font-bold text-foreground">AquaVolt Explicação</h4>
+            
+            {/* Wistia Video - 16:9 aspect ratio */}
+            <div className="w-full my-3">
+              <div className="relative w-full" style={{ paddingBottom: "56.25%" }}>
+                <iframe 
+                  src="https://fast.wistia.net/embed/iframe/x00b5mokfv?web_component=true&seo=true" 
+                  title="AquaVolt Video" 
+                  allow="autoplay; fullscreen" 
+                  frameBorder="0" 
+                  scrolling="no" 
+                  className="absolute top-0 left-0 w-full h-full rounded-lg" 
+                  name="wistia_embed"
+                />
+              </div>
+            </div>
+            
             <h5 className="text-sm font-semibold text-foreground">Experimente uma diversão sem precedentes no karting aquático</h5>
             <p className="text-foreground">
               <strong>Conheça o revolucionário AquaVolt</strong>, um híbrido impressionante de kart e jet ski, também conhecido como "boat kart". Este inovador jet boat incorpora uma mistura perfeita de potência, agilidade e a pura adrenalina de cruzar a água a uma velocidade incrível e com melhor custo benefício.
             </p>
             <p className="text-primary font-bold">ULTIMO DIA DE PROMOÇÃO!</p>
-          </div>
-
-          {/* Wistia Video - 16:9 aspect ratio */}
-          <div className="w-full">
-            <div className="relative w-full" style={{ paddingBottom: "56.25%" }}>
-              <iframe 
-                src="https://fast.wistia.net/embed/iframe/x00b5mokfv?web_component=true&seo=true" 
-                title="AquaVolt Video" 
-                allow="autoplay; fullscreen" 
-                frameBorder="0" 
-                scrolling="no" 
-                className="absolute top-0 left-0 w-full h-full rounded-lg" 
-                name="wistia_embed"
-              />
-            </div>
           </div>
 
           <img src={aquavoltPower} alt="AquaVolt Power" className="w-full rounded-lg" />
