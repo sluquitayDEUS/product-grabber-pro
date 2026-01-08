@@ -83,7 +83,7 @@ const ProductPageFooter = () => {
 
       {/* Copyright */}
       <p className="text-center text-[10px] text-white/50 mt-3">
-        © 2024 Shoppe. Todos os direitos reservados.
+        © 2024 Shoppebr. Todos os direitos reservados.
       </p>
     </footer>;
 };
