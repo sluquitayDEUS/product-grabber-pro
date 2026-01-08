@@ -1,5 +1,6 @@
-import { useState } from "react";
+import { useState, memo, lazy, Suspense } from "react";
 import { ChevronDown, ChevronUp } from "lucide-react";
+import LazyImage from "@/components/ui/lazy-image";
 
 // Import description images
 import aquavoltBanner from "@/assets/aquavolt-banner.webp";
@@ -30,7 +31,7 @@ const specs = [
   { label: "Certificações", value: "CE, FCC, ROHS, MSDS, UL38.3" },
 ];
 
-const ProductDescription = () => {
+const ProductDescription = memo(() => {
   const [isExpanded, setIsExpanded] = useState(false);
 
   return (
@@ -53,7 +54,7 @@ const ProductDescription = () => {
         <div className={`text-xs leading-relaxed space-y-4 ${!isExpanded && "max-h-[200px] overflow-hidden"}`}>
           
           {/* Banner */}
-          <img src={aquavoltBanner} alt="AquaVolt Banner" className="w-full rounded-lg" />
+          <LazyImage src={aquavoltBanner} alt="AquaVolt Banner" className="w-full rounded-lg" />
           
           {/* Intro */}
           <div className="space-y-2 text-center">
@@ -81,7 +82,7 @@ const ProductDescription = () => {
             <p className="text-primary font-bold">ULTIMO DIA DE PROMOÇÃO!</p>
           </div>
 
-          <img src={aquavoltPower} alt="AquaVolt Power" className="w-full rounded-lg" />
+          <LazyImage src={aquavoltPower} alt="AquaVolt Power" className="w-full rounded-lg" />
 
           {/* Power Section */}
           <div className="space-y-2 text-center">
@@ -91,7 +92,7 @@ const ProductDescription = () => {
             </p>
           </div>
 
-          <img src={aquavoltResistance} alt="AquaVolt Resistance" className="w-full rounded-lg" />
+          <LazyImage src={aquavoltResistance} alt="AquaVolt Resistance" className="w-full rounded-lg" />
 
           {/* Resistance Section */}
           <div className="space-y-2 text-center">
@@ -101,7 +102,7 @@ const ProductDescription = () => {
             </p>
           </div>
 
-          <img src={aquavoltDurability} alt="AquaVolt Durability" className="w-full rounded-lg" />
+          <LazyImage src={aquavoltDurability} alt="AquaVolt Durability" className="w-full rounded-lg" />
 
           {/* Durability Section */}
           <div className="space-y-2 text-center">
@@ -111,7 +112,7 @@ const ProductDescription = () => {
             </p>
           </div>
 
-          <img src={aquavoltNavigation} alt="AquaVolt Navigation" className="w-full rounded-lg" />
+          <LazyImage src={aquavoltNavigation} alt="AquaVolt Navigation" className="w-full rounded-lg" />
 
           {/* Navigation Section */}
           <div className="space-y-2 text-center">
@@ -121,7 +122,7 @@ const ProductDescription = () => {
             </p>
           </div>
 
-          <img src={aquavoltAccelerator} alt="AquaVolt Accelerator" className="w-full rounded-lg" />
+          <LazyImage src={aquavoltAccelerator} alt="AquaVolt Accelerator" className="w-full rounded-lg" />
 
           {/* Safety Section */}
           <div className="space-y-2 text-center">
@@ -131,7 +132,7 @@ const ProductDescription = () => {
             </p>
           </div>
 
-          <img src={aquavoltSafety} alt="AquaVolt Safety" className="w-full rounded-lg" />
+          <LazyImage src={aquavoltSafety} alt="AquaVolt Safety" className="w-full rounded-lg" />
 
           {/* Style Section */}
           <div className="space-y-2 text-center">
@@ -141,7 +142,7 @@ const ProductDescription = () => {
             </p>
           </div>
 
-          <img src={aquavoltStyle} alt="AquaVolt Style" className="w-full rounded-lg" />
+          <LazyImage src={aquavoltStyle} alt="AquaVolt Style" className="w-full rounded-lg" />
 
           {/* Charging Section */}
           <div className="space-y-2 text-center">
@@ -151,7 +152,7 @@ const ProductDescription = () => {
             </p>
           </div>
 
-          <img src={aquavoltCharging} alt="AquaVolt Charging" className="w-full rounded-lg" />
+          <LazyImage src={aquavoltCharging} alt="AquaVolt Charging" className="w-full rounded-lg" />
 
           {/* Support Section */}
           <div className="space-y-2 text-center">
@@ -161,7 +162,7 @@ const ProductDescription = () => {
             </p>
           </div>
 
-          <img src={aquavoltSupport} alt="AquaVolt Support" className="w-full rounded-lg" />
+          <LazyImage src={aquavoltSupport} alt="AquaVolt Support" className="w-full rounded-lg" />
 
           {/* No License Section */}
           <div className="space-y-2 text-center">
@@ -171,14 +172,14 @@ const ProductDescription = () => {
             </p>
           </div>
 
-          <img src={aquavoltNoLicense} alt="Sem habilitação náutica" className="w-full rounded-lg" />
+          <LazyImage src={aquavoltNoLicense} alt="Sem habilitação náutica" className="w-full rounded-lg" />
 
           {/* Transport Section */}
           <div className="space-y-2 text-center">
             <h5 className="text-sm font-semibold text-foreground">Fácil de ser Transportado</h5>
           </div>
 
-          <img src={aquavoltTransport} alt="AquaVolt Transport" className="w-full rounded-lg" />
+          <LazyImage src={aquavoltTransport} alt="AquaVolt Transport" className="w-full rounded-lg" />
 
           {/* Specs Summary */}
           <div className="space-y-2 text-center">
@@ -199,7 +200,7 @@ const ProductDescription = () => {
             </ul>
           </div>
 
-          <img src={aquavoltSpecs} alt="AquaVolt Specs" className="w-full rounded-lg" />
+          <LazyImage src={aquavoltSpecs} alt="AquaVolt Specs" className="w-full rounded-lg" />
 
         </div>
         
@@ -220,6 +221,8 @@ const ProductDescription = () => {
       </div>
     </div>
   );
-};
+});
+
+ProductDescription.displayName = "ProductDescription";
 
 export default ProductDescription;
