@@ -9,16 +9,31 @@ import CheckoutFooter from "@/components/checkout/CheckoutFooter";
 import CheckoutChatButton from "@/components/checkout/CheckoutChatButton";
 import { useCart } from "@/contexts/CartContext";
 import { useAbandonedCart } from "@/hooks/useAbandonedCart";
+import { useMetaPixel } from "@/hooks/useMetaPixel";
 
 const Checkout = () => {
   const addressRef = useRef<CheckoutAddressRef>(null);
-  const { setHasVisitedCheckout } = useCart();
+  const { setHasVisitedCheckout, quantity, product } = useCart();
   const { notifyCreditCardAttempt, markPixGenerated } = useAbandonedCart();
+  const { trackInitiateCheckout, trackAddToCart } = useMetaPixel();
   
-  // Mark that user has visited checkout
+  // Mark that user has visited checkout and track events
   useEffect(() => {
     setHasVisitedCheckout(true);
-  }, [setHasVisitedCheckout]);
+    
+    // Track InitiateCheckout and AddToCart
+    const productValue = (product?.price || 149700) * quantity;
+    trackInitiateCheckout(
+      productValue,
+      "AquaVolt - Prancha Elétrica Subaquática",
+      "aquavolt-001"
+    );
+    trackAddToCart(
+      productValue,
+      "AquaVolt - Prancha Elétrica Subaquática",
+      "aquavolt-001"
+    );
+  }, [setHasVisitedCheckout, trackInitiateCheckout, trackAddToCart, quantity, product]);
   
   const handleAddressInvalid = () => {
     addressRef.current?.scrollAndHighlight();
