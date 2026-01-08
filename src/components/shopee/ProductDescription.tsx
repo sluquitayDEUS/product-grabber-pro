@@ -34,7 +34,7 @@ const ProductDescription = () => {
   const [isExpanded, setIsExpanded] = useState(false);
 
   return (
-    <div className="bg-card px-3 py-4 mt-2">
+    <div className="bg-card px-3 py-4 mt-2 description-section">
       <h2 className="text-sm font-medium text-foreground mb-3">Detalhes do Produto</h2>
 
       {/* Specifications */}
