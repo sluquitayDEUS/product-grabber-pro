@@ -14,13 +14,24 @@ import RelatedProducts from "@/components/shopee/RelatedProducts";
 import ProductFooter from "@/components/shopee/ProductFooter";
 import ScrollToTopButton from "@/components/shopee/ScrollToTopButton";
 import { useAbandonedCart } from "@/hooks/useAbandonedCart";
+import { useMetaPixel } from "@/hooks/useMetaPixel";
 
 const Index = () => {
   const variationsRef = useRef<ProductVariationsRef>(null);
   const [galleryIndex, setGalleryIndex] = useState(0);
+  const { trackViewContent } = useMetaPixel();
   
   // Initialize abandoned cart tracking (checks for stale carts on page load)
   useAbandonedCart();
+
+  // Track ViewContent on page load
+  useEffect(() => {
+    trackViewContent(
+      "AquaVolt - Prancha Elétrica Subaquática",
+      "aquavolt-001",
+      149700 // R$ 1.497,00 em centavos
+    );
+  }, [trackViewContent]);
 
   const handleNoColorSelected = () => {
     variationsRef.current?.scrollAndHighlight();

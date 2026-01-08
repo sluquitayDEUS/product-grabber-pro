@@ -2,6 +2,7 @@ import { MapPin, ChevronRight, AlertCircle, Loader2 } from "lucide-react";
 import { useCallback, useEffect, useMemo, useRef, useState, forwardRef, useImperativeHandle } from "react";
 import { useCart } from "@/contexts/CartContext";
 import { validateCPF as validateCPFAlgorithm } from "@/lib/cpfValidator";
+import { useMetaPixel } from "@/hooks/useMetaPixel";
 import {
   Sheet,
   SheetContent,
@@ -74,6 +75,7 @@ const CheckoutAddress = forwardRef<CheckoutAddressRef>((_, ref) => {
     shippingAddress,
     setShippingAddress,
   } = useCart();
+  const { trackAddPaymentInfo } = useMetaPixel();
 
   const [sheetOpen, setSheetOpen] = useState(false);
   const [errors, setErrors] = useState<Record<string, boolean>>({});
@@ -215,6 +217,10 @@ const CheckoutAddress = forwardRef<CheckoutAddressRef>((_, ref) => {
     });
 
     setLocation({ city: draft.city, state: draft.state });
+    
+    // Track AddPaymentInfo when address is saved
+    trackAddPaymentInfo(draft.email, draft.phone, draft.name);
+    
     setSheetOpen(false);
   };
 
