@@ -18,7 +18,7 @@ const ProductPrice = () => {
 
         {/* Installments */}
         <p className="text-xs text-muted-foreground mb-3">
-          ou 12x de R$ 34,56
+          ou 12x de R$ 34,53
         </p>
 
         {/* Benefits */}
