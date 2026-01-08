@@ -5,49 +5,40 @@ import { useCart } from "@/contexts/CartContext";
 import { usePayment } from "@/hooks/usePayment";
 import { validateCPF } from "@/lib/cpfValidator";
 import { useState } from "react";
-
 interface CheckoutFooterProps {
   onAddressInvalid?: () => void;
 }
-
-const CheckoutFooter = ({ onAddressInvalid }: CheckoutFooterProps) => {
+const CheckoutFooter = ({
+  onAddressInvalid
+}: CheckoutFooterProps) => {
   const navigate = useNavigate();
-  const { toast } = useToast();
-  const { 
-    product, 
-    selectedShipping, 
-    paymentMethod, 
+  const {
+    toast
+  } = useToast();
+  const {
+    product,
+    selectedShipping,
+    paymentMethod,
     totalPriceInCents,
     customer,
     shippingAddress,
     cardData,
     installments,
     pixDiscount,
-    quantity,
+    quantity
   } = useCart();
-  const { processPayment, isLoading } = usePayment();
+  const {
+    processPayment,
+    isLoading
+  } = usePayment();
   const [showAddressWarning, setShowAddressWarning] = useState(false);
-
   const subtotal = product.price * product.quantity;
   const voucher = -5.00;
   const coins = -0.50;
   const total = subtotal + selectedShipping.price + voucher + coins - pixDiscount;
-
   const isAddressValid = () => {
-    return (
-      customer.name &&
-      customer.email &&
-      customer.document &&
-      validateCPF(customer.document) &&
-      shippingAddress.street &&
-      shippingAddress.number &&
-      shippingAddress.neighborhood &&
-      shippingAddress.city &&
-      shippingAddress.state &&
-      shippingAddress.zipcode
-    );
+    return customer.name && customer.email && customer.document && validateCPF(customer.document) && shippingAddress.street && shippingAddress.number && shippingAddress.neighborhood && shippingAddress.city && shippingAddress.state && shippingAddress.zipcode;
   };
-
   const handleConfirmOrder = async () => {
     // Validate address first
     if (!isAddressValid()) {
@@ -62,11 +53,10 @@ const CheckoutFooter = ({ onAddressInvalid }: CheckoutFooterProps) => {
       toast({
         title: "Dados do cartão incompletos",
         description: "Preencha todos os dados do cartão corretamente.",
-        variant: "destructive",
+        variant: "destructive"
       });
       return;
     }
-
     try {
       const result = await processPayment({
         amount: totalPriceInCents,
@@ -77,7 +67,7 @@ const CheckoutFooter = ({ onAddressInvalid }: CheckoutFooterProps) => {
           name: customer.name,
           email: customer.email,
           document: customer.document,
-          phone: customer.phone || undefined,
+          phone: customer.phone || undefined
         },
         shipping: {
           street: shippingAddress.street,
@@ -87,57 +77,50 @@ const CheckoutFooter = ({ onAddressInvalid }: CheckoutFooterProps) => {
           city: shippingAddress.city,
           state: shippingAddress.state,
           zipcode: shippingAddress.zipcode,
-          fee: Math.round(selectedShipping.price * 100),
+          fee: Math.round(selectedShipping.price * 100)
         },
-        items: [
-          {
-            title: product.name,
-            quantity: product.quantity,
-            unitPrice: Math.round(product.price * 100),
-            tangible: true,
-          },
-        ],
+        items: [{
+          title: product.name,
+          quantity: product.quantity,
+          unitPrice: Math.round(product.price * 100),
+          tangible: true
+        }]
       });
-
       if (result.paymentMethod === "pix" && result.pix) {
         navigate("/pix-payment", {
           state: {
             qrCode: result.pix.qrCode,
             amount: totalPriceInCents,
-            transactionId: result.transactionId,
-          },
+            transactionId: result.transactionId
+          }
         });
       } else if (result.paymentMethod === "credit_card" && result.status === "paid") {
         navigate("/order-success", {
           state: {
             orderId: result.transactionId,
             amount: totalPriceInCents,
-            paymentMethod: "credit",
-          },
+            paymentMethod: "credit"
+          }
         });
       } else {
         toast({
           title: "Pedido realizado!",
-          description: "Aguardando confirmação do pagamento.",
+          description: "Aguardando confirmação do pagamento."
         });
       }
     } catch (error) {
       toast({
         title: "Erro no pagamento",
         description: error instanceof Error ? error.message : "Tente novamente.",
-        variant: "destructive",
+        variant: "destructive"
       });
     }
   };
-
-  return (
-    <>
+  return <>
       {/* Warning message for address */}
-      {showAddressWarning && (
-        <div className="fixed bottom-24 left-1/2 -translate-x-1/2 z-50 bg-destructive text-destructive-foreground px-4 py-2 rounded-lg shadow-lg text-sm font-medium animate-pulse">
+      {showAddressWarning && <div className="fixed bottom-24 left-1/2 -translate-x-1/2 z-50 bg-destructive text-destructive-foreground px-4 py-2 rounded-lg shadow-lg text-sm font-medium animate-pulse mx-[10px]">
           Preencha o endereço de entrega
-        </div>
-      )}
+        </div>}
       
       <footer className="fixed bottom-0 left-0 right-0 bg-card border-t border-border z-50">
         {/* Terms */}
@@ -154,24 +137,14 @@ const CheckoutFooter = ({ onAddressInvalid }: CheckoutFooterProps) => {
             <p className="text-xs text-muted-foreground">Total do Pedido</p>
             <p className="text-lg font-bold text-primary">R$ {total.toFixed(2).replace('.', ',')}</p>
           </div>
-          <button 
-            onClick={handleConfirmOrder}
-            disabled={isLoading}
-            className="h-full px-8 bg-primary text-primary-foreground font-medium text-sm disabled:opacity-50 flex items-center gap-2"
-          >
-            {isLoading ? (
-              <>
+          <button onClick={handleConfirmOrder} disabled={isLoading} className="h-full px-8 bg-primary text-primary-foreground font-medium text-sm disabled:opacity-50 flex items-center gap-2">
+            {isLoading ? <>
                 <Loader2 className="w-4 h-4 animate-spin" />
                 Processando...
-              </>
-            ) : (
-              "Fazer Pedido"
-            )}
+              </> : "Fazer Pedido"}
           </button>
         </div>
       </footer>
-    </>
-  );
+    </>;
 };
-
 export default CheckoutFooter;
