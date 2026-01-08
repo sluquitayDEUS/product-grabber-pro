@@ -21,6 +21,18 @@ const faqData = [
   {
     question: "Posso parcelar?",
     answer: "Sim! Aceitamos cartões de crédito com parcelamento em até 12x sem juros."
+  },
+  {
+    question: "Como rastreio meu pedido?",
+    answer: "Após o envio, você receberá o código de rastreio por e-mail e WhatsApp. Acompanhe em tempo real pelo site dos Correios ou transportadora."
+  },
+  {
+    question: "Posso alterar meu endereço?",
+    answer: "Sim! Você pode alterar o endereço antes de finalizar o pedido clicando em 'Adicionar endereço de entrega'. Após a confirmação do pagamento, entre em contato conosco."
+  },
+  {
+    question: "Vocês emitem nota fiscal?",
+    answer: "Sim! Emitimos nota fiscal eletrônica (NF-e) automaticamente. Ela será enviada para seu e-mail após a confirmação do pagamento."
   }
 ];
 

@@ -27,7 +27,7 @@ const faqData = [
   },
   {
     question: "Quais formas de pagamento?",
-    answer: "Aceitamos PIX e Cartão de Crédito (em até 12x com juros). No PIX, oferecemos 5% de desconto para primeira compra! Não aceitamos cartão de débito nem boleto bancário. O pagamento via PIX é instantâneo e o pedido é processado imediatamente."
+    answer: "Aceitamos PIX e Cartão de Crédito (em até 12x com juros). No PIX, oferecemos até 12% de desconto! Não aceitamos cartão de débito nem boleto bancário. O pagamento via PIX é instantâneo e o pedido é processado imediatamente."
   },
   {
     question: "Como rastreio meu pedido?",
@@ -56,6 +56,26 @@ const faqData = [
   {
     question: "Como é o carregamento?",
     answer: "A bateria de lítio ternária carrega completamente em apenas 3 a 4 horas, compatível com tomadas 220V e 110V. A bateria possui vida útil de até 800 ciclos de carga e descarga. O AquaVolt pesa apenas 45 kg (casco) + 23 kg (bateria), sendo fácil de transportar."
+  },
+  {
+    question: "Posso cancelar meu pedido?",
+    answer: "Sim! Você pode cancelar seu pedido antes do envio sem nenhum custo. Após o envio, você pode recusar o recebimento ou solicitar devolução em até 7 dias. O reembolso é processado em até 48 horas após a confirmação."
+  },
+  {
+    question: "Como entro em contato com a loja?",
+    answer: "Você pode nos contatar pelo chat da Shopee, disponível 24 horas! Nossa equipe responde em até 2 horas durante o horário comercial. Também enviamos atualizações do seu pedido por e-mail e WhatsApp automaticamente."
+  },
+  {
+    question: "O produto vem com acessórios?",
+    answer: "Sim! O AquaVolt inclui: colete salva-vidas, airbag anticolisão, piso sintético, carregador compatível com 110V/220V e certificado da Marinha do Brasil. Tudo o que você precisa para começar a usar imediatamente!"
+  },
+  {
+    question: "Posso comprar mais de uma unidade?",
+    answer: "Por questões de estoque limitado, cada cliente pode adquirir no máximo 2 unidades por pedido. Se precisar de mais, entre em contato conosco pelo chat para verificar disponibilidade especial."
+  },
+  {
+    question: "Vocês emitem nota fiscal?",
+    answer: "Sim! Emitimos nota fiscal eletrônica (NF-e) em todas as compras. A nota é enviada automaticamente para seu e-mail após a confirmação do pagamento. Caso precise de segunda via, basta solicitar pelo chat."
   }
 ];
 
