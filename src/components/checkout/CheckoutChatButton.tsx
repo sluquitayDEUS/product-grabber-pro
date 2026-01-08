@@ -58,14 +58,16 @@ const CheckoutChatButton = () => {
 
   return (
     <>
-      {/* Small floating chat button */}
-      <button
-        onClick={() => setIsOpen(true)}
-        className="fixed bottom-20 left-3 w-10 h-10 bg-[#EE4D2D] text-white rounded-full flex items-center justify-center shadow-lg z-40 hover:scale-105 transition-transform"
-        aria-label="Abrir chat"
-      >
-        <MessageCircle className="w-5 h-5" />
-      </button>
+      {/* Small floating chat button - bottom left */}
+      {!isOpen && (
+        <button
+          onClick={() => setIsOpen(true)}
+          className="fixed bottom-[72px] left-2 w-9 h-9 bg-[#EE4D2D] text-white rounded-full flex items-center justify-center shadow-lg z-40 hover:scale-105 transition-transform"
+          aria-label="Abrir chat"
+        >
+          <MessageCircle className="w-4 h-4" />
+        </button>
+      )}
 
       {/* Chat popup - small and compact */}
       {isOpen && (
