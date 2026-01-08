@@ -2,13 +2,10 @@ import { useState } from "react";
 import { MessageCircle, Store } from "lucide-react";
 import StorePopup from "./StorePopup";
 import ChatPopup from "./ChatPopup";
-
 const StoreCard = () => {
   const [showStorePopup, setShowStorePopup] = useState(false);
   const [showChatPopup, setShowChatPopup] = useState(false);
-
-  return (
-    <>
+  return <>
       <div className="bg-card px-3 py-4 mt-2">
         <div className="flex items-center gap-3">
           {/* Store Avatar */}
@@ -45,7 +42,7 @@ const StoreCard = () => {
           </div>
           <div className="w-px h-8 bg-border" />
           <div className="text-center">
-            <p className="text-sm font-medium text-primary">72</p>
+            <p className="text-sm font-medium text-primary">372</p>
             <p className="text-xs text-muted-foreground">Produtos</p>
           </div>
           <div className="w-px h-8 bg-border" />
@@ -57,17 +54,11 @@ const StoreCard = () => {
 
         {/* Action Buttons */}
         <div className="flex gap-2 mt-4">
-          <button 
-            onClick={() => setShowChatPopup(true)}
-            className="flex-1 flex items-center justify-center gap-2 py-2 border border-primary text-primary rounded-lg text-sm"
-          >
+          <button onClick={() => setShowChatPopup(true)} className="flex-1 flex items-center justify-center gap-2 py-2 border border-primary text-primary rounded-lg text-sm">
             <MessageCircle className="w-4 h-4" />
             Chat
           </button>
-          <button 
-            onClick={() => setShowStorePopup(true)}
-            className="flex-1 flex items-center justify-center gap-2 py-2 border border-border text-foreground rounded-lg text-sm"
-          >
+          <button onClick={() => setShowStorePopup(true)} className="flex-1 flex items-center justify-center gap-2 py-2 border border-border text-foreground rounded-lg text-sm">
             <Store className="w-4 h-4" />
             Ver Loja
           </button>
@@ -76,8 +67,6 @@ const StoreCard = () => {
 
       <StorePopup open={showStorePopup} onOpenChange={setShowStorePopup} />
       <ChatPopup open={showChatPopup} onOpenChange={setShowChatPopup} />
-    </>
-  );
+    </>;
 };
-
 export default StoreCard;
