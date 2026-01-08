@@ -275,7 +275,7 @@ const CheckoutAddress = forwardRef<CheckoutAddressRef>((_, ref) => {
           </button>
         </SheetTrigger>
 
-        <SheetContent ref={sheetContentRef} side="bottom" className="rounded-t-xl h-[85vh] overflow-y-auto">
+        <SheetContent ref={sheetContentRef} side="bottom" className="rounded-t-xl h-[85vh] overflow-y-auto" onOpenAutoFocus={(e) => e.preventDefault()}>
           <SheetHeader>
             <SheetTitle>Dados + Endereço</SheetTitle>
           </SheetHeader>
