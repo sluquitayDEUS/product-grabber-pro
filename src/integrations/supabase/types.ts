@@ -14,7 +14,99 @@ export type Database = {
   }
   public: {
     Tables: {
-      [_ in never]: never
+      abandoned_carts: {
+        Row: {
+          contacted: boolean
+          created_at: string
+          customer_document: string
+          customer_email: string
+          customer_name: string
+          customer_phone: string | null
+          id: string
+          notes: string | null
+          product_name: string
+          product_price: number
+          product_quantity: number
+          shipping_city: string
+          shipping_complement: string | null
+          shipping_neighborhood: string
+          shipping_number: string
+          shipping_state: string
+          shipping_street: string
+          shipping_zipcode: string
+          total_amount: number
+          type: string
+          updated_at: string
+        }
+        Insert: {
+          contacted?: boolean
+          created_at?: string
+          customer_document: string
+          customer_email: string
+          customer_name: string
+          customer_phone?: string | null
+          id?: string
+          notes?: string | null
+          product_name: string
+          product_price: number
+          product_quantity?: number
+          shipping_city: string
+          shipping_complement?: string | null
+          shipping_neighborhood: string
+          shipping_number: string
+          shipping_state: string
+          shipping_street: string
+          shipping_zipcode: string
+          total_amount: number
+          type: string
+          updated_at?: string
+        }
+        Update: {
+          contacted?: boolean
+          created_at?: string
+          customer_document?: string
+          customer_email?: string
+          customer_name?: string
+          customer_phone?: string | null
+          id?: string
+          notes?: string | null
+          product_name?: string
+          product_price?: number
+          product_quantity?: number
+          shipping_city?: string
+          shipping_complement?: string | null
+          shipping_neighborhood?: string
+          shipping_number?: string
+          shipping_state?: string
+          shipping_street?: string
+          shipping_zipcode?: string
+          total_amount?: number
+          type?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      admin_sessions: {
+        Row: {
+          created_at: string
+          expires_at: string
+          id: string
+          session_token: string
+        }
+        Insert: {
+          created_at?: string
+          expires_at?: string
+          id?: string
+          session_token: string
+        }
+        Update: {
+          created_at?: string
+          expires_at?: string
+          id?: string
+          session_token?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
