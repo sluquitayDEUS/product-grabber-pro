@@ -205,7 +205,7 @@ const allReviews = generateReviews();
 
 const ProductReviews = () => {
   const [activeFilter, setActiveFilter] = useState("Todas");
-  const [showAll, setShowAll] = useState(false);
+  const [visibleCount, setVisibleCount] = useState(10);
 
   const getFilteredReviews = () => {
     let filtered = allReviews;
@@ -221,8 +221,9 @@ const ProductReviews = () => {
   };
 
   const filteredReviews = getFilteredReviews();
-  const displayedReviews = showAll ? filteredReviews : filteredReviews.slice(0, 10);
-  const remainingCount = filteredReviews.length - 10;
+  const displayedReviews = filteredReviews.slice(0, visibleCount);
+  const remainingCount = filteredReviews.length - visibleCount;
+  const nextLoadCount = Math.min(5, remainingCount);
 
   const renderStars = (rating: number) => {
     return (
@@ -248,13 +249,9 @@ const ProductReviews = () => {
           <h2 className="text-sm font-medium text-foreground">Avaliações do Produto</h2>
           <span className="text-xs text-muted-foreground">(1.2 mil)</span>
         </div>
-        <button 
-          onClick={() => setShowAll(!showAll)}
-          className="flex items-center gap-1 text-primary"
-        >
-          <span className="text-sm">{showAll ? "Ver menos" : "Ver Todas"}</span>
-          <ChevronRight className="w-4 h-4" />
-        </button>
+        <span className="text-xs text-muted-foreground">
+          Mostrando {Math.min(visibleCount, filteredReviews.length)} de {filteredReviews.length}
+        </span>
       </div>
 
       {/* Rating Summary */}
@@ -276,7 +273,7 @@ const ProductReviews = () => {
             key={filter}
             onClick={() => {
               setActiveFilter(filter);
-              setShowAll(false);
+              setVisibleCount(10);
             }}
             className={`flex-shrink-0 px-3 py-1.5 rounded-full text-xs transition-all ${
               activeFilter === filter
@@ -351,12 +348,12 @@ const ProductReviews = () => {
       </div>
 
       {/* Load More Button */}
-      {!showAll && remainingCount > 0 && (
+      {remainingCount > 0 && (
         <button
-          onClick={() => setShowAll(true)}
+          onClick={() => setVisibleCount(prev => prev + 5)}
           className="w-full py-4 border-t border-border flex items-center justify-center gap-2 text-primary text-sm font-medium"
         >
-          <span>Ver mais {remainingCount} avaliações</span>
+          <span>Ver mais {nextLoadCount} avaliações</span>
           <ChevronDown className="w-4 h-4" />
         </button>
       )}
