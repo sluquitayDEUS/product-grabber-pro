@@ -16,23 +16,34 @@ import ProductPageFooter from "@/components/shopee/ProductPageFooter";
 import ScrollToTopButton from "@/components/shopee/ScrollToTopButton";
 import { useAbandonedCart } from "@/hooks/useAbandonedCart";
 import { useMetaPixel } from "@/hooks/useMetaPixel";
+import { useGoogleAnalytics } from "@/hooks/useGoogleAnalytics";
 
 const Index = () => {
   const variationsRef = useRef<ProductVariationsRef>(null);
   const [galleryIndex, setGalleryIndex] = useState(0);
   const { trackViewContent } = useMetaPixel();
+  const { trackPageView, trackViewItem } = useGoogleAnalytics();
   
   // Initialize abandoned cart tracking (checks for stale carts on page load)
   useAbandonedCart();
 
   // Track ViewContent on page load
   useEffect(() => {
+    // Meta Pixel tracking
     trackViewContent(
       "AquaVolt - Prancha Elétrica Subaquática",
       "aquavolt-001",
       149700 // R$ 1.497,00 em centavos
     );
-  }, [trackViewContent]);
+    
+    // Google Analytics tracking
+    trackPageView("/", "AquaVolt - Produto");
+    trackViewItem(
+      "aquavolt-001",
+      "AquaVolt - Prancha Elétrica Subaquática",
+      149700
+    );
+  }, [trackViewContent, trackPageView, trackViewItem]);
 
   const handleNoColorSelected = () => {
     variationsRef.current?.scrollAndHighlight();
