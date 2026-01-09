@@ -5,6 +5,7 @@ import { Button } from "@/components/ui/button";
 import { QRCodeSVG } from "qrcode.react";
 import { useAbandonedCart } from "@/hooks/useAbandonedCart";
 import { useGoogleAnalytics } from "@/hooks/useGoogleAnalytics";
+import { useMetaPixel } from "@/hooks/useMetaPixel";
 import { useCart } from "@/contexts/CartContext";
 
 const PixPayment = () => {
@@ -14,8 +15,9 @@ const PixPayment = () => {
   const [timeLeft, setTimeLeft] = useState(15 * 60); // 15 minutes in seconds
   const [pulseTimer, setPulseTimer] = useState(false);
   const { markPixGenerated, clearAbandonedCart } = useAbandonedCart();
-  const { trackPageView, trackPurchase, trackGenerateLead, trackAddPaymentInfo } = useGoogleAnalytics();
-  const { quantity } = useCart();
+  const { trackPageView, trackPurchase: gaTrackPurchase, trackGenerateLead, trackAddPaymentInfo } = useGoogleAnalytics();
+  const { trackPurchase: metaTrackPurchase } = useMetaPixel();
+  const { quantity, customer } = useCart();
   const hasTrackedPurchase = useRef(false);
 
   // Get data from navigation state
@@ -31,26 +33,31 @@ const PixPayment = () => {
     markPixGenerated();
     clearAbandonedCart();
 
-    // Track Google Analytics events (only once)
+    // Track events (only once)
     if (!hasTrackedPurchase.current) {
       hasTrackedPurchase.current = true;
       
-      // Track page view
+      // Google Analytics tracking
       trackPageView("/pix-payment", "AquaVolt - Pagamento Pix");
-      
-      // Track add payment info
       trackAddPaymentInfo(amount, "pix");
-      
-      // Track generate lead (potential conversion)
       trackGenerateLead(amount);
-      
-      // Track purchase event when Pix is generated
-      trackPurchase(
+      gaTrackPurchase(
         transactionId || `pix-${Date.now()}`,
         amount,
         "aquavolt-001",
         "AquaVolt - Prancha Elétrica Subaquática",
         quantity
+      );
+      
+      // Meta Pixel Purchase event
+      metaTrackPurchase(
+        amount,
+        "AquaVolt - Prancha Elétrica Subaquática",
+        "aquavolt-001",
+        transactionId || `pix-${Date.now()}`,
+        customer?.email,
+        customer?.phone,
+        customer?.name
       );
     }
 
@@ -70,7 +77,7 @@ const PixPayment = () => {
     }, 1000);
 
     return () => clearInterval(timer);
-  }, [qrCode, navigate, trackPageView, trackPurchase, trackGenerateLead, trackAddPaymentInfo, amount, transactionId, quantity, markPixGenerated, clearAbandonedCart]);
+  }, [qrCode, navigate, trackPageView, gaTrackPurchase, trackGenerateLead, trackAddPaymentInfo, metaTrackPurchase, amount, transactionId, quantity, customer, markPixGenerated, clearAbandonedCart]);
 
   const handleCopyCode = async () => {
     try {
