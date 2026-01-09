@@ -1,9 +1,11 @@
 import { Copy, Check, Clock, ShieldCheck, ArrowLeft, CheckCircle2, Store, BadgeCheck, Truck, Lock, Smartphone, Star, Package } from "lucide-react";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { QRCodeSVG } from "qrcode.react";
 import { useAbandonedCart } from "@/hooks/useAbandonedCart";
+import { useGoogleAnalytics } from "@/hooks/useGoogleAnalytics";
+import { useCart } from "@/contexts/CartContext";
 
 const PixPayment = () => {
   const location = useLocation();
@@ -12,6 +14,9 @@ const PixPayment = () => {
   const [timeLeft, setTimeLeft] = useState(15 * 60); // 15 minutes in seconds
   const [pulseTimer, setPulseTimer] = useState(false);
   const { markPixGenerated, clearAbandonedCart } = useAbandonedCart();
+  const { trackPageView, trackPurchase, trackGenerateLead, trackAddPaymentInfo } = useGoogleAnalytics();
+  const { quantity } = useCart();
+  const hasTrackedPurchase = useRef(false);
 
   // Get data from navigation state
   const { qrCode, amount, transactionId } = location.state || {};
@@ -25,6 +30,29 @@ const PixPayment = () => {
     // Mark Pix as generated and clear abandoned cart tracking
     markPixGenerated();
     clearAbandonedCart();
+
+    // Track Google Analytics events (only once)
+    if (!hasTrackedPurchase.current) {
+      hasTrackedPurchase.current = true;
+      
+      // Track page view
+      trackPageView("/pix-payment", "AquaVolt - Pagamento Pix");
+      
+      // Track add payment info
+      trackAddPaymentInfo(amount, "pix");
+      
+      // Track generate lead (potential conversion)
+      trackGenerateLead(amount);
+      
+      // Track purchase event when Pix is generated
+      trackPurchase(
+        transactionId || `pix-${Date.now()}`,
+        amount,
+        "aquavolt-001",
+        "AquaVolt - Prancha Elétrica Subaquática",
+        quantity
+      );
+    }
 
     // Countdown timer
     const timer = setInterval(() => {
@@ -42,7 +70,7 @@ const PixPayment = () => {
     }, 1000);
 
     return () => clearInterval(timer);
-  }, [qrCode, navigate]);
+  }, [qrCode, navigate, trackPageView, trackPurchase, trackGenerateLead, trackAddPaymentInfo, amount, transactionId, quantity, markPixGenerated, clearAbandonedCart]);
 
   const handleCopyCode = async () => {
     try {

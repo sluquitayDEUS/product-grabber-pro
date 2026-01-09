@@ -10,19 +10,22 @@ import CheckoutChatButton from "@/components/checkout/CheckoutChatButton";
 import { useCart } from "@/contexts/CartContext";
 import { useAbandonedCart } from "@/hooks/useAbandonedCart";
 import { useMetaPixel } from "@/hooks/useMetaPixel";
+import { useGoogleAnalytics } from "@/hooks/useGoogleAnalytics";
 
 const Checkout = () => {
   const addressRef = useRef<CheckoutAddressRef>(null);
   const { setHasVisitedCheckout, quantity, product } = useCart();
   const { notifyCreditCardAttempt, markPixGenerated } = useAbandonedCart();
   const { trackInitiateCheckout, trackAddToCart } = useMetaPixel();
+  const { trackPageView, trackBeginCheckout, trackAddToCart: gaTrackAddToCart } = useGoogleAnalytics();
   
   // Mark that user has visited checkout and track events
   useEffect(() => {
     setHasVisitedCheckout(true);
     
-    // Track InitiateCheckout and AddToCart
     const productValue = (product?.price || 149700) * quantity;
+    
+    // Meta Pixel tracking
     trackInitiateCheckout(
       productValue,
       "AquaVolt - Prancha Elétrica Subaquática",
@@ -33,7 +36,22 @@ const Checkout = () => {
       "AquaVolt - Prancha Elétrica Subaquática",
       "aquavolt-001"
     );
-  }, [setHasVisitedCheckout, trackInitiateCheckout, trackAddToCart, quantity, product]);
+    
+    // Google Analytics tracking
+    trackPageView("/checkout", "AquaVolt - Checkout");
+    trackBeginCheckout(
+      productValue,
+      "aquavolt-001",
+      "AquaVolt - Prancha Elétrica Subaquática",
+      quantity
+    );
+    gaTrackAddToCart(
+      "aquavolt-001",
+      "AquaVolt - Prancha Elétrica Subaquática",
+      productValue,
+      quantity
+    );
+  }, [setHasVisitedCheckout, trackInitiateCheckout, trackAddToCart, quantity, product, trackPageView, trackBeginCheckout, gaTrackAddToCart]);
   
   const handleAddressInvalid = () => {
     addressRef.current?.scrollAndHighlight();
