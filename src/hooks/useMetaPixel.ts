@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useRef } from "react";
 import { supabase } from "@/integrations/supabase/client";
 
-const PIXEL_ID = "913382967693567";
+const PIXEL_ID = "1591851395153388";
 const STORAGE_KEY = "meta_pixel_events";
 
 interface TrackedEvent {
