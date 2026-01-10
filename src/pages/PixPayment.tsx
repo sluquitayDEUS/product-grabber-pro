@@ -1,5 +1,5 @@
 import { Copy, Check, Clock, ShieldCheck, ArrowLeft, CheckCircle2, Store, BadgeCheck, Truck, Lock, Smartphone, Star, Package } from "lucide-react";
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef, useCallback } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { QRCodeSVG } from "qrcode.react";
@@ -7,6 +7,7 @@ import { useAbandonedCart } from "@/hooks/useAbandonedCart";
 import { useGoogleAnalytics } from "@/hooks/useGoogleAnalytics";
 import { useMetaPixel } from "@/hooks/useMetaPixel";
 import { useCart } from "@/contexts/CartContext";
+import { supabase } from "@/integrations/supabase/client";
 
 const PixPayment = () => {
   const location = useLocation();
@@ -14,14 +15,78 @@ const PixPayment = () => {
   const [copied, setCopied] = useState(false);
   const [timeLeft, setTimeLeft] = useState(15 * 60); // 15 minutes in seconds
   const [pulseTimer, setPulseTimer] = useState(false);
+  const [isPaid, setIsPaid] = useState(false);
   const { markPixGenerated, clearAbandonedCart } = useAbandonedCart();
   const { trackPageView, trackPurchase: gaTrackPurchase, trackGenerateLead, trackAddPaymentInfo } = useGoogleAnalytics();
   const { trackPurchase: metaTrackPurchase } = useMetaPixel();
   const { quantity, customer } = useCart();
   const hasTrackedPurchase = useRef(false);
+  const pollingRef = useRef<ReturnType<typeof setInterval> | null>(null);
 
   // Get data from navigation state
   const { qrCode, amount, transactionId } = location.state || {};
+
+  // Check payment status
+  const checkPaymentStatus = useCallback(async () => {
+    if (!transactionId || isPaid) return;
+
+    try {
+      const { data, error } = await supabase.functions.invoke('check-payment-status', {
+        body: { transactionId },
+      });
+
+      if (error) {
+        console.error('Error checking payment status:', error);
+        return;
+      }
+
+      if (data?.status === 'paid') {
+        setIsPaid(true);
+        
+        // Stop polling
+        if (pollingRef.current) {
+          clearInterval(pollingRef.current);
+          pollingRef.current = null;
+        }
+
+        // Track Purchase events only when payment is confirmed
+        if (!hasTrackedPurchase.current) {
+          hasTrackedPurchase.current = true;
+          
+          // Google Analytics Purchase
+          gaTrackPurchase(
+            transactionId,
+            amount,
+            "aquavolt-001",
+            "AquaVolt - Prancha Elétrica Subaquática",
+            quantity
+          );
+          
+          // Meta Pixel Purchase
+          metaTrackPurchase(
+            amount,
+            "AquaVolt - Prancha Elétrica Subaquática",
+            "aquavolt-001",
+            transactionId,
+            customer?.email,
+            customer?.phone,
+            customer?.name
+          );
+        }
+
+        // Redirect to success page
+        navigate("/order-success", {
+          state: {
+            orderId: transactionId,
+            amount,
+            paymentMethod: "pix"
+          }
+        });
+      }
+    } catch (err) {
+      console.error('Payment status check failed:', err);
+    }
+  }, [transactionId, isPaid, amount, quantity, customer, gaTrackPurchase, metaTrackPurchase, navigate]);
 
   useEffect(() => {
     if (!qrCode) {
@@ -33,33 +98,15 @@ const PixPayment = () => {
     markPixGenerated();
     clearAbandonedCart();
 
-    // Track events (only once)
-    if (!hasTrackedPurchase.current) {
-      hasTrackedPurchase.current = true;
-      
-      // Google Analytics tracking
-      trackPageView("/pix-payment", "AquaVolt - Pagamento Pix");
-      trackAddPaymentInfo(amount, "pix");
-      trackGenerateLead(amount);
-      gaTrackPurchase(
-        transactionId || `pix-${Date.now()}`,
-        amount,
-        "aquavolt-001",
-        "AquaVolt - Prancha Elétrica Subaquática",
-        quantity
-      );
-      
-      // Meta Pixel Purchase event
-      metaTrackPurchase(
-        amount,
-        "AquaVolt - Prancha Elétrica Subaquática",
-        "aquavolt-001",
-        transactionId || `pix-${Date.now()}`,
-        customer?.email,
-        customer?.phone,
-        customer?.name
-      );
-    }
+    // Track page view and payment info (but NOT purchase - that waits for confirmation)
+    trackPageView("/pix-payment", "AquaVolt - Pagamento Pix");
+    trackAddPaymentInfo(amount, "pix");
+    trackGenerateLead(amount);
+
+    // Start polling for payment status (every 5 seconds)
+    pollingRef.current = setInterval(checkPaymentStatus, 5000);
+    // Also check immediately
+    checkPaymentStatus();
 
     // Countdown timer
     const timer = setInterval(() => {
@@ -76,8 +123,13 @@ const PixPayment = () => {
       });
     }, 1000);
 
-    return () => clearInterval(timer);
-  }, [qrCode, navigate, trackPageView, gaTrackPurchase, trackGenerateLead, trackAddPaymentInfo, metaTrackPurchase, amount, transactionId, quantity, customer, markPixGenerated, clearAbandonedCart]);
+    return () => {
+      clearInterval(timer);
+      if (pollingRef.current) {
+        clearInterval(pollingRef.current);
+      }
+    };
+  }, [qrCode, navigate, trackPageView, trackAddPaymentInfo, trackGenerateLead, amount, markPixGenerated, clearAbandonedCart, checkPaymentStatus]);
 
   const handleCopyCode = async () => {
     try {

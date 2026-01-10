@@ -1,19 +1,14 @@
 import { CheckCircle, Package, Truck, Home, ShieldCheck, Star, PartyPopper } from "lucide-react";
 import { useLocation, useNavigate } from "react-router-dom";
-import { useEffect, useRef } from "react";
+import { useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import confetti from "canvas-confetti";
 import { useAbandonedCart } from "@/hooks/useAbandonedCart";
-import { useMetaPixel } from "@/hooks/useMetaPixel";
-import { useCart } from "@/contexts/CartContext";
 
 const OrderSuccess = () => {
   const location = useLocation();
   const navigate = useNavigate();
   const { clearAbandonedCart } = useAbandonedCart();
-  const { trackPurchase } = useMetaPixel();
-  const { customer } = useCart();
-  const purchaseTrackedRef = useRef(false);
 
   // Get order data from navigation state
   const { orderId, amount, paymentMethod } = location.state || {};
@@ -28,19 +23,8 @@ const OrderSuccess = () => {
     // Clear abandoned cart data since order was successful
     clearAbandonedCart();
 
-    // Track Purchase event (only for Pix payments confirmed)
-    if (paymentMethod === "pix" && !purchaseTrackedRef.current) {
-      purchaseTrackedRef.current = true;
-      trackPurchase(
-        amount,
-        "AquaVolt - Prancha Elétrica Subaquática",
-        "aquavolt-001",
-        orderId,
-        customer?.email,
-        customer?.phone,
-        customer?.name
-      );
-    }
+    // Note: Purchase events are now tracked in PixPayment.tsx when payment is confirmed
+    // This prevents duplicate tracking and ensures we only track confirmed payments
 
     // Trigger confetti celebration
     const duration = 3 * 1000;
@@ -72,7 +56,7 @@ const OrderSuccess = () => {
     }, 250);
 
     return () => clearInterval(interval);
-  }, [orderId, navigate, paymentMethod, amount, customer, trackPurchase]);
+  }, [orderId, navigate, clearAbandonedCart]);
 
   const formatCurrency = (value: number) => {
     return (value / 100).toLocaleString("pt-BR", {
