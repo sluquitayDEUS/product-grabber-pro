@@ -1,4 +1,4 @@
-import aquavolt1 from "@/assets/aquavolt-1.webp";
+import aquavolt1 from "@/assets/aquavolt-1-custom.png";
 import aquavolt2 from "@/assets/aquavolt-2.webp";
 import aquavolt3 from "@/assets/aquavolt-3.webp";
 import aquavolt4 from "@/assets/aquavolt-4.webp";
@@ -9,13 +9,7 @@ interface ProductThumbnailsProps {
   onSelect: (index: number) => void;
 }
 
-const images = [
-  aquavolt1,
-  aquavolt2,
-  aquavolt3,
-  aquavolt4,
-  aquavolt5,
-];
+const images = [aquavolt1, aquavolt2, aquavolt3, aquavolt4, aquavolt5];
 
 const ProductThumbnails = ({ selectedIndex, onSelect }: ProductThumbnailsProps) => {
   return (
