@@ -64,12 +64,13 @@ const ProductFooter = ({ onNoColorSelected }: ProductFooterProps) => {
             </span>
           </button>
 
-          {/* Buy Now - Shopee style orange */}
+          {/* Buy Now - Shopee style orange with discount text */}
           <button 
             onClick={goToCheckout}
-            className="flex-1 h-full bg-[#EE4D2D] text-white font-medium text-base"
+            className="flex-1 h-full bg-[#EE4D2D] text-white flex flex-col items-center justify-center"
           >
-            Compre agora
+            <span className="text-sm font-medium italic">Comprar com desconto</span>
+            <span className="text-base font-bold">R$390,90</span>
           </button>
         </div>
       </footer>

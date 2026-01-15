@@ -31,42 +31,28 @@ const FlashSaleTimer = () => {
   const formatNumber = (num: number) => num.toString().padStart(2, '0');
 
   return (
-    <div className="bg-gradient-to-r from-[#D0011B] to-[#EE4D2D]">
-      <div className="px-3 py-2 flex items-center justify-between">
-        <div className="flex items-center gap-2">
-          <Zap className="w-4 h-4 text-yellow-300 fill-yellow-300" />
-          <span className="text-white font-bold text-sm tracking-wide">
-            OFERTAS RE<span className="text-yellow-300">⚡</span>ÂMPAGO
-          </span>
-        </div>
-        <div className="flex items-center gap-1 text-white text-xs">
-          <span>TERMINA EM</span>
-          <div className="flex items-center gap-0.5 ml-1">
-            <span className="bg-black/80 px-1.5 py-0.5 rounded font-mono font-bold text-sm">
-              {formatNumber(timeLeft.hours)}
-            </span>
-            <span className="font-bold">:</span>
-            <span className="bg-black/80 px-1.5 py-0.5 rounded font-mono font-bold text-sm">
-              {formatNumber(timeLeft.minutes)}
-            </span>
-            <span className="font-bold">:</span>
-            <span className="bg-black/80 px-1.5 py-0.5 rounded font-mono font-bold text-sm">
-              {formatNumber(timeLeft.seconds)}
-            </span>
-          </div>
-        </div>
+    <div className="flex items-stretch h-12 overflow-hidden">
+      {/* Left side - OFERTAS RELÂMPAGO */}
+      <div className="bg-gradient-to-r from-[#EE4D2D] to-[#F97316] flex items-center px-3 gap-1.5">
+        <span className="text-white font-bold text-sm whitespace-nowrap">
+          OFERTAS RE<Zap className="inline w-3.5 h-3.5 text-yellow-300 fill-yellow-300 -mt-0.5" />ÂMPAGO
+        </span>
       </div>
-      {/* Barra de progresso - % vendido */}
-      <div className="px-3 pb-2">
-        <div className="flex items-center gap-2">
-          <div className="flex-1 h-3 bg-white/30 rounded-full overflow-hidden">
-            <div 
-              className="h-full bg-gradient-to-r from-yellow-300 to-yellow-500 rounded-full transition-all duration-300"
-              style={{ width: '78%' }}
-            />
-          </div>
-          <span className="text-white text-[10px] font-medium whitespace-nowrap">
-            🔥 78% vendido
+      
+      {/* Right side - Timer */}
+      <div className="bg-[#FFF5F2] flex items-center px-3 flex-1 justify-end gap-2">
+        <span className="text-[#333] text-xs font-medium">TERMINA EM</span>
+        <div className="flex items-center gap-0.5">
+          <span className="bg-[#333] text-white px-1.5 py-1 rounded text-sm font-bold font-mono min-w-[24px] text-center">
+            {formatNumber(timeLeft.hours)}
+          </span>
+          <span className="text-[#EE4D2D] font-bold text-sm">:</span>
+          <span className="bg-[#333] text-white px-1.5 py-1 rounded text-sm font-bold font-mono min-w-[24px] text-center">
+            {formatNumber(timeLeft.minutes)}
+          </span>
+          <span className="text-[#EE4D2D] font-bold text-sm">:</span>
+          <span className="bg-[#333] text-white px-1.5 py-1 rounded text-sm font-bold font-mono min-w-[24px] text-center">
+            {formatNumber(timeLeft.seconds)}
           </span>
         </div>
       </div>

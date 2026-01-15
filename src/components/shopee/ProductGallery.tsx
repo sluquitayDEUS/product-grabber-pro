@@ -86,23 +86,25 @@ const ProductGallery = memo(({ currentIndex, onIndexChange }: ProductGalleryProp
         <ChevronRight className="w-5 h-5 text-primary-foreground" />
       </button>
 
-      {/* Dots Indicator */}
-      <div className="absolute bottom-3 left-1/2 -translate-x-1/2 flex gap-1.5">
-        {images.map((_, index) => (
-          <button
-            key={index}
-            onClick={() => onIndexChange(index)}
-            className={`w-2 h-2 rounded-full transition-all ${
-              index === currentIndex 
-                ? "bg-primary w-4" 
-                : "bg-primary-foreground/50"
-            }`}
-          />
-        ))}
+      {/* Free Shipping Banner - Shopee Style */}
+      <div className="absolute bottom-0 left-0 right-0 bg-[#224662] flex items-center px-3 py-2">
+        <div className="w-7 h-5 rounded-sm overflow-hidden flex-shrink-0 mr-2 flex items-center justify-center bg-[#009739]">
+          <div className="w-full h-full relative">
+            <div className="absolute inset-0 bg-[#009739]" />
+            <div className="absolute top-0 left-0 w-0 h-0 border-t-[10px] border-t-[#FEDD00] border-r-[14px] border-r-transparent" />
+            <div className="absolute bottom-0 left-0 w-0 h-0 border-b-[10px] border-b-[#FEDD00] border-r-[14px] border-r-transparent" />
+            <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-3 h-3 bg-[#002776] rounded-full flex items-center justify-center">
+              <div className="w-1.5 h-1.5 bg-white rounded-full" />
+            </div>
+          </div>
+        </div>
+        <span className="text-white font-bold text-sm">
+          FRETE GRÁTIS <span className="font-normal">acima de</span> R$10
+        </span>
       </div>
 
       {/* Image Counter */}
-      <div className="absolute bottom-3 right-3 bg-black/50 text-primary-foreground text-xs px-2 py-1 rounded-full">
+      <div className="absolute bottom-12 right-3 bg-black/50 text-primary-foreground text-xs px-2 py-1 rounded-full">
         {currentIndex + 1}/{images.length}
       </div>
     </div>
