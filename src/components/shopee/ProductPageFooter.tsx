@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom";
-import { Mail, Building2, MapPin, CreditCard } from "lucide-react";
+import { Mail, Building2, MapPin, CreditCard, Facebook, Instagram, Youtube } from "lucide-react";
 import seloReclameAqui from "@/assets/selo-reclame-aqui.png";
 import seloSiteSeguro from "@/assets/selo-site-seguro.png";
 const ProductPageFooter = () => {
@@ -79,6 +79,37 @@ const ProductPageFooter = () => {
       <div className="flex justify-center items-center gap-3 mb-4">
         <img src={seloReclameAqui} alt="Selo Reclame Aqui" className="h-10 object-contain" />
         <img src={seloSiteSeguro} alt="Site Seguro" className="h-10 object-contain" />
+      </div>
+
+      {/* Redes Sociais */}
+      <div className="border-t border-white/20 pt-4 mb-4">
+        <p className="text-center text-[10px] text-white/60 mb-3">Siga-nos</p>
+        <div className="flex justify-center items-center gap-4">
+          <a 
+            href="https://facebook.com" 
+            target="_blank" 
+            rel="noopener noreferrer"
+            className="w-9 h-9 bg-white/10 rounded-full flex items-center justify-center hover:bg-white/20 transition-colors"
+          >
+            <Facebook className="w-4 h-4 text-white" />
+          </a>
+          <a 
+            href="https://instagram.com" 
+            target="_blank" 
+            rel="noopener noreferrer"
+            className="w-9 h-9 bg-white/10 rounded-full flex items-center justify-center hover:bg-white/20 transition-colors"
+          >
+            <Instagram className="w-4 h-4 text-white" />
+          </a>
+          <a 
+            href="https://youtube.com" 
+            target="_blank" 
+            rel="noopener noreferrer"
+            className="w-9 h-9 bg-white/10 rounded-full flex items-center justify-center hover:bg-white/20 transition-colors"
+          >
+            <Youtube className="w-4 h-4 text-white" />
+          </a>
+        </div>
       </div>
 
       {/* Copyright */}

@@ -1,4 +1,4 @@
-import { Heart, Share2 } from "lucide-react";
+import { Heart, Share2, BadgeCheck } from "lucide-react";
 import { useState } from "react";
 const ProductTitle = () => {
   const [isFavorite, setIsFavorite] = useState(false);
@@ -6,6 +6,14 @@ const ProductTitle = () => {
       <div className="flex gap-3">
         {/* Title */}
         <div className="flex-1">
+          {/* Badge Escolha Shopee */}
+          <div className="flex items-center gap-1 mb-1.5">
+            <span className="bg-[#EE4D2D] text-white text-[10px] px-1.5 py-0.5 rounded flex items-center gap-0.5">
+              <BadgeCheck className="w-3 h-3" />
+              Escolha
+            </span>
+            <span className="text-[10px] text-muted-foreground">Produto indicado</span>
+          </div>
           <h1 className="text-sm font-medium text-foreground leading-tight mb-2">Brinquedo Elétrico AquaVolt - Potência, Estilo e Durabilidade em um Design Compacto | Ultimo dia de promoção 🔥</h1>
           
           {/* Stats */}
