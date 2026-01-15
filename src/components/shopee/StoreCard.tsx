@@ -1,9 +1,10 @@
 import { useState } from "react";
-import { MessageCircle, Store } from "lucide-react";
+import { MessageCircle, Store, UserPlus, Check } from "lucide-react";
 import StorePopup from "./StorePopup";
 import ChatPopup from "./ChatPopup";
 const StoreCard = () => {
   const [showStorePopup, setShowStorePopup] = useState(false);
+  const [isFollowing, setIsFollowing] = useState(false);
   const [showChatPopup, setShowChatPopup] = useState(false);
   return <>
       <div className="bg-card px-3 py-4 mt-2">
@@ -61,6 +62,26 @@ const StoreCard = () => {
           <button onClick={() => setShowStorePopup(true)} className="flex-1 flex items-center justify-center gap-2 py-2 border border-border text-foreground rounded-lg text-sm">
             <Store className="w-4 h-4" />
             Ver Loja
+          </button>
+          <button 
+            onClick={() => setIsFollowing(!isFollowing)} 
+            className={`flex-1 flex items-center justify-center gap-1.5 py-2 rounded-lg text-sm transition-colors ${
+              isFollowing 
+                ? 'bg-gray-100 text-muted-foreground border border-border' 
+                : 'bg-primary text-primary-foreground'
+            }`}
+          >
+            {isFollowing ? (
+              <>
+                <Check className="w-4 h-4" />
+                Seguindo
+              </>
+            ) : (
+              <>
+                <UserPlus className="w-4 h-4" />
+                Seguir
+              </>
+            )}
           </button>
         </div>
       </div>
