@@ -128,10 +128,10 @@ serve(async (req) => {
     console.log('Sending to Furia Pay:', JSON.stringify(furiaPayload, null, 2));
 
     // Call Furia Pay API
-    const response = await fetch('https://api.furiapaybr.com/v1/transactions', {
+    const response = await fetch('https://api.furiapaybr.app/v1/payment-transactions/create', {
       method: 'POST',
       headers: {
-        'Authorization': auth,
+        'authorization': auth,
         'Content-Type': 'application/json',
       },
       body: JSON.stringify(furiaPayload),

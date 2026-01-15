@@ -42,10 +42,10 @@ serve(async (req) => {
     const auth = 'Basic ' + btoa(`${publicKey}:${secretKey}`);
 
     // Call Furia Pay API to get transaction status
-    const response = await fetch(`https://api.furiapaybr.com/v1/transactions/${body.transactionId}`, {
+    const response = await fetch(`https://api.furiapaybr.app/v1/transactions/${body.transactionId}`, {
       method: 'GET',
       headers: {
-        'Authorization': auth,
+        'authorization': auth,
         'Content-Type': 'application/json',
       },
     });
