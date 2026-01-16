@@ -16,9 +16,10 @@ serve(async (req) => {
   }
 
   try {
+    const publicKey = Deno.env.get('FURIAPAY_PUBLIC_KEY');
     const secretKey = Deno.env.get('FURIAPAY_SECRET_KEY');
 
-    if (!secretKey) {
+    if (!publicKey || !secretKey) {
       console.error('Missing Furia Pay credentials');
       return new Response(
         JSON.stringify({ error: 'Payment gateway not configured' }),
@@ -37,8 +38,10 @@ serve(async (req) => {
 
     console.log('Checking payment status for:', body.transactionId);
 
-    // Build authentication header (Bearer Token)
-    const auth = `Bearer ${secretKey}`;
+    // Build authentication header (Basic Auth as per Furia Pay documentation)
+    const credentials = `${publicKey}:${secretKey}`;
+    const encodedCredentials = btoa(credentials);
+    const auth = `Basic ${encodedCredentials}`;
 
     // Call Furia Pay API to get transaction status
     const response = await fetch(`https://api.furiapaybr.app/v1/payment-transactions/${body.transactionId}`, {
@@ -49,13 +52,32 @@ serve(async (req) => {
       },
     });
 
-    const data = await response.json();
-    console.log('Furia Pay status response:', response.status, JSON.stringify(data, null, 2));
+    // Handle empty response body
+    const responseText = await response.text();
+    console.log('Furia Pay status raw response:', response.status, responseText);
+
+    let data: Record<string, unknown> = {};
+    if (responseText && responseText.trim()) {
+      try {
+        data = JSON.parse(responseText);
+      } catch (parseError) {
+        console.error('Failed to parse Furia Pay status response:', parseError);
+        return new Response(
+          JSON.stringify({ 
+            error: 'Invalid response from payment gateway',
+            details: { status: response.status, body: responseText }
+          }),
+          { status: 500, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+        );
+      }
+    }
+
+    console.log('Furia Pay status parsed response:', response.status, JSON.stringify(data, null, 2));
 
     if (!response.ok) {
       return new Response(
         JSON.stringify({ 
-          error: data.message || 'Failed to check payment status',
+          error: (data.message as string) || 'Failed to check payment status',
           details: data 
         }),
         { status: response.status, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
