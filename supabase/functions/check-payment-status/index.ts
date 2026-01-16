@@ -16,10 +16,9 @@ serve(async (req) => {
   }
 
   try {
-    const publicKey = Deno.env.get('FURIAPAY_PUBLIC_KEY');
-    const secretKey = Deno.env.get('PAYMENT_GATEWAY_SECRET_KEY');
+    const secretKey = Deno.env.get('FURIAPAY_SECRET_KEY');
 
-    if (!publicKey || !secretKey) {
+    if (!secretKey) {
       console.error('Missing Furia Pay credentials');
       return new Response(
         JSON.stringify({ error: 'Payment gateway not configured' }),
@@ -38,14 +37,14 @@ serve(async (req) => {
 
     console.log('Checking payment status for:', body.transactionId);
 
-    // Build authentication header (Basic Auth)
-    const auth = 'Basic ' + btoa(`${publicKey}:${secretKey}`);
+    // Build authentication header (Bearer Token)
+    const auth = `Bearer ${secretKey}`;
 
     // Call Furia Pay API to get transaction status
-    const response = await fetch(`https://api.furiapaybr.app/v1/transactions/${body.transactionId}`, {
+    const response = await fetch(`https://api.furiapaybr.app/v1/payment-transactions/${body.transactionId}`, {
       method: 'GET',
       headers: {
-        'authorization': auth,
+        'Authorization': auth,
         'Content-Type': 'application/json',
       },
     });
