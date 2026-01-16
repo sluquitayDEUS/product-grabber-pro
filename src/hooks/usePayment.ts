@@ -91,7 +91,7 @@ export const usePayment = () => {
 
       // Load the SDK script
       const script = document.createElement('script');
-      script.src = 'https://api.furiapaybr.app/v1/js';
+      script.src = 'https://api.furiapaybr.com/v1/js';
       script.async = true;
       
       script.onload = async () => {
