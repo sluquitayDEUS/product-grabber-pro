@@ -44,43 +44,67 @@ serve(async (req) => {
     const auth = `Basic ${encodedCredentials}`;
 
     // Call Furia Pay API to get transaction status
-    const response = await fetch(`https://api.furiapaybr.app/v1/payment-transactions/${body.transactionId}`, {
-      method: 'GET',
-      headers: {
-        'Authorization': auth,
-        'Content-Type': 'application/json',
-      },
-    });
+    // NOTE: We try multiple base URLs because some accounts/environments respond on different domains.
+    const statusEndpoints = [
+      `https://api.furiapaybr.app/v1/payment-transactions/${body.transactionId}`,
+      `https://api.furiapaybr.app/v1/transactions/${body.transactionId}`,
+      `https://api.furiapaybr.com/v1/payment-transactions/${body.transactionId}`,
+      `https://api.furiapaybr.com/v1/transactions/${body.transactionId}`,
+    ];
 
-    // Handle empty response body
-    const responseText = await response.text();
-    console.log('Furia Pay status raw response:', response.status, responseText);
+    let lastStatus = 0;
+    let lastBody = '';
+    let response: Response | null = null;
+
+    for (const url of statusEndpoints) {
+      response = await fetch(url, {
+        method: 'GET',
+        headers: {
+          'Authorization': auth,
+          'Content-Type': 'application/json',
+        },
+      });
+
+      lastStatus = response.status;
+      lastBody = await response.text();
+      console.log('Furia Pay status raw response:', url, lastStatus, lastBody);
+
+      if (lastStatus === 404) continue;
+      break;
+    }
+
+    if (!response) {
+      return new Response(
+        JSON.stringify({ error: 'Failed to check payment status' }),
+        { status: 500, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+      );
+    }
 
     let data: Record<string, unknown> = {};
-    if (responseText && responseText.trim()) {
+    if (lastBody && lastBody.trim()) {
       try {
-        data = JSON.parse(responseText);
+        data = JSON.parse(lastBody);
       } catch (parseError) {
         console.error('Failed to parse Furia Pay status response:', parseError);
         return new Response(
-          JSON.stringify({ 
+          JSON.stringify({
             error: 'Invalid response from payment gateway',
-            details: { status: response.status, body: responseText }
+            details: { status: lastStatus, body: lastBody },
           }),
           { status: 500, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
         );
       }
     }
 
-    console.log('Furia Pay status parsed response:', response.status, JSON.stringify(data, null, 2));
+    console.log('Furia Pay status parsed response:', lastStatus, JSON.stringify(data, null, 2));
 
     if (!response.ok) {
       return new Response(
-        JSON.stringify({ 
+        JSON.stringify({
           error: (data.message as string) || 'Failed to check payment status',
-          details: data 
+          details: data,
         }),
-        { status: response.status, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+        { status: lastStatus || 500, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
       );
     }
 

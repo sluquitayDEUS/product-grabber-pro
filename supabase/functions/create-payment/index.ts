@@ -130,52 +130,79 @@ serve(async (req) => {
 
     console.log('Sending to Furia Pay:', JSON.stringify(furiaPayload, null, 2));
 
-    // Call Furia Pay API - endpoint with /create suffix as per documentation
-    const response = await fetch('https://api.furiapaybr.app/v1/payment-transactions/create', {
-      method: 'POST',
-      headers: {
-        'Authorization': auth,
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(furiaPayload),
-    });
+    // Call Furia Pay API
+    // NOTE: We try multiple base URLs because some accounts/environments respond on different domains.
+    const createEndpoints = [
+      'https://api.furiapaybr.app/v1/payment-transactions/create',
+      'https://api.furiapaybr.app/v1/payment-transactions',
+      'https://api.furiapaybr.com/v1/payment-transactions/create',
+      'https://api.furiapaybr.com/v1/payment-transactions',
+    ];
 
-    // Handle empty response body (some errors might return empty body)
-    const responseText = await response.text();
-    console.log('Furia Pay raw response:', response.status, responseText);
+    let lastStatus = 0;
+    let lastBody = '';
+    let response: Response | null = null;
+
+    for (const url of createEndpoints) {
+      response = await fetch(url, {
+        method: 'POST',
+        headers: {
+          'Authorization': auth,
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(furiaPayload),
+      });
+
+      lastStatus = response.status;
+      lastBody = await response.text();
+      console.log('Furia Pay raw response:', url, lastStatus, lastBody);
+
+      // If endpoint not found, try the fallback
+      if (lastStatus === 404) continue;
+
+      // Otherwise stop here (success or other error)
+      break;
+    }
+
+    if (!response) {
+      return new Response(
+        JSON.stringify({ error: 'Payment gateway request not executed' }),
+        { status: 500, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+      );
+    }
 
     let data: Record<string, unknown> = {};
-    if (responseText && responseText.trim()) {
+    if (lastBody && lastBody.trim()) {
       try {
-        data = JSON.parse(responseText);
+        data = JSON.parse(lastBody);
       } catch (parseError) {
         console.error('Failed to parse Furia Pay response:', parseError);
         return new Response(
-          JSON.stringify({ 
+          JSON.stringify({
             error: 'Invalid response from payment gateway',
-            details: { status: response.status, body: responseText }
+            details: { status: lastStatus, body: lastBody },
           }),
           { status: 500, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
         );
       }
     }
 
-    console.log('Furia Pay parsed response:', response.status, JSON.stringify(data, null, 2));
+    console.log('Furia Pay parsed response:', lastStatus, JSON.stringify(data, null, 2));
 
     if (!response.ok) {
       return new Response(
-        JSON.stringify({ 
-          error: (data.message as string) || `Payment failed with status ${response.status}`,
-          details: data 
+        JSON.stringify({
+          error: (data.message as string) || `Payment failed with status ${lastStatus}`,
+          details: data,
         }),
-        { status: response.status, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+        { status: lastStatus || 500, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
       );
     }
 
     // Return success response with payment data
     const pixData = data.pix as Record<string, unknown> | undefined;
     const cardData = data.card as Record<string, unknown> | undefined;
-    
+
     return new Response(
       JSON.stringify({
         success: true,
