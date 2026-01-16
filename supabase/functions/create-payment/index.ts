@@ -43,10 +43,10 @@ serve(async (req) => {
 
   try {
     const publicKey = Deno.env.get('FURIAPAY_PUBLIC_KEY');
-    const secretKey = Deno.env.get('PAYMENT_GATEWAY_SECRET_KEY');
+    const secretKey = Deno.env.get('FURIAPAY_SECRET_KEY');
 
     if (!publicKey || !secretKey) {
-      console.error('Missing Furia Pay credentials');
+      console.error('Missing Furia Pay credentials - PUBLIC_KEY or SECRET_KEY not set');
       return new Response(
         JSON.stringify({ error: 'Payment gateway not configured' }),
         { status: 500, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
@@ -60,8 +60,11 @@ serve(async (req) => {
       customer: body.customer?.email 
     });
 
-    // Build authentication header (Basic Auth)
-    const auth = 'Basic ' + btoa(`${publicKey}:${secretKey}`);
+    // Build authentication header (Basic Auth as per Furia Pay documentation)
+    // Format: Basic Base64(PUBLIC_KEY:SECRET_KEY)
+    const credentials = `${publicKey}:${secretKey}`;
+    const encodedCredentials = btoa(credentials);
+    const auth = `Basic ${encodedCredentials}`;
 
     // Build Furia Pay payload
     const furiaPayload: Record<string, unknown> = {
@@ -128,29 +131,78 @@ serve(async (req) => {
     console.log('Sending to Furia Pay:', JSON.stringify(furiaPayload, null, 2));
 
     // Call Furia Pay API
-    const response = await fetch('https://api.furiapaybr.app/v1/payment-transactions/create', {
-      method: 'POST',
-      headers: {
-        'authorization': auth,
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(furiaPayload),
-    });
+    // NOTE: We try multiple base URLs because some accounts/environments respond on different domains.
+    const createEndpoints = [
+      'https://api.furiapaybr.app/v1/payment-transactions/create',
+      'https://api.furiapaybr.app/v1/payment-transactions',
+      'https://api.furiapaybr.com/v1/payment-transactions/create',
+      'https://api.furiapaybr.com/v1/payment-transactions',
+    ];
 
-    const data = await response.json();
-    console.log('Furia Pay response:', response.status, JSON.stringify(data, null, 2));
+    let lastStatus = 0;
+    let lastBody = '';
+    let response: Response | null = null;
+
+    for (const url of createEndpoints) {
+      response = await fetch(url, {
+        method: 'POST',
+        headers: {
+          'Authorization': auth,
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(furiaPayload),
+      });
+
+      lastStatus = response.status;
+      lastBody = await response.text();
+      console.log('Furia Pay raw response:', url, lastStatus, lastBody);
+
+      // If endpoint not found, try the fallback
+      if (lastStatus === 404) continue;
+
+      // Otherwise stop here (success or other error)
+      break;
+    }
+
+    if (!response) {
+      return new Response(
+        JSON.stringify({ error: 'Payment gateway request not executed' }),
+        { status: 500, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+      );
+    }
+
+    let data: Record<string, unknown> = {};
+    if (lastBody && lastBody.trim()) {
+      try {
+        data = JSON.parse(lastBody);
+      } catch (parseError) {
+        console.error('Failed to parse Furia Pay response:', parseError);
+        return new Response(
+          JSON.stringify({
+            error: 'Invalid response from payment gateway',
+            details: { status: lastStatus, body: lastBody },
+          }),
+          { status: 500, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+        );
+      }
+    }
+
+    console.log('Furia Pay parsed response:', lastStatus, JSON.stringify(data, null, 2));
 
     if (!response.ok) {
       return new Response(
-        JSON.stringify({ 
-          error: data.message || 'Payment failed',
-          details: data 
+        JSON.stringify({
+          error: (data.message as string) || `Payment failed with status ${lastStatus}`,
+          details: data,
         }),
-        { status: response.status, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+        { status: lastStatus || 500, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
       );
     }
 
     // Return success response with payment data
+    const pixData = data.pix as Record<string, unknown> | undefined;
+    const cardData = data.card as Record<string, unknown> | undefined;
+
     return new Response(
       JSON.stringify({
         success: true,
@@ -158,16 +210,16 @@ serve(async (req) => {
         status: data.status,
         paymentMethod: body.paymentMethod,
         // PIX specific data - note: API returns qrcode not qrCodeUrl
-        ...(body.paymentMethod === 'pix' && data.pix && {
+        ...(body.paymentMethod === 'pix' && pixData && {
           pix: {
-            qrCode: data.pix.qrcode || data.pix.qrCode,
-            expiresAt: data.pix.expirationDate || data.pix.expiresAt,
+            qrCode: pixData.qrcode || pixData.qrCode,
+            expiresAt: pixData.expirationDate || pixData.expiresAt,
           },
         }),
         // Credit card specific data
-        ...(body.paymentMethod === 'credit_card' && {
-          cardLastDigits: data.card?.lastDigits,
-          cardBrand: data.card?.brand,
+        ...(body.paymentMethod === 'credit_card' && cardData && {
+          cardLastDigits: cardData.lastDigits,
+          cardBrand: cardData.brand,
         }),
       }),
       { status: 200, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
