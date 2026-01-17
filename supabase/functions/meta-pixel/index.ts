@@ -66,7 +66,7 @@ serve(async (req) => {
 
   try {
     const accessToken = Deno.env.get("META_ACCESS_TOKEN");
-    const pixelId = "1591851395153388";
+    const pixelId = "1871084903776488";
 
     if (!accessToken) {
       console.error("META_ACCESS_TOKEN not configured");
