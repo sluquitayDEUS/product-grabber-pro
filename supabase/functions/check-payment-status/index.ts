@@ -44,78 +44,67 @@ serve(async (req) => {
     const auth = `Basic ${encodedCredentials}`;
 
     // Call Furia Pay API to get transaction status
-    // NOTE: We try multiple base URLs because some accounts/environments respond on different domains.
-    const statusEndpoints = [
-      `https://api.furiapaybr.app/v1/payment-transactions/${body.transactionId}`,
-      `https://api.furiapaybr.app/v1/transactions/${body.transactionId}`,
-      `https://api.furiapaybr.com/v1/payment-transactions/${body.transactionId}`,
-      `https://api.furiapaybr.com/v1/transactions/${body.transactionId}`,
-    ];
+    // Official endpoint: GET /v1/payment-transaction/info/{id}
+    // https://furiapaybrasil.readme.io/reference/get_v1payment-transactioninfoid
+    const apiUrl = `https://api.furiapaybr.app/v1/payment-transaction/info/${body.transactionId}`;
 
-    let lastStatus = 0;
-    let lastBody = '';
-    let response: Response | null = null;
+    console.log('Calling Furia Pay status API:', apiUrl);
 
-    for (const url of statusEndpoints) {
-      response = await fetch(url, {
-        method: 'GET',
-        headers: {
-          'Authorization': auth,
-          'Content-Type': 'application/json',
-        },
-      });
+    const response = await fetch(apiUrl, {
+      method: 'GET',
+      headers: {
+        'Authorization': auth,
+        'Content-Type': 'application/json',
+      },
+    });
 
-      lastStatus = response.status;
-      lastBody = await response.text();
-      console.log('Furia Pay status raw response:', url, lastStatus, lastBody);
-
-      if (lastStatus === 404) continue;
-      break;
-    }
-
-    if (!response) {
-      return new Response(
-        JSON.stringify({ error: 'Failed to check payment status' }),
-        { status: 500, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
-      );
-    }
+    const responseText = await response.text();
+    console.log('Furia Pay status raw response:', response.status, responseText);
 
     let data: Record<string, unknown> = {};
-    if (lastBody && lastBody.trim()) {
+    if (responseText && responseText.trim()) {
       try {
-        data = JSON.parse(lastBody);
+        data = JSON.parse(responseText);
       } catch (parseError) {
         console.error('Failed to parse Furia Pay status response:', parseError);
         return new Response(
           JSON.stringify({
             error: 'Invalid response from payment gateway',
-            details: { status: lastStatus, body: lastBody },
+            details: { status: response.status, body: responseText },
           }),
           { status: 500, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
         );
       }
     }
 
-    console.log('Furia Pay status parsed response:', lastStatus, JSON.stringify(data, null, 2));
+    console.log('Furia Pay status parsed response:', response.status, JSON.stringify(data, null, 2));
 
     if (!response.ok) {
+      const errorMessage = (data.message as string) || 
+                          (data.error as string) || 
+                          'Failed to check payment status';
+      
       return new Response(
         JSON.stringify({
-          error: (data.message as string) || 'Failed to check payment status',
+          error: errorMessage,
           details: data,
         }),
-        { status: lastStatus || 500, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+        { status: response.status || 500, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
       );
     }
 
-    // Return status
+    // Response is wrapped in a "data" object according to Furia Pay API
+    const paymentData = (data.data || data) as Record<string, unknown>;
+
+    // Return status - API uses snake_case
+    // Possible statuses: PAID, PENDING, REFUNDED, FAILED, REFUSED
     return new Response(
       JSON.stringify({
         success: true,
-        transactionId: data.id,
-        status: data.status, // 'pending', 'paid', 'refused', 'refunded', etc.
-        paymentMethod: data.paymentMethod,
-        paidAt: data.paidAt || null,
+        transactionId: paymentData.id,
+        status: paymentData.status,
+        paymentMethod: paymentData.payment_method || paymentData.paymentMethod,
+        paidAt: paymentData.paid_at || paymentData.paidAt || null,
       }),
       { status: 200, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
     );
