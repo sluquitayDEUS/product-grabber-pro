@@ -1,5 +1,6 @@
 import { useRef, useState, useEffect } from "react";
 import ProductHeader from "@/components/shopee/ProductHeader";
+import PromoBanner from "@/components/shopee/PromoBanner";
 import ProductGallery from "@/components/shopee/ProductGallery";
 import ProductThumbnails from "@/components/shopee/ProductThumbnails";
 import FlashSaleTimer from "@/components/shopee/FlashSaleTimer";
@@ -53,6 +54,7 @@ const Index = () => {
     <div className="min-h-screen bg-background">
       <div className="max-w-md mx-auto">
         <ProductHeader />
+        <PromoBanner />
         <ProductGallery currentIndex={galleryIndex} onIndexChange={setGalleryIndex} />
         <ProductThumbnails selectedIndex={galleryIndex} onSelect={setGalleryIndex} />
         <FlashSaleTimer />

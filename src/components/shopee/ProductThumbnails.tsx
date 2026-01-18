@@ -1,8 +1,8 @@
-import aquavolt1 from "@/assets/aquavolt-1-custom.png";
-import aquavolt2 from "@/assets/aquavolt-2.webp";
-import aquavolt3 from "@/assets/aquavolt-3.webp";
-import aquavolt4 from "@/assets/aquavolt-4.webp";
-import aquavolt5 from "@/assets/aquavolt-5.webp";
+import aquavolt1 from "@/assets/aquavolt-new-1.webp";
+import aquavolt2 from "@/assets/aquavolt-new-2.webp";
+import aquavolt3 from "@/assets/aquavolt-new-3.webp";
+import aquavolt4 from "@/assets/aquavolt-new-4.webp";
+import aquavolt5 from "@/assets/aquavolt-new-5.webp";
 
 interface ProductThumbnailsProps {
   selectedIndex: number;
