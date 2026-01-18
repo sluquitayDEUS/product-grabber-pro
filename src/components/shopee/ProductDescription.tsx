@@ -71,6 +71,7 @@ const ProductDescription = memo(() => {
                   scrolling="no" 
                   className="absolute top-0 left-0 w-full h-full rounded-lg" 
                   name="wistia_embed"
+                  loading="lazy"
                 />
               </div>
             </div>

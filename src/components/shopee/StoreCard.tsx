@@ -1,8 +1,9 @@
-import { useState } from "react";
+import { useState, memo } from "react";
 import { MessageCircle, Store, UserPlus, Check } from "lucide-react";
 import StorePopup from "./StorePopup";
 import ChatPopup from "./ChatPopup";
-const StoreCard = () => {
+
+const StoreCard = memo(() => {
   const [showStorePopup, setShowStorePopup] = useState(false);
   const [isFollowing, setIsFollowing] = useState(false);
   const [showChatPopup, setShowChatPopup] = useState(false);
@@ -89,5 +90,8 @@ const StoreCard = () => {
       <StorePopup open={showStorePopup} onOpenChange={setShowStorePopup} />
       <ChatPopup open={showChatPopup} onOpenChange={setShowChatPopup} />
     </>;
-};
+});
+
+StoreCard.displayName = "StoreCard";
+
 export default StoreCard;

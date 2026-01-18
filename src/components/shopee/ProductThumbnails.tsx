@@ -1,3 +1,4 @@
+import { memo } from "react";
 import aquavolt1 from "@/assets/aquavolt-new-1.webp";
 import aquavolt2 from "@/assets/aquavolt-new-2.webp";
 import aquavolt3 from "@/assets/aquavolt-new-3.webp";
@@ -11,7 +12,7 @@ interface ProductThumbnailsProps {
 
 const images = [aquavolt1, aquavolt2, aquavolt3, aquavolt4, aquavolt5];
 
-const ProductThumbnails = ({ selectedIndex, onSelect }: ProductThumbnailsProps) => {
+const ProductThumbnails = memo(({ selectedIndex, onSelect }: ProductThumbnailsProps) => {
   return (
     <div className="bg-card px-3 py-2">
       <div className="flex gap-2 overflow-x-auto pb-1 scrollbar-hide">
@@ -29,12 +30,16 @@ const ProductThumbnails = ({ selectedIndex, onSelect }: ProductThumbnailsProps) 
               src={img}
               alt={`Produto ${index + 1}`}
               className="w-full h-full object-cover"
+              loading="lazy"
+              decoding="async"
             />
           </button>
         ))}
       </div>
     </div>
   );
-};
+});
+
+ProductThumbnails.displayName = "ProductThumbnails";
 
 export default ProductThumbnails;

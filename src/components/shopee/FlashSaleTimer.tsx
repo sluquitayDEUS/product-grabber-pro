@@ -1,11 +1,10 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, memo, useCallback } from "react";
 import { Zap } from "lucide-react";
 
-const FlashSaleTimer = () => {
+const FlashSaleTimer = memo(() => {
   const [timeLeft, setTimeLeft] = useState({ hours: 0, minutes: 0, seconds: 0 });
 
-  useEffect(() => {
-    const calculateTimeLeft = () => {
+  const calculateTimeLeft = useCallback(() => {
       const now = new Date();
       const midnight = new Date();
       midnight.setHours(24, 0, 0, 0);
@@ -16,9 +15,10 @@ const FlashSaleTimer = () => {
       const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
       const seconds = Math.floor((diff % (1000 * 60)) / 1000);
       
-      return { hours, minutes, seconds };
-    };
+    return { hours, minutes, seconds };
+  }, []);
 
+  useEffect(() => {
     setTimeLeft(calculateTimeLeft());
 
     const timer = setInterval(() => {
@@ -26,7 +26,7 @@ const FlashSaleTimer = () => {
     }, 1000);
 
     return () => clearInterval(timer);
-  }, []);
+  }, [calculateTimeLeft]);
 
   const formatNumber = (num: number) => num.toString().padStart(2, '0');
 
@@ -54,6 +54,8 @@ const FlashSaleTimer = () => {
       </div>
     </div>
   );
-};
+});
+
+FlashSaleTimer.displayName = "FlashSaleTimer";
 
 export default FlashSaleTimer;
