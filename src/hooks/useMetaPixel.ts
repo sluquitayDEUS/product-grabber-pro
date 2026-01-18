@@ -57,9 +57,23 @@ const markEventTracked = (eventName: string): void => {
   }
 };
 
+// Check if running on production domain
+const isProduction = (): boolean => {
+  if (typeof window === "undefined") return false;
+  const hostname = window.location.hostname;
+  // Only track on production domain, not on lovable.app or localhost
+  return !hostname.includes("lovable.app") && 
+         !hostname.includes("localhost") && 
+         !hostname.includes("127.0.0.1");
+};
+
 // Initialize Meta Pixel base code
 const initPixel = (): void => {
   if (typeof window === "undefined") return;
+  if (!isProduction()) {
+    console.log("Meta Pixel: Disabled on non-production domain");
+    return;
+  }
   if ((window as any).fbq) return;
 
   const fbq = function(...args: any[]) {
@@ -110,6 +124,12 @@ export const useMetaPixel = () => {
       skipDedupe?: boolean;
     }
   ) => {
+    // Skip tracking on non-production domains
+    if (!isProduction()) {
+      console.log(`Meta Pixel: Skipping ${eventName} on non-production domain`);
+      return;
+    }
+
     // Check deduplication (skip for Purchase which should always track)
     const skipDedupe = params?.skipDedupe || eventName === "Purchase";
     if (!skipDedupe && wasEventTracked(eventName)) {
