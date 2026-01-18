@@ -2,11 +2,11 @@ import { useState, memo, useCallback } from "react";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 
 // Import product images
-import aquavolt1 from "@/assets/aquavolt-1-custom.png";
-import aquavolt2 from "@/assets/aquavolt-2.webp";
-import aquavolt3 from "@/assets/aquavolt-3.webp";
-import aquavolt4 from "@/assets/aquavolt-4.webp";
-import aquavolt5 from "@/assets/aquavolt-5.webp";
+import aquavolt1 from "@/assets/aquavolt-new-1.webp";
+import aquavolt2 from "@/assets/aquavolt-new-2.webp";
+import aquavolt3 from "@/assets/aquavolt-new-3.webp";
+import aquavolt4 from "@/assets/aquavolt-new-4.webp";
+import aquavolt5 from "@/assets/aquavolt-new-5.webp";
 
 const images = [aquavolt1, aquavolt2, aquavolt3, aquavolt4, aquavolt5];
 
