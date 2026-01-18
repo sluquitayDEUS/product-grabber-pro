@@ -1,5 +1,5 @@
-import { useState } from "react";
-import { ThumbsUp, ChevronRight, ChevronDown } from "lucide-react";
+import { useState, memo, useMemo, useCallback } from "react";
+import { ThumbsUp, ChevronDown } from "lucide-react";
 
 // Import review images
 import review1 from "@/assets/review-product-1.jpg";
@@ -203,27 +203,36 @@ const generateReviews = () => {
 
 const allReviews = generateReviews();
 
-const ProductReviews = () => {
+const ProductReviews = memo(() => {
   const [activeFilter, setActiveFilter] = useState("Todas");
   const [visibleCount, setVisibleCount] = useState(10);
 
-  const getFilteredReviews = () => {
-    let filtered = allReviews;
-    
+  const filteredReviews = useMemo(() => {
     if (activeFilter === "Com Foto") {
-      filtered = allReviews.filter(r => r.images.length > 0);
+      return allReviews.filter(r => r.images.length > 0);
     } else if (activeFilter.includes("★")) {
       const rating = parseInt(activeFilter);
-      filtered = allReviews.filter(r => r.rating === rating);
+      return allReviews.filter(r => r.rating === rating);
     }
+    return allReviews;
+  }, [activeFilter]);
 
-    return filtered;
-  };
-
-  const filteredReviews = getFilteredReviews();
-  const displayedReviews = filteredReviews.slice(0, visibleCount);
+  const displayedReviews = useMemo(() => 
+    filteredReviews.slice(0, visibleCount), 
+    [filteredReviews, visibleCount]
+  );
+  
   const remainingCount = filteredReviews.length - visibleCount;
   const nextLoadCount = Math.min(5, remainingCount);
+
+  const handleLoadMore = useCallback(() => {
+    setVisibleCount(prev => prev + 5);
+  }, []);
+
+  const handleFilterChange = useCallback((filter: string) => {
+    setActiveFilter(filter);
+    setVisibleCount(10);
+  }, []);
 
   const renderStars = (rating: number) => {
     return (
@@ -266,15 +275,11 @@ const ProductReviews = () => {
         </div>
       </div>
 
-      {/* Filters */}
       <div className="flex gap-2 px-3 py-3 overflow-x-auto scrollbar-hide">
         {filters.map((filter) => (
           <button
             key={filter}
-            onClick={() => {
-              setActiveFilter(filter);
-              setVisibleCount(10);
-            }}
+            onClick={() => handleFilterChange(filter)}
             className={`flex-shrink-0 px-3 py-1.5 rounded-full text-xs transition-all ${
               activeFilter === filter
                 ? "bg-shopee-light text-primary border border-primary"
@@ -296,6 +301,8 @@ const ProductReviews = () => {
                 src={review.avatar}
                 alt={review.user}
                 className="w-8 h-8 rounded-full object-cover"
+                loading="lazy"
+                decoding="async"
               />
               <div>
                 <p className="text-xs font-medium text-foreground">{review.user}</p>
@@ -316,7 +323,6 @@ const ProductReviews = () => {
               {review.comment}
             </p>
 
-            {/* Images */}
             {review.images.length > 0 && (
               <div className="flex gap-2 mb-3">
                 {review.images.map((img: string, index: number) => (
@@ -325,6 +331,8 @@ const ProductReviews = () => {
                     src={img}
                     alt={`Review ${index + 1}`}
                     className="w-20 h-20 rounded-lg object-cover"
+                    loading="lazy"
+                    decoding="async"
                   />
                 ))}
               </div>
@@ -347,10 +355,9 @@ const ProductReviews = () => {
         ))}
       </div>
 
-      {/* Load More Button */}
       {remainingCount > 0 && (
         <button
-          onClick={() => setVisibleCount(prev => prev + 5)}
+          onClick={handleLoadMore}
           className="w-full py-4 border-t border-border flex items-center justify-center gap-2 text-primary text-sm font-medium"
         >
           <span>Ver mais {nextLoadCount} avaliações</span>
@@ -359,6 +366,8 @@ const ProductReviews = () => {
       )}
     </div>
   );
-};
+});
+
+ProductReviews.displayName = "ProductReviews";
 
 export default ProductReviews;
