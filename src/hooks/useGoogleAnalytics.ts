@@ -9,9 +9,20 @@ declare global {
   }
 }
 
+// Check if running on production domain
+const isProduction = (): boolean => {
+  if (typeof window === "undefined") return false;
+  const hostname = window.location.hostname;
+  // Only track on production domain, not on lovable.app or localhost
+  return !hostname.includes("lovable.app") && 
+         !hostname.includes("localhost") && 
+         !hostname.includes("127.0.0.1");
+};
+
 export const useGoogleAnalytics = () => {
   // Track page view
   const trackPageView = (pagePath: string, pageTitle: string) => {
+    if (!isProduction()) return;
     if (typeof window !== "undefined" && window.gtag) {
       window.gtag("event", "page_view", {
         page_path: pagePath,
@@ -27,6 +38,7 @@ export const useGoogleAnalytics = () => {
     value: number,
     currency: string = "BRL"
   ) => {
+    if (!isProduction()) return;
     if (typeof window !== "undefined" && window.gtag) {
       window.gtag("event", "view_item", {
         currency,
@@ -51,6 +63,7 @@ export const useGoogleAnalytics = () => {
     quantity: number = 1,
     currency: string = "BRL"
   ) => {
+    if (!isProduction()) return;
     if (typeof window !== "undefined" && window.gtag) {
       window.gtag("event", "begin_checkout", {
         currency,
@@ -73,6 +86,7 @@ export const useGoogleAnalytics = () => {
     paymentType: string,
     currency: string = "BRL"
   ) => {
+    if (!isProduction()) return;
     if (typeof window !== "undefined" && window.gtag) {
       window.gtag("event", "add_payment_info", {
         currency,
@@ -91,6 +105,7 @@ export const useGoogleAnalytics = () => {
     quantity: number = 1,
     currency: string = "BRL"
   ) => {
+    if (!isProduction()) return;
     if (typeof window !== "undefined" && window.gtag) {
       window.gtag("event", "purchase", {
         transaction_id: transactionId,
@@ -116,6 +131,7 @@ export const useGoogleAnalytics = () => {
     quantity: number = 1,
     currency: string = "BRL"
   ) => {
+    if (!isProduction()) return;
     if (typeof window !== "undefined" && window.gtag) {
       window.gtag("event", "add_to_cart", {
         currency,
@@ -137,6 +153,7 @@ export const useGoogleAnalytics = () => {
     value: number,
     currency: string = "BRL"
   ) => {
+    if (!isProduction()) return;
     if (typeof window !== "undefined" && window.gtag) {
       window.gtag("event", "generate_lead", {
         currency,

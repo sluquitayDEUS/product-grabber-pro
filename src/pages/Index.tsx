@@ -53,8 +53,8 @@ const Index = () => {
   return (
     <div className="min-h-screen bg-background">
       <div className="max-w-md mx-auto">
-        <ProductHeader />
         <PromoBanner />
+        <ProductHeader />
         <ProductGallery currentIndex={galleryIndex} onIndexChange={setGalleryIndex} />
         <ProductThumbnails selectedIndex={galleryIndex} onSelect={setGalleryIndex} />
         <FlashSaleTimer />

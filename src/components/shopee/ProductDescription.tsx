@@ -15,7 +15,7 @@ import aquavoltCharging from "@/assets/aquavolt-charging.webp";
 import aquavoltSupport from "@/assets/aquavolt-support.jpg";
 import aquavoltNoLicense from "@/assets/aquavolt-no-license.webp";
 import aquavoltTransport from "@/assets/aquavolt-transport.webp";
-import aquavoltSpecs from "@/assets/aquavolt-specs.webp";
+
 
 const specs = [
   { label: "Potência", value: "15 kW" },
@@ -200,7 +200,7 @@ const ProductDescription = memo(() => {
             </ul>
           </div>
 
-          <LazyImage src={aquavoltSpecs} alt="AquaVolt Specs" className="w-full rounded-lg" />
+          
 
         </div>
         
