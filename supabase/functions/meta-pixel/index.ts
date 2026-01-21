@@ -140,6 +140,12 @@ serve(async (req) => {
       eventData.custom_data = customData;
     }
 
+    // Attach transaction_id as order_id for Purchase (helps attribution & debugging)
+    if (body.transaction_id) {
+      customData.content_ids = customData.content_ids || [];
+      (customData as any).order_id = body.transaction_id;
+    }
+
     const payload = {
       data: [eventData],
     };

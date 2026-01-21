@@ -58,13 +58,18 @@ const markEventTracked = (eventName: string): void => {
 };
 
 // Check if running on production domain
+//
+// IMPORTANT:
+// - We allow tracking on the published *.lovable.app domain.
+// - We block tracking on preview domains (id-preview--*.lovable.app) and localhost.
 const isProduction = (): boolean => {
   if (typeof window === "undefined") return false;
   const hostname = window.location.hostname;
-  // Only track on production domain, not on lovable.app or localhost
-  return !hostname.includes("lovable.app") && 
-         !hostname.includes("localhost") && 
-         !hostname.includes("127.0.0.1");
+
+  if (hostname.includes("localhost") || hostname.includes("127.0.0.1")) return false;
+  if (hostname.startsWith("id-preview--")) return false;
+
+  return true;
 };
 
 // Initialize Meta Pixel base code

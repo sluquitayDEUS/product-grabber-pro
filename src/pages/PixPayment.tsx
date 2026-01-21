@@ -40,7 +40,8 @@ const PixPayment = () => {
         return;
       }
 
-      if (data?.status === 'paid') {
+      const normalizedStatus = String(data?.status ?? "").toLowerCase();
+      if (normalizedStatus === 'paid') {
         setIsPaid(true);
         
         // Stop polling
