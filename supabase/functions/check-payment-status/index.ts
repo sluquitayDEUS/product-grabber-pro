@@ -96,13 +96,17 @@ serve(async (req) => {
     // Response is wrapped in a "data" object according to Furia Pay API
     const paymentData = (data.data || data) as Record<string, unknown>;
 
-    // Return status - API uses snake_case
-    // Possible statuses: PAID, PENDING, REFUNDED, FAILED, REFUSED
+    // Return status
+    // Furia Pay statuses are usually uppercase: PAID, PENDING, REFUNDED, FAILED, REFUSED, etc.
+    const rawStatus = String(paymentData.status ?? "");
+    const normalizedStatus = rawStatus.toLowerCase();
+
     return new Response(
       JSON.stringify({
         success: true,
         transactionId: paymentData.id,
-        status: paymentData.status,
+        status: normalizedStatus,
+        rawStatus,
         paymentMethod: paymentData.payment_method || paymentData.paymentMethod,
         paidAt: paymentData.paid_at || paymentData.paidAt || null,
       }),
