@@ -48,7 +48,7 @@ const StoreCard = memo(() => {
           </div>
           <div className="w-px h-8 bg-border" />
           <div className="text-center">
-            <p className="text-sm font-medium text-primary">​+15.7M </p>
+            <p className="text-sm font-medium text-primary">​+ 15.7M </p>
             <p className="text-xs text-muted-foreground">Seguidores</p>
           </div>
         </div>
