@@ -1,4 +1,4 @@
-import { ChevronRight, Store, MessageCircle, Zap, Truck, Minus, Plus, BadgeCheck } from "lucide-react";
+import { ChevronRight, Store, MessageCircle, Zap, Truck, Minus, Plus } from "lucide-react";
 import { useState } from "react";
 import { useCart } from "@/contexts/CartContext";
 import {
@@ -10,7 +10,8 @@ import {
 } from "@/components/ui/sheet";
 import StorePopup from "@/components/shopee/StorePopup";
 import ChatPopup from "@/components/checkout/ChatPopup";
-import shopeeLogo from "@/assets/shopee-logo.png";
+import shopeeLogo from "@/assets/shopee-logo.webp";
+import VerifiedBadge from "@/components/ui/verified-badge";
 
 const CheckoutProducts = () => {
   const { product, selectedShipping, setSelectedShippingType, getShippingOptions, quantity, setQuantity } = useCart();
@@ -48,7 +49,7 @@ const CheckoutProducts = () => {
         <img src={shopeeLogo} alt="Shopee Oficial" className="w-5 h-5 object-contain" />
         <span className="font-medium text-sm text-foreground flex items-center gap-1">
           Shopee Oficial
-          <BadgeCheck className="w-4 h-4 text-blue-500 fill-blue-500" />
+          <VerifiedBadge size="sm" />
         </span>
         <ChevronRight className="w-4 h-4 text-muted-foreground ml-auto" />
       </button>

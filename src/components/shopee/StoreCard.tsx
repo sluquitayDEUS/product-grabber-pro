@@ -1,8 +1,9 @@
 import { useState, memo } from "react";
-import { MessageCircle, Store, UserPlus, Check, BadgeCheck } from "lucide-react";
+import { MessageCircle, Store, UserPlus, Check } from "lucide-react";
 import StorePopup from "./StorePopup";
 import ChatPopup from "./ChatPopup";
-import shopeeLogo from "@/assets/shopee-logo.png";
+import shopeeLogo from "@/assets/shopee-logo.webp";
+import VerifiedBadge from "@/components/ui/verified-badge";
 
 const StoreCard = memo(() => {
   const [showStorePopup, setShowStorePopup] = useState(false);
@@ -23,7 +24,7 @@ const StoreCard = memo(() => {
           <div className="flex-1">
             <h3 className="text-sm font-medium text-foreground flex items-center gap-1">
               Shopee Oficial
-              <BadgeCheck className="w-4 h-4 text-blue-500 fill-blue-500" />
+              <VerifiedBadge size="sm" />
             </h3>
             <p className="text-xs text-muted-foreground">Online há 3 minutos</p>
             

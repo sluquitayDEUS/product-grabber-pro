@@ -1,6 +1,8 @@
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
-import { Shield, Package, Star, Users, Clock, CheckCircle2, Award, TrendingUp, BadgeCheck } from "lucide-react";
-import shopeeLogo from "@/assets/shopee-logo.png";
+import { Shield, Package, Star, Users, Clock, CheckCircle2, Award, TrendingUp } from "lucide-react";
+import shopeeLogo from "@/assets/shopee-logo.webp";
+import VerifiedBadge from "@/components/ui/verified-badge";
+
 interface StorePopupProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
@@ -19,7 +21,7 @@ const StorePopup = ({
               <div className="flex items-center gap-2">
                 <h3 className="font-bold text-lg flex items-center gap-1">
                   Shopee Oficial
-                  <BadgeCheck className="w-5 h-5 text-blue-400 fill-blue-400" />
+                  <VerifiedBadge size="md" />
                 </h3>
               </div>
               <div className="flex items-center gap-1 mt-1">
