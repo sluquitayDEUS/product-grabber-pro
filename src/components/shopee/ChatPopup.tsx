@@ -1,9 +1,10 @@
 import { useState } from "react";
-import { MessageCircle, X, Send } from "lucide-react";
+import { MessageCircle, X, Send, BadgeCheck } from "lucide-react";
 import {
   Dialog,
   DialogContent,
 } from "@/components/ui/dialog";
+import shopeeLogo from "@/assets/shopee-logo.png";
 
 interface ChatPopupProps {
   open: boolean;
@@ -19,7 +20,7 @@ interface Message {
 const faqData = [
   {
     question: "Este site é seguro?",
-    answer: "Sim, 100% seguro! O produto é vendido através da plataforma Shopee, que oferece o programa Garantia Shopee. Seu pagamento só é liberado ao vendedor após você confirmar o recebimento. Utilizamos criptografia SSL e somos uma loja verificada com mais de 127 mil pedidos entregues."
+    answer: "Sim, 100% seguro! Este produto é vendido e enviado pela Shopee Oficial, que oferece o programa Garantia Shopee. Seu pagamento só é liberado após você confirmar o recebimento. Utilizamos criptografia SSL e somos a loja oficial da Shopee com mais de 127 mil pedidos entregues."
   },
   {
     question: "Qual o prazo de entrega?",
@@ -43,7 +44,7 @@ const faqData = [
   },
   {
     question: "A loja é confiável?",
-    answer: "Somos a Atacado Premium, loja verificada pela Shopee com selo de Loja Oficial! Temos mais de 127 mil pedidos entregues, 98% de avaliações positivas e mais de 85 mil seguidores. Estamos há mais de 3 anos no mercado com compromisso de qualidade."
+    answer: "Somos a Shopee Oficial, a loja verificada da própria plataforma Shopee! Temos mais de 127 mil pedidos entregues, 98% de avaliações positivas e mais de 15 milhões de seguidores. Garantia total de procedência e qualidade."
   },
   {
     question: "Qual a velocidade do AquaVolt?",
@@ -63,7 +64,7 @@ const faqData = [
   },
   {
     question: "Como entro em contato com a loja?",
-    answer: "Você pode nos contatar pelo chat da Shopee, disponível 24 horas! Nossa equipe responde em até 2 horas durante o horário comercial. Também enviamos atualizações do seu pedido por e-mail e WhatsApp automaticamente."
+    answer: "Você pode nos contatar pelo chat da Shopee Oficial, disponível 24 horas! Nossa equipe responde em até 2 horas durante o horário comercial. Também enviamos atualizações do seu pedido por e-mail e WhatsApp automaticamente."
   },
   {
     question: "O produto vem com acessórios?",
@@ -84,7 +85,7 @@ const ChatPopup = ({ open, onOpenChange }: ChatPopupProps) => {
     {
       id: 0,
       type: "bot",
-      text: "Olá! 👋 Bem-vindo à Atacado Premium! Como posso ajudar você hoje? Selecione uma das opções abaixo ou digite sua pergunta."
+      text: "Olá! 👋 Bem-vindo à Shopee Oficial! Como posso ajudar você hoje? Selecione uma das opções abaixo ou digite sua pergunta."
     }
   ]);
   const [showQuestions, setShowQuestions] = useState(true);
@@ -116,14 +117,17 @@ const ChatPopup = ({ open, onOpenChange }: ChatPopupProps) => {
         <div className="bg-primary p-4 flex items-center gap-3">
           <div className="relative">
             <img 
-              src="/lovable-uploads/f6949b55-5746-4c6d-a30a-e701c014d9c9.png" 
-              alt="Loja" 
-              className="w-10 h-10 rounded-full object-cover border-2 border-white"
+              src={shopeeLogo}
+              alt="Shopee Oficial" 
+              className="w-10 h-10 rounded-full object-cover border-2 border-white bg-white p-1"
             />
             <span className="absolute -bottom-1 -right-1 w-3 h-3 bg-green-500 rounded-full border-2 border-white"></span>
           </div>
           <div className="flex-1">
-            <h3 className="text-white font-medium text-sm">Atacado Premium</h3>
+            <h3 className="text-white font-medium text-sm flex items-center gap-1">
+              Shopee Oficial
+              <BadgeCheck className="w-4 h-4 text-blue-400 fill-blue-400" />
+            </h3>
             <p className="text-white/80 text-xs flex items-center gap-1">
               <span className="w-2 h-2 bg-green-400 rounded-full"></span>
               Online agora
@@ -148,11 +152,11 @@ const ChatPopup = ({ open, onOpenChange }: ChatPopupProps) => {
                 {message.type === "bot" && (
                   <div className="flex items-center gap-2 mb-1">
                     <img 
-                      src="/lovable-uploads/f6949b55-5746-4c6d-a30a-e701c014d9c9.png" 
-                      alt="Loja" 
-                      className="w-6 h-6 rounded-full object-cover"
+                      src={shopeeLogo}
+                      alt="Shopee Oficial" 
+                      className="w-6 h-6 rounded-full object-cover bg-white p-0.5"
                     />
-                    <span className="text-xs text-muted-foreground">Resposta Automática da Loja</span>
+                    <span className="text-xs text-muted-foreground">Resposta Automática - Shopee Oficial</span>
                   </div>
                 )}
                 <div 

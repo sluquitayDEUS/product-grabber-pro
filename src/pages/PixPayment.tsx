@@ -337,11 +337,14 @@ const PixPayment = () => {
         {/* Store Credibility */}
         <div className="bg-card rounded-2xl p-4 shadow-lg border">
           <div className="flex items-center gap-3 mb-3">
-            <div className="bg-primary/10 rounded-full p-2">
-              <Store className="w-5 h-5 text-primary" />
+            <div className="bg-white rounded-full p-2 border border-primary/20">
+              <img src="/src/assets/shopee-logo.png" alt="Shopee Oficial" className="w-5 h-5 object-contain" />
             </div>
             <div>
-              <p className="font-bold text-sm">Atacado Premium</p>
+              <p className="font-bold text-sm flex items-center gap-1">
+                Shopee Oficial
+                <BadgeCheck className="w-4 h-4 text-blue-500 fill-blue-500" />
+              </p>
               <div className="flex items-center gap-1">
                 <Star className="w-3 h-3 fill-amber-400 text-amber-400" />
                 <span className="text-xs text-muted-foreground">4.9 • Loja Oficial</span>
