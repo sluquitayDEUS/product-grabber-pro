@@ -1,7 +1,9 @@
 import { useState, memo } from "react";
-import { MessageCircle, Store, UserPlus, Check } from "lucide-react";
+import { MessageCircle, Store, UserPlus, Check, BadgeCheck } from "lucide-react";
 import StorePopup from "./StorePopup";
 import ChatPopup from "./ChatPopup";
+import shopeeLogo from "@/assets/shopee-logo.png";
+
 const StoreCard = memo(() => {
   const [showStorePopup, setShowStorePopup] = useState(false);
   const [isFollowing, setIsFollowing] = useState(false);
@@ -11,7 +13,7 @@ const StoreCard = memo(() => {
         <div className="flex items-center gap-3">
           {/* Store Avatar */}
           <div className="relative">
-            <img alt="Loja" className="w-14 h-14 rounded-full object-cover border-2 border-primary" src="/lovable-uploads/f6949b55-5746-4c6d-a30a-e701c014d9c9.png" />
+            <img alt="Shopee Oficial" className="w-14 h-14 rounded-full object-cover border-2 border-primary bg-white p-1" src={shopeeLogo} />
             <span className="absolute -bottom-1 left-1/2 -translate-x-1/2 bg-primary text-primary-foreground text-[8px] px-1.5 py-0.5 rounded font-medium">
               Oficial
             </span>
@@ -19,7 +21,10 @@ const StoreCard = memo(() => {
 
           {/* Store Info */}
           <div className="flex-1">
-            <h3 className="text-sm font-medium text-foreground">Shopee Oficial</h3>
+            <h3 className="text-sm font-medium text-foreground flex items-center gap-1">
+              Shopee Oficial
+              <BadgeCheck className="w-4 h-4 text-blue-500 fill-blue-500" />
+            </h3>
             <p className="text-xs text-muted-foreground">Online há 3 minutos</p>
             
             <div className="flex items-center gap-4 mt-1">

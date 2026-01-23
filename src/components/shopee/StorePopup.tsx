@@ -1,5 +1,6 @@
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
-import { Shield, Package, Star, Users, Clock, CheckCircle2, Award, TrendingUp } from "lucide-react";
+import { Shield, Package, Star, Users, Clock, CheckCircle2, Award, TrendingUp, BadgeCheck } from "lucide-react";
+import shopeeLogo from "@/assets/shopee-logo.png";
 
 interface StorePopupProps {
   open: boolean;
@@ -14,20 +15,20 @@ const StorePopup = ({ open, onOpenChange }: StorePopupProps) => {
         <div className="bg-gradient-to-r from-primary to-primary/80 p-4 text-primary-foreground">
           <div className="flex items-center gap-3">
             <img 
-              src="/lovable-uploads/f6949b55-5746-4c6d-a30a-e701c014d9c9.png" 
-              alt="Loja" 
-              className="w-16 h-16 rounded-full border-2 border-white/30 object-cover"
+              src={shopeeLogo}
+              alt="Shopee Oficial" 
+              className="w-16 h-16 rounded-full border-2 border-white/30 object-cover bg-white p-2"
             />
             <div>
               <div className="flex items-center gap-2">
-                <h3 className="font-bold text-lg">Atacado Premium</h3>
-                <span className="bg-white/20 text-[10px] px-2 py-0.5 rounded-full font-medium">
-                  Loja Oficial
-                </span>
+                <h3 className="font-bold text-lg flex items-center gap-1">
+                  Shopee Oficial
+                  <BadgeCheck className="w-5 h-5 text-blue-400 fill-blue-400" />
+                </h3>
               </div>
               <div className="flex items-center gap-1 mt-1">
                 <Shield className="w-4 h-4" />
-                <span className="text-sm">Vendedor Verificado</span>
+                <span className="text-sm">Loja Oficial Verificada</span>
               </div>
             </div>
           </div>
