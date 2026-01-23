@@ -1,4 +1,4 @@
-import { Copy, Check, Clock, ShieldCheck, ArrowLeft, CheckCircle2, Store, BadgeCheck, Truck, Lock, Smartphone, Star, Package } from "lucide-react";
+import { Copy, Check, Clock, ShieldCheck, ArrowLeft, CheckCircle2, Store, Truck, Lock, Smartphone, Star, Package } from "lucide-react";
 import { useState, useEffect, useRef, useCallback } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
@@ -327,7 +327,7 @@ const PixPayment = () => {
             </div>
             <div className="flex flex-col items-center gap-1">
               <div className="bg-primary/10 rounded-full p-2">
-                <BadgeCheck className="w-5 h-5 text-primary" />
+                <ShieldCheck className="w-5 h-5 text-primary" />
               </div>
               <span className="text-xs font-medium text-foreground">Garantia</span>
             </div>
@@ -338,12 +338,14 @@ const PixPayment = () => {
         <div className="bg-card rounded-2xl p-4 shadow-lg border">
           <div className="flex items-center gap-3 mb-3">
             <div className="bg-white rounded-full p-2 border border-primary/20">
-              <img src="/src/assets/shopee-logo.png" alt="Shopee Oficial" className="w-5 h-5 object-contain" />
+              <img src="/src/assets/shopee-logo.webp" alt="Shopee Oficial" className="w-5 h-5 object-contain" />
             </div>
             <div>
               <p className="font-bold text-sm flex items-center gap-1">
                 Shopee Oficial
-                <BadgeCheck className="w-4 h-4 text-blue-500 fill-blue-500" />
+                <span className="inline-flex w-4 h-4 bg-[#1DA1F2] rounded-full items-center justify-center" style={{clipPath: "polygon(50% 0%, 61% 11%, 75% 7%, 78% 22%, 93% 25%, 89% 39%, 100% 50%, 89% 61%, 93% 75%, 78% 78%, 75% 93%, 61% 89%, 50% 100%, 39% 89%, 25% 93%, 22% 78%, 7% 75%, 11% 61%, 0% 50%, 11% 39%, 7% 25%, 22% 22%, 25% 7%, 39% 11%)"}}>
+                  <Check className="w-2.5 h-2.5 text-white stroke-[3]" />
+                </span>
               </p>
               <div className="flex items-center gap-1">
                 <Star className="w-3 h-3 fill-amber-400 text-amber-400" />

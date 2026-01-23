@@ -1,10 +1,11 @@
 import { useState } from "react";
-import { MessageCircle, X, Send, BadgeCheck } from "lucide-react";
+import { MessageCircle, X, Send } from "lucide-react";
 import {
   Dialog,
   DialogContent,
 } from "@/components/ui/dialog";
-import shopeeLogo from "@/assets/shopee-logo.png";
+import shopeeLogo from "@/assets/shopee-logo.webp";
+import VerifiedBadge from "@/components/ui/verified-badge";
 
 interface ChatPopupProps {
   open: boolean;
@@ -126,7 +127,7 @@ const ChatPopup = ({ open, onOpenChange }: ChatPopupProps) => {
           <div className="flex-1">
             <h3 className="text-white font-medium text-sm flex items-center gap-1">
               Shopee Oficial
-              <BadgeCheck className="w-4 h-4 text-blue-400 fill-blue-400" />
+              <VerifiedBadge size="sm" />
             </h3>
             <p className="text-white/80 text-xs flex items-center gap-1">
               <span className="w-2 h-2 bg-green-400 rounded-full"></span>
