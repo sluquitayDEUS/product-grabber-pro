@@ -13,7 +13,7 @@ const ProductHeader = () => {
   };
 
   return (
-    <header className="sticky top-0 z-40 bg-gradient-to-b from-black/40 to-transparent">
+    <header className="sticky top-0 z-40 bg-transparent">
       <div className="flex items-center justify-between px-3 py-2">
         <button className="w-9 h-9 flex items-center justify-center rounded-full bg-black/30">
           <ArrowLeft className="w-5 h-5 text-primary-foreground" />

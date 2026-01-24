@@ -54,7 +54,7 @@ const ProductDescription = memo(() => {
         <div className={`text-xs leading-relaxed space-y-4 ${!isExpanded && "max-h-[200px] overflow-hidden"}`}>
           
           {/* Banner */}
-          <LazyImage src={aquavoltBanner} alt="AquaVolt Banner" className="w-full rounded-lg" />
+          <LazyImage src={aquavoltBanner} alt="AquaVolt Banner" className="w-full rounded-lg" width={600} height={400} />
           
           {/* Intro */}
           <div className="space-y-2 text-center">
@@ -83,7 +83,7 @@ const ProductDescription = memo(() => {
             <p className="text-primary font-bold">ULTIMO DIA DE PROMOÇÃO!</p>
           </div>
 
-          <LazyImage src={aquavoltPower} alt="AquaVolt Power" className="w-full rounded-lg" />
+          <LazyImage src={aquavoltPower} alt="AquaVolt Power" className="w-full rounded-lg" width={600} height={400} />
 
           {/* Power Section */}
           <div className="space-y-2 text-center">
@@ -93,7 +93,7 @@ const ProductDescription = memo(() => {
             </p>
           </div>
 
-          <LazyImage src={aquavoltResistance} alt="AquaVolt Resistance" className="w-full rounded-lg" />
+          <LazyImage src={aquavoltResistance} alt="AquaVolt Resistance" className="w-full rounded-lg" width={600} height={400} />
 
           {/* Resistance Section */}
           <div className="space-y-2 text-center">
@@ -103,7 +103,7 @@ const ProductDescription = memo(() => {
             </p>
           </div>
 
-          <LazyImage src={aquavoltDurability} alt="AquaVolt Durability" className="w-full rounded-lg" />
+          <LazyImage src={aquavoltDurability} alt="AquaVolt Durability" className="w-full rounded-lg" width={600} height={400} />
 
           {/* Durability Section */}
           <div className="space-y-2 text-center">
@@ -113,7 +113,7 @@ const ProductDescription = memo(() => {
             </p>
           </div>
 
-          <LazyImage src={aquavoltNavigation} alt="AquaVolt Navigation" className="w-full rounded-lg" />
+          <LazyImage src={aquavoltNavigation} alt="AquaVolt Navigation" className="w-full rounded-lg" width={600} height={400} />
 
           {/* Navigation Section */}
           <div className="space-y-2 text-center">
@@ -123,7 +123,7 @@ const ProductDescription = memo(() => {
             </p>
           </div>
 
-          <LazyImage src={aquavoltAccelerator} alt="AquaVolt Accelerator" className="w-full rounded-lg" />
+          <LazyImage src={aquavoltAccelerator} alt="AquaVolt Accelerator" className="w-full rounded-lg" width={600} height={400} />
 
           {/* Safety Section */}
           <div className="space-y-2 text-center">
@@ -133,7 +133,7 @@ const ProductDescription = memo(() => {
             </p>
           </div>
 
-          <LazyImage src={aquavoltSafety} alt="AquaVolt Safety" className="w-full rounded-lg" />
+          <LazyImage src={aquavoltSafety} alt="AquaVolt Safety" className="w-full rounded-lg" width={600} height={400} />
 
           {/* Style Section */}
           <div className="space-y-2 text-center">
@@ -143,7 +143,7 @@ const ProductDescription = memo(() => {
             </p>
           </div>
 
-          <LazyImage src={aquavoltStyle} alt="AquaVolt Style" className="w-full rounded-lg" />
+          <LazyImage src={aquavoltStyle} alt="AquaVolt Style" className="w-full rounded-lg" width={600} height={400} />
 
           {/* Charging Section */}
           <div className="space-y-2 text-center">
@@ -153,7 +153,7 @@ const ProductDescription = memo(() => {
             </p>
           </div>
 
-          <LazyImage src={aquavoltCharging} alt="AquaVolt Charging" className="w-full rounded-lg" />
+          <LazyImage src={aquavoltCharging} alt="AquaVolt Charging" className="w-full rounded-lg" width={600} height={400} />
 
           {/* Support Section */}
           <div className="space-y-2 text-center">
@@ -163,7 +163,7 @@ const ProductDescription = memo(() => {
             </p>
           </div>
 
-          <LazyImage src={aquavoltSupport} alt="AquaVolt Support" className="w-full rounded-lg" />
+          <LazyImage src={aquavoltSupport} alt="AquaVolt Support" className="w-full rounded-lg" width={600} height={400} />
 
           {/* No License Section */}
           <div className="space-y-2 text-center">
@@ -173,14 +173,14 @@ const ProductDescription = memo(() => {
             </p>
           </div>
 
-          <LazyImage src={aquavoltNoLicense} alt="Sem habilitação náutica" className="w-full rounded-lg" />
+          <LazyImage src={aquavoltNoLicense} alt="Sem habilitação náutica" className="w-full rounded-lg" width={600} height={400} />
 
           {/* Transport Section */}
           <div className="space-y-2 text-center">
             <h5 className="text-sm font-semibold text-foreground">Fácil de ser Transportado</h5>
           </div>
 
-          <LazyImage src={aquavoltTransport} alt="AquaVolt Transport" className="w-full rounded-lg" />
+          <LazyImage src={aquavoltTransport} alt="AquaVolt Transport" className="w-full rounded-lg" width={600} height={400} />
 
           {/* Specs Summary */}
           <div className="space-y-2 text-center">
