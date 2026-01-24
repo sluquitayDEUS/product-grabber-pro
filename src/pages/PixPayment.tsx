@@ -8,7 +8,6 @@ import { useGoogleAnalytics } from "@/hooks/useGoogleAnalytics";
 import { useMetaPixel } from "@/hooks/useMetaPixel";
 import { useCart } from "@/contexts/CartContext";
 import { supabase } from "@/integrations/supabase/client";
-
 const PixPayment = () => {
   const location = useLocation();
   const navigate = useNavigate();
@@ -16,34 +15,53 @@ const PixPayment = () => {
   const [timeLeft, setTimeLeft] = useState(15 * 60); // 15 minutes in seconds
   const [pulseTimer, setPulseTimer] = useState(false);
   const [isPaid, setIsPaid] = useState(false);
-  const { markPixGenerated, clearAbandonedCart } = useAbandonedCart();
-  const { trackPageView, trackPurchase: gaTrackPurchase, trackGenerateLead, trackAddPaymentInfo } = useGoogleAnalytics();
-  const { trackPurchase: metaTrackPurchase } = useMetaPixel();
-  const { quantity, customer } = useCart();
+  const {
+    markPixGenerated,
+    clearAbandonedCart
+  } = useAbandonedCart();
+  const {
+    trackPageView,
+    trackPurchase: gaTrackPurchase,
+    trackGenerateLead,
+    trackAddPaymentInfo
+  } = useGoogleAnalytics();
+  const {
+    trackPurchase: metaTrackPurchase
+  } = useMetaPixel();
+  const {
+    quantity,
+    customer
+  } = useCart();
   const hasTrackedPurchase = useRef(false);
   const pollingRef = useRef<ReturnType<typeof setInterval> | null>(null);
 
   // Get data from navigation state
-  const { qrCode, amount, transactionId } = location.state || {};
+  const {
+    qrCode,
+    amount,
+    transactionId
+  } = location.state || {};
 
   // Check payment status
   const checkPaymentStatus = useCallback(async () => {
     if (!transactionId || isPaid) return;
-
     try {
-      const { data, error } = await supabase.functions.invoke('check-payment-status', {
-        body: { transactionId },
+      const {
+        data,
+        error
+      } = await supabase.functions.invoke('check-payment-status', {
+        body: {
+          transactionId
+        }
       });
-
       if (error) {
         console.error('Error checking payment status:', error);
         return;
       }
-
       const normalizedStatus = String(data?.status ?? "").toLowerCase();
       if (normalizedStatus === 'paid') {
         setIsPaid(true);
-        
+
         // Stop polling
         if (pollingRef.current) {
           clearInterval(pollingRef.current);
@@ -53,26 +71,12 @@ const PixPayment = () => {
         // Track Purchase events only when payment is confirmed
         if (!hasTrackedPurchase.current) {
           hasTrackedPurchase.current = true;
-          
+
           // Google Analytics Purchase
-          gaTrackPurchase(
-            transactionId,
-            amount,
-            "aquavolt-001",
-            "AquaVolt - Prancha Elétrica Subaquática",
-            quantity
-          );
-          
+          gaTrackPurchase(transactionId, amount, "aquavolt-001", "AquaVolt - Prancha Elétrica Subaquática", quantity);
+
           // Meta Pixel Purchase
-          metaTrackPurchase(
-            amount,
-            "AquaVolt - Prancha Elétrica Subaquática",
-            "aquavolt-001",
-            transactionId,
-            customer?.email,
-            customer?.phone,
-            customer?.name
-          );
+          metaTrackPurchase(amount, "AquaVolt - Prancha Elétrica Subaquática", "aquavolt-001", transactionId, customer?.email, customer?.phone, customer?.name);
         }
 
         // Redirect to success page
@@ -88,7 +92,6 @@ const PixPayment = () => {
       console.error('Payment status check failed:', err);
     }
   }, [transactionId, isPaid, amount, quantity, customer, gaTrackPurchase, metaTrackPurchase, navigate]);
-
   useEffect(() => {
     if (!qrCode) {
       navigate("/");
@@ -111,7 +114,7 @@ const PixPayment = () => {
 
     // Countdown timer
     const timer = setInterval(() => {
-      setTimeLeft((prev) => {
+      setTimeLeft(prev => {
         if (prev <= 1) {
           clearInterval(timer);
           return 0;
@@ -123,7 +126,6 @@ const PixPayment = () => {
         return prev - 1;
       });
     }, 1000);
-
     return () => {
       clearInterval(timer);
       if (pollingRef.current) {
@@ -131,7 +133,6 @@ const PixPayment = () => {
       }
     };
   }, [qrCode, navigate, trackPageView, trackAddPaymentInfo, trackGenerateLead, amount, markPixGenerated, clearAbandonedCart, checkPaymentStatus]);
-
   const handleCopyCode = async () => {
     try {
       await navigator.clipboard.writeText(qrCode);
@@ -141,29 +142,23 @@ const PixPayment = () => {
       console.error("Failed to copy:", err);
     }
   };
-
   const formatCurrency = (value: number) => {
     return (value / 100).toLocaleString("pt-BR", {
       style: "currency",
-      currency: "BRL",
+      currency: "BRL"
     });
   };
-
   const formatTime = (seconds: number) => {
     const mins = Math.floor(seconds / 60);
     const secs = seconds % 60;
     return `${mins.toString().padStart(2, "0")}:${secs.toString().padStart(2, "0")}`;
   };
-
   const isExpired = timeLeft === 0;
   const isLowTime = timeLeft <= 300 && timeLeft > 0;
-
   if (!qrCode) {
     return null;
   }
-
-  return (
-    <div className="min-h-screen bg-background">
+  return <div className="min-h-screen bg-background">
       {/* Header */}
       <header className="bg-primary text-primary-foreground py-4 px-4 flex items-center gap-3 sticky top-0 z-50 shadow-md">
         <button onClick={() => navigate("/")} className="p-1 hover:bg-white/10 rounded-full transition-colors">
@@ -172,9 +167,9 @@ const PixPayment = () => {
         <div className="flex items-center gap-2 flex-1">
           <div className="bg-white rounded-lg p-1.5">
             <svg width="24" height="24" viewBox="0 0 512 512" fill="none">
-              <path d="M112.57 391.19c20.056 0 38.928-7.808 53.12-22l76.693-76.692c5.385-5.404 14.765-5.384 20.15 0l76.989 76.989c14.191 14.172 33.045 21.98 53.12 21.98h15.098l-97.138 97.139c-30.326 30.344-79.505 30.344-109.85 0l-97.415-97.416h9.232z" fill="#32BCAD"/>
-              <path d="M401.051 120.471h-15.098c-20.075 0-38.929 7.808-53.12 22l-76.97 76.989c-5.551 5.53-14.6 5.55-20.15 0l-76.711-76.693c-14.192-14.191-33.046-22-53.12-22h-9.214l97.397-97.397c30.344-30.345 79.523-30.345 109.867 0l97.119 97.101z" fill="#32BCAD"/>
-              <path d="M498.363 206.098l-63.96-63.96c3.15 8.355 4.896 17.37 4.896 26.815 0 20.075-7.808 38.929-22 53.12l-76.97 76.99c-2.794 2.775-6.44 4.162-10.094 4.162-3.636 0-7.282-1.387-10.076-4.161l-76.712-76.693c-14.19-14.192-33.044-22.02-53.101-22.02-20.056 0-38.91 7.828-53.12 22.02l-76.97 76.989c-14.191 14.172-22 33.026-22 53.12 0 9.463 1.746 18.477 4.915 26.832l-63.977-63.977c-30.345-30.344-30.345-79.523 0-109.867l63.96-63.96c-3.15-8.355-4.896-17.37-4.896-26.815 0-20.075 7.808-38.929 22-53.12l76.97-76.99c14.191-14.172 33.045-22 53.12-22 20.056 0 38.91 7.828 53.12 22.02l76.97 76.989c5.55 5.55 14.6 5.53 20.15 0l76.97-76.99c14.192-14.172 33.046-22 53.12-22 9.463 0 18.477 1.746 26.832 4.915l-63.977-63.977c-30.344-30.345-79.523-30.345-109.867 0" fill="#32BCAD"/>
+              <path d="M112.57 391.19c20.056 0 38.928-7.808 53.12-22l76.693-76.692c5.385-5.404 14.765-5.384 20.15 0l76.989 76.989c14.191 14.172 33.045 21.98 53.12 21.98h15.098l-97.138 97.139c-30.326 30.344-79.505 30.344-109.85 0l-97.415-97.416h9.232z" fill="#32BCAD" />
+              <path d="M401.051 120.471h-15.098c-20.075 0-38.929 7.808-53.12 22l-76.97 76.989c-5.551 5.53-14.6 5.55-20.15 0l-76.711-76.693c-14.192-14.191-33.046-22-53.12-22h-9.214l97.397-97.397c30.344-30.345 79.523-30.345 109.867 0l97.119 97.101z" fill="#32BCAD" />
+              <path d="M498.363 206.098l-63.96-63.96c3.15 8.355 4.896 17.37 4.896 26.815 0 20.075-7.808 38.929-22 53.12l-76.97 76.99c-2.794 2.775-6.44 4.162-10.094 4.162-3.636 0-7.282-1.387-10.076-4.161l-76.712-76.693c-14.19-14.192-33.044-22.02-53.101-22.02-20.056 0-38.91 7.828-53.12 22.02l-76.97 76.989c-14.191 14.172-22 33.026-22 53.12 0 9.463 1.746 18.477 4.915 26.832l-63.977-63.977c-30.345-30.344-30.345-79.523 0-109.867l63.96-63.96c-3.15-8.355-4.896-17.37-4.896-26.815 0-20.075 7.808-38.929 22-53.12l76.97-76.99c14.191-14.172 33.045-22 53.12-22 20.056 0 38.91 7.828 53.12 22.02l76.97 76.989c5.55 5.55 14.6 5.53 20.15 0l76.97-76.99c14.192-14.172 33.046-22 53.12-22 9.463 0 18.477 1.746 26.832 4.915l-63.977-63.977c-30.344-30.345-79.523-30.345-109.867 0" fill="#32BCAD" />
             </svg>
           </div>
           <div>
@@ -211,9 +206,7 @@ const PixPayment = () => {
             <p className={`text-4xl font-bold tabular-nums ${isExpired ? "text-destructive" : isLowTime ? "text-amber-500" : "text-primary"}`}>
               {formatTime(timeLeft)}
             </p>
-            {isLowTime && !isExpired && (
-              <p className="text-xs text-amber-600 mt-1 animate-pulse">⚠️ Tempo acabando! Finalize agora</p>
-            )}
+            {isLowTime && !isExpired && <p className="text-xs text-amber-600 mt-1 animate-pulse">⚠️ Tempo acabando! Finalize agora</p>}
           </div>
           
           <div className="p-5 text-center">
@@ -233,54 +226,32 @@ const PixPayment = () => {
         <div className="bg-card rounded-2xl p-6 shadow-lg border">
           <div className="flex justify-center mb-4">
             <div className={`bg-white p-4 rounded-xl border-2 ${isExpired ? "border-gray-200" : "border-primary/30"} relative`}>
-              <QRCodeSVG
-                value={qrCode}
-                size={200}
-                level="H"
-                includeMargin={false}
-                className={isExpired ? "opacity-30" : ""}
-              />
-              {!isExpired && (
-                <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
+              <QRCodeSVG value={qrCode} size={200} level="H" includeMargin={false} className={isExpired ? "opacity-30" : ""} />
+              {!isExpired && <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
                   <div className="bg-white rounded-lg p-1 shadow-sm">
                     <svg width="32" height="32" viewBox="0 0 512 512" fill="none">
-                      <path d="M112.57 391.19c20.056 0 38.928-7.808 53.12-22l76.693-76.692c5.385-5.404 14.765-5.384 20.15 0l76.989 76.989c14.191 14.172 33.045 21.98 53.12 21.98h15.098l-97.138 97.139c-30.326 30.344-79.505 30.344-109.85 0l-97.415-97.416h9.232z" fill="#32BCAD"/>
-                      <path d="M401.051 120.471h-15.098c-20.075 0-38.929 7.808-53.12 22l-76.97 76.989c-5.551 5.53-14.6 5.55-20.15 0l-76.711-76.693c-14.192-14.191-33.046-22-53.12-22h-9.214l97.397-97.397c30.344-30.345 79.523-30.345 109.867 0l97.119 97.101z" fill="#32BCAD"/>
+                      <path d="M112.57 391.19c20.056 0 38.928-7.808 53.12-22l76.693-76.692c5.385-5.404 14.765-5.384 20.15 0l76.989 76.989c14.191 14.172 33.045 21.98 53.12 21.98h15.098l-97.138 97.139c-30.326 30.344-79.505 30.344-109.85 0l-97.415-97.416h9.232z" fill="#32BCAD" />
+                      <path d="M401.051 120.471h-15.098c-20.075 0-38.929 7.808-53.12 22l-76.97 76.989c-5.551 5.53-14.6 5.55-20.15 0l-76.711-76.693c-14.192-14.191-33.046-22-53.12-22h-9.214l97.397-97.397c30.344-30.345 79.523-30.345 109.867 0l97.119 97.101z" fill="#32BCAD" />
                     </svg>
                   </div>
-                </div>
-              )}
+                </div>}
             </div>
           </div>
 
           {/* Copy Button */}
-          <Button
-            onClick={handleCopyCode}
-            disabled={isExpired}
-            className={`w-full h-14 text-base font-bold gap-2 rounded-xl transition-all ${
-              copied 
-                ? "bg-shopee-success hover:bg-shopee-success/90" 
-                : "bg-primary hover:bg-primary/90"
-            }`}
-          >
-            {copied ? (
-              <>
+          <Button onClick={handleCopyCode} disabled={isExpired} className={`w-full h-14 text-base font-bold gap-2 rounded-xl transition-all ${copied ? "bg-shopee-success hover:bg-shopee-success/90" : "bg-primary hover:bg-primary/90"}`}>
+            {copied ? <>
                 <Check className="w-5 h-5" />
                 Código Pix copiado!
-              </>
-            ) : (
-              <>
+              </> : <>
                 <Copy className="w-5 h-5" />
                 Copiar código Pix
-              </>
-            )}
+              </>}
           </Button>
 
-          {copied && (
-            <p className="text-center text-sm text-shopee-success mt-2 animate-in fade-in">
+          {copied && <p className="text-center text-sm text-shopee-success mt-2 animate-in fade-in">
               ✓ Cole no app do seu banco para pagar
-            </p>
-          )}
+            </p>}
         </div>
 
         {/* Instructions Card */}
@@ -291,13 +262,23 @@ const PixPayment = () => {
           </h3>
           
           <div className="space-y-3">
-            {[
-              { step: 1, title: "Abra o app do banco", desc: "Acesse a área Pix do seu aplicativo" },
-              { step: 2, title: "Escolha Pix Copia e Cola", desc: "Ou escaneie o QR Code acima" },
-              { step: 3, title: "Cole o código copiado", desc: "Confirme os dados do pagamento" },
-              { step: 4, title: "Pronto! Aprovação imediata", desc: "Você receberá a confirmação por email" },
-            ].map((item) => (
-              <div key={item.step} className="flex gap-3 items-start">
+            {[{
+            step: 1,
+            title: "Abra o app do banco",
+            desc: "Acesse a área Pix do seu aplicativo"
+          }, {
+            step: 2,
+            title: "Escolha Pix Copia e Cola",
+            desc: "Ou escaneie o QR Code acima"
+          }, {
+            step: 3,
+            title: "Cole o código copiado",
+            desc: "Confirme os dados do pagamento"
+          }, {
+            step: 4,
+            title: "Pronto! Aprovação imediata",
+            desc: "Você receberá a confirmação por email"
+          }].map(item => <div key={item.step} className="flex gap-3 items-start">
                 <div className="flex-shrink-0 w-7 h-7 rounded-full bg-primary text-primary-foreground flex items-center justify-center font-bold text-sm">
                   {item.step}
                 </div>
@@ -305,8 +286,7 @@ const PixPayment = () => {
                   <p className="font-semibold text-sm">{item.title}</p>
                   <p className="text-xs text-muted-foreground">{item.desc}</p>
                 </div>
-              </div>
-            ))}
+              </div>)}
           </div>
         </div>
 
@@ -343,7 +323,9 @@ const PixPayment = () => {
             <div>
               <p className="font-bold text-sm flex items-center gap-1">
                 Shopee Oficial
-                <span className="inline-flex w-4 h-4 bg-[#1DA1F2] rounded-full items-center justify-center" style={{clipPath: "polygon(50% 0%, 61% 11%, 75% 7%, 78% 22%, 93% 25%, 89% 39%, 100% 50%, 89% 61%, 93% 75%, 78% 78%, 75% 93%, 61% 89%, 50% 100%, 39% 89%, 25% 93%, 22% 78%, 7% 75%, 11% 61%, 0% 50%, 11% 39%, 7% 25%, 22% 22%, 25% 7%, 39% 11%)"}}>
+                <span className="inline-flex w-4 h-4 bg-[#1DA1F2] rounded-full items-center justify-center" style={{
+                clipPath: "polygon(50% 0%, 61% 11%, 75% 7%, 78% 22%, 93% 25%, 89% 39%, 100% 50%, 89% 61%, 93% 75%, 78% 78%, 75% 93%, 61% 89%, 50% 100%, 39% 89%, 25% 93%, 22% 78%, 7% 75%, 11% 61%, 0% 50%, 11% 39%, 7% 25%, 22% 22%, 25% 7%, 39% 11%)"
+              }}>
                   <Check className="w-2.5 h-2.5 text-white stroke-[3]" />
                 </span>
               </p>
@@ -361,7 +343,7 @@ const PixPayment = () => {
           
           <div className="grid grid-cols-3 gap-2 pt-3 border-t">
             <div className="text-center">
-              <p className="font-bold text-primary text-lg">127k+</p>
+              <p className="font-bold text-primary text-lg">65B+</p>
               <p className="text-xs text-muted-foreground">Vendas</p>
             </div>
             <div className="text-center border-x">
@@ -369,7 +351,7 @@ const PixPayment = () => {
               <p className="text-xs text-muted-foreground">Satisfação</p>
             </div>
             <div className="text-center">
-              <p className="font-bold text-primary text-lg">89k+</p>
+              <p className="font-bold text-primary text-lg">2.5B+</p>
               <p className="text-xs text-muted-foreground">Avaliações</p>
             </div>
           </div>
@@ -402,19 +384,15 @@ const PixPayment = () => {
         </div>
 
         {/* Transaction ID */}
-        {transactionId && (
-          <div className="text-center py-2">
+        {transactionId && <div className="text-center py-2">
             <p className="text-xs text-muted-foreground">
               Código da transação: <span className="font-mono">{transactionId}</span>
             </p>
-          </div>
-        )}
+          </div>}
 
         {/* Bottom spacing */}
         <div className="h-4" />
       </div>
-    </div>
-  );
+    </div>;
 };
-
 export default PixPayment;
