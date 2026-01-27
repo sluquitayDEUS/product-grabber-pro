@@ -15,37 +15,51 @@ import aquavoltCharging from "@/assets/aquavolt-charging.webp";
 import aquavoltSupport from "@/assets/aquavolt-support.jpg";
 import aquavoltNoLicense from "@/assets/aquavolt-no-license.webp";
 import aquavoltTransport from "@/assets/aquavolt-transport.webp";
-
-
-const specs = [
-  { label: "Potência", value: "15 kW" },
-  { label: "Velocidade Máxima", value: "52 km/h" },
-  { label: "Autonomia", value: "70-80 min" },
-  { label: "Peso", value: "Casco 45 kg + Bateria 23 kg" },
-  { label: "Capacidade", value: "Suporta até 130 kg" },
-  { label: "Material", value: "ABS + PC + EPP (casco)" },
-  { label: "Bateria", value: "Lítio ternária" },
-  { label: "Carregamento", value: "3-4 horas (220V/110V)" },
-  { label: "Dimensões", value: "1850 x 860 x 550 mm" },
-  { label: "Garantia", value: "90 dias de fábrica" },
-  { label: "Certificações", value: "CE, FCC, ROHS, MSDS, UL38.3" },
-];
-
+const specs = [{
+  label: "Potência",
+  value: "15 kW"
+}, {
+  label: "Velocidade Máxima",
+  value: "52 km/h"
+}, {
+  label: "Autonomia",
+  value: "70-80 min"
+}, {
+  label: "Peso",
+  value: "Casco 45 kg + Bateria 23 kg"
+}, {
+  label: "Capacidade",
+  value: "Suporta até 130 kg"
+}, {
+  label: "Material",
+  value: "ABS + PC + EPP (casco)"
+}, {
+  label: "Bateria",
+  value: "Lítio ternária"
+}, {
+  label: "Carregamento",
+  value: "3-4 horas (220V/110V)"
+}, {
+  label: "Dimensões",
+  value: "1850 x 860 x 550 mm"
+}, {
+  label: "Garantia",
+  value: "90 dias de fábrica"
+}, {
+  label: "Certificações",
+  value: "CE, FCC, ROHS, MSDS, UL38.3"
+}];
 const ProductDescription = memo(() => {
   const [isExpanded, setIsExpanded] = useState(false);
-
-  return (
-    <div className="bg-card px-3 py-4 mt-2 description-section">
+  return <div className="bg-card px-3 py-4 mt-2 description-section">
       <h2 className="text-sm font-medium text-foreground mb-3">Detalhes do Produto</h2>
 
       {/* Specifications */}
       <div className="space-y-2 mb-4">
-        {specs.map((spec, index) => (
-          <div key={index} className="flex text-xs">
+        {specs.map((spec, index) => <div key={index} className="flex text-xs">
             <span className="w-28 text-muted-foreground flex-shrink-0">{spec.label}</span>
             <span className="text-foreground">{spec.value}</span>
-          </div>
-        ))}
+          </div>)}
       </div>
 
       {/* Description */}
@@ -62,17 +76,10 @@ const ProductDescription = memo(() => {
             
             {/* Wistia Video - 16:9 aspect ratio */}
             <div className="w-full my-3">
-              <div className="relative w-full" style={{ paddingBottom: "56.25%" }}>
-                <iframe 
-                  src="https://fast.wistia.net/embed/iframe/x00b5mokfv?web_component=true&seo=true" 
-                  title="AquaVolt Video" 
-                  allow="autoplay; fullscreen" 
-                  frameBorder="0" 
-                  scrolling="no" 
-                  className="absolute top-0 left-0 w-full h-full rounded-lg" 
-                  name="wistia_embed"
-                  loading="lazy"
-                />
+              <div className="relative w-full" style={{
+              paddingBottom: "56.25%"
+            }}>
+                <iframe src="https://fast.wistia.net/embed/iframe/x00b5mokfv?web_component=true&seo=true" title="AquaVolt Video" allow="autoplay; fullscreen" frameBorder="0" scrolling="no" className="absolute top-0 left-0 w-full h-full rounded-lg" name="wistia_embed" loading="lazy" />
               </div>
             </div>
             
@@ -159,7 +166,9 @@ const ProductDescription = memo(() => {
           <div className="space-y-2 text-center">
             <h5 className="text-sm font-semibold text-foreground">Onde faço reparos caso precise?</h5>
             <p className="text-foreground">
-              <strong>Se precisar de reparos devido ao mau uso</strong>, por favor, entre em contato com nossa equipe de suporte através da página de contato. Eles irão conectá-lo a um mecânico náutico especializado próximo a você. Este profissional, recomendado pela Atacado Premium, é de total confiança e está preparado para ajudar com qualquer necessidade relacionada ao seu AquaVolt.
+              <strong></strong>O AquaVolt é enviado pela Shopee e passa por testes completos antes do envio, garantindo que o produto chegue funcionando corretamente.
+
+Não realizamos reparos em casos de mau uso após o recebimento. Se for necessário algum conserto, basta levar o AquaVolt a qualquer mecânico náutico da sua região. O produto possui um sistema padrão, e qualquer mecânico náutico está apto a realizar os reparos necessários.
             </p>
           </div>
 
@@ -205,25 +214,15 @@ const ProductDescription = memo(() => {
 
         </div>
         
-        <button
-          onClick={() => setIsExpanded(!isExpanded)}
-          className="flex items-center justify-center gap-1 w-full mt-3 py-2 text-sm text-primary"
-        >
-          {isExpanded ? (
-            <>
+        <button onClick={() => setIsExpanded(!isExpanded)} className="flex items-center justify-center gap-1 w-full mt-3 py-2 text-sm text-primary">
+          {isExpanded ? <>
               Ver menos <ChevronUp className="w-4 h-4" />
-            </>
-          ) : (
-            <>
+            </> : <>
               Ver mais <ChevronDown className="w-4 h-4" />
-            </>
-          )}
+            </>}
         </button>
       </div>
-    </div>
-  );
+    </div>;
 });
-
 ProductDescription.displayName = "ProductDescription";
-
 export default ProductDescription;
