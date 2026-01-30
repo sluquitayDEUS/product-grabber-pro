@@ -1,32 +1,33 @@
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Shield, Package, Star, Users, Clock, CheckCircle2, Award, TrendingUp } from "lucide-react";
-import shopeeLogo from "@/assets/shopee-logo.webp";
-import VerifiedBadge from "@/components/ui/verified-badge";
 
 interface StorePopupProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
 }
-const StorePopup = ({
-  open,
-  onOpenChange
-}: StorePopupProps) => {
-  return <Dialog open={open} onOpenChange={onOpenChange}>
+
+const StorePopup = ({ open, onOpenChange }: StorePopupProps) => {
+  return (
+    <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="max-w-[360px] rounded-xl p-0 overflow-hidden">
         {/* Header com gradiente */}
         <div className="bg-gradient-to-r from-primary to-primary/80 p-4 text-primary-foreground">
           <div className="flex items-center gap-3">
-            <img src={shopeeLogo} alt="Shopee Oficial" className="w-16 h-16 rounded-full border-2 border-white/30 object-cover bg-white p-2" />
+            <img 
+              src="/lovable-uploads/f6949b55-5746-4c6d-a30a-e701c014d9c9.png" 
+              alt="Loja" 
+              className="w-16 h-16 rounded-full border-2 border-white/30 object-cover"
+            />
             <div>
               <div className="flex items-center gap-2">
-                <h3 className="font-bold text-lg flex items-center gap-1">
-                  Shopee Oficial
-                  <VerifiedBadge size="md" />
-                </h3>
+                <h3 className="font-bold text-lg">Atacado Premium</h3>
+                <span className="bg-white/20 text-[10px] px-2 py-0.5 rounded-full font-medium">
+                  Loja Oficial
+                </span>
               </div>
               <div className="flex items-center gap-1 mt-1">
                 <Shield className="w-4 h-4" />
-                <span className="text-sm">Loja Oficial Verificada</span>
+                <span className="text-sm">Vendedor Verificado</span>
               </div>
             </div>
           </div>
@@ -39,7 +40,7 @@ const StorePopup = ({
               <div className="flex items-center justify-center gap-1 text-green-600 mb-1">
                 <Package className="w-5 h-5" />
               </div>
-              <p className="text-xl font-bold text-green-700">60 Bilhões </p>
+              <p className="text-xl font-bold text-green-700">127.843</p>
               <p className="text-xs text-green-600">Pedidos Entregues</p>
             </div>
             
@@ -47,7 +48,7 @@ const StorePopup = ({
               <div className="flex items-center justify-center gap-1 text-amber-600 mb-1">
                 <Star className="w-5 h-5 fill-amber-500" />
               </div>
-              <p className="text-xl font-bold text-amber-700">3 Bilhões  </p>
+              <p className="text-xl font-bold text-amber-700">89.521</p>
               <p className="text-xs text-amber-600">Avaliações Positivas</p>
             </div>
             
@@ -55,7 +56,7 @@ const StorePopup = ({
               <div className="flex items-center justify-center gap-1 text-blue-600 mb-1">
                 <Users className="w-5 h-5" />
               </div>
-              <p className="text-xl font-bold text-blue-700">+ 15 Milhões </p>
+              <p className="text-xl font-bold text-blue-700">85.412</p>
               <p className="text-xs text-blue-600">Seguidores</p>
             </div>
             
@@ -63,7 +64,7 @@ const StorePopup = ({
               <div className="flex items-center justify-center gap-1 text-purple-600 mb-1">
                 <Clock className="w-5 h-5" />
               </div>
-              <p className="text-xl font-bold text-purple-700"> 10 Anos</p>
+              <p className="text-xl font-bold text-purple-700">3 Anos</p>
               <p className="text-xs text-purple-600">No Mercado</p>
             </div>
           </div>
@@ -89,7 +90,7 @@ const StorePopup = ({
             <div className="flex items-center gap-2 p-2 bg-muted/50 rounded-lg">
               <TrendingUp className="w-5 h-5 text-blue-500 flex-shrink-0" />
               <div className="flex-1">
-                <p className="text-sm font-medium text-foreground">Tempo de Resposta: 2m</p>
+                <p className="text-sm font-medium text-foreground">Tempo de Resposta: 2h</p>
                 <p className="text-xs text-muted-foreground">Responde rapidamente às mensagens</p>
               </div>
             </div>
@@ -107,6 +108,8 @@ const StorePopup = ({
           </div>
         </div>
       </DialogContent>
-    </Dialog>;
+    </Dialog>
+  );
 };
+
 export default StorePopup;

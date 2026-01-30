@@ -13,10 +13,6 @@ const PromoBanner = () => {
         src={promoBanner}
         alt="2.2 1ª Liquida do Ano - R$16 Milhões em cupons, Frete Grátis, 40% Cashback"
         className="w-full h-auto"
-        width={800}
-        height={200}
-        loading="eager"
-        fetchPriority="high"
       />
       <button
         onClick={() => setIsVisible(false)}

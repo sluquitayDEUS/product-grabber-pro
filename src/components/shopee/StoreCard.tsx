@@ -2,8 +2,6 @@ import { useState, memo } from "react";
 import { MessageCircle, Store, UserPlus, Check } from "lucide-react";
 import StorePopup from "./StorePopup";
 import ChatPopup from "./ChatPopup";
-import shopeeLogo from "@/assets/shopee-logo.webp";
-import VerifiedBadge from "@/components/ui/verified-badge";
 
 const StoreCard = memo(() => {
   const [showStorePopup, setShowStorePopup] = useState(false);
@@ -14,7 +12,7 @@ const StoreCard = memo(() => {
         <div className="flex items-center gap-3">
           {/* Store Avatar */}
           <div className="relative">
-            <img alt="Shopee Oficial" className="w-14 h-14 rounded-full object-cover border-2 border-primary bg-white p-1" src={shopeeLogo} />
+            <img alt="Loja" className="w-14 h-14 rounded-full object-cover border-2 border-primary" src="/lovable-uploads/f6949b55-5746-4c6d-a30a-e701c014d9c9.png" />
             <span className="absolute -bottom-1 left-1/2 -translate-x-1/2 bg-primary text-primary-foreground text-[8px] px-1.5 py-0.5 rounded font-medium">
               Oficial
             </span>
@@ -22,10 +20,7 @@ const StoreCard = memo(() => {
 
           {/* Store Info */}
           <div className="flex-1">
-            <h3 className="text-sm font-medium text-foreground flex items-center gap-1">
-              Shopee Oficial
-              <VerifiedBadge size="sm" />
-            </h3>
+            <h3 className="text-sm font-medium text-foreground">Atacado Premium</h3>
             <p className="text-xs text-muted-foreground">Online há 3 minutos</p>
             
             <div className="flex items-center gap-4 mt-1">
@@ -49,12 +44,12 @@ const StoreCard = memo(() => {
           </div>
           <div className="w-px h-8 bg-border" />
           <div className="text-center">
-            <p className="text-sm font-medium text-primary">+ 2.5M </p>
+            <p className="text-sm font-medium text-primary">372</p>
             <p className="text-xs text-muted-foreground">Produtos</p>
           </div>
           <div className="w-px h-8 bg-border" />
           <div className="text-center">
-            <p className="text-sm font-medium text-primary">​+ 15.7M </p>
+            <p className="text-sm font-medium text-primary">85mil</p>
             <p className="text-xs text-muted-foreground">Seguidores</p>
           </div>
         </div>
@@ -69,14 +64,25 @@ const StoreCard = memo(() => {
             <Store className="w-4 h-4" />
             Ver Loja
           </button>
-          <button onClick={() => setIsFollowing(!isFollowing)} className={`flex-1 flex items-center justify-center gap-1.5 py-2 rounded-lg text-sm transition-colors ${isFollowing ? 'bg-gray-100 text-muted-foreground border border-border' : 'bg-primary text-primary-foreground'}`}>
-            {isFollowing ? <>
+          <button 
+            onClick={() => setIsFollowing(!isFollowing)} 
+            className={`flex-1 flex items-center justify-center gap-1.5 py-2 rounded-lg text-sm transition-colors ${
+              isFollowing 
+                ? 'bg-gray-100 text-muted-foreground border border-border' 
+                : 'bg-primary text-primary-foreground'
+            }`}
+          >
+            {isFollowing ? (
+              <>
                 <Check className="w-4 h-4" />
                 Seguindo
-              </> : <>
+              </>
+            ) : (
+              <>
                 <UserPlus className="w-4 h-4" />
                 Seguir
-              </>}
+              </>
+            )}
           </button>
         </div>
       </div>
@@ -85,5 +91,7 @@ const StoreCard = memo(() => {
       <ChatPopup open={showChatPopup} onOpenChange={setShowChatPopup} />
     </>;
 });
+
 StoreCard.displayName = "StoreCard";
+
 export default StoreCard;
