@@ -50,6 +50,8 @@ const RelatedProducts = memo(() => {
                 src={product.image}
                 alt={product.title}
                 className="w-full h-full object-cover"
+                width={200}
+                height={200}
               />
               <span className="absolute top-1 left-1 bg-red-600 text-white text-[10px] px-1.5 py-0.5 rounded font-bold">
                 ESGOTADO

@@ -10,6 +10,8 @@ import {
 } from "@/components/ui/sheet";
 import StorePopup from "@/components/shopee/StorePopup";
 import ChatPopup from "@/components/checkout/ChatPopup";
+import shopeeLogo from "@/assets/shopee-logo.webp";
+import VerifiedBadge from "@/components/ui/verified-badge";
 
 const CheckoutProducts = () => {
   const { product, selectedShipping, setSelectedShippingType, getShippingOptions, quantity, setQuantity } = useCart();
@@ -44,8 +46,11 @@ const CheckoutProducts = () => {
         onClick={() => setShowStorePopup(true)}
         className="w-full flex items-center gap-2 p-3 border-b border-border hover:bg-muted/50 transition-colors"
       >
-        <Store className="w-4 h-4 text-foreground" />
-        <span className="font-medium text-sm text-foreground">Atacado Premium</span>
+        <img src={shopeeLogo} alt="Shopee Oficial" className="w-5 h-5 object-contain" />
+        <span className="font-medium text-sm text-foreground flex items-center gap-1">
+          Shopee Oficial
+          <VerifiedBadge size="sm" />
+        </span>
         <ChevronRight className="w-4 h-4 text-muted-foreground ml-auto" />
       </button>
 

@@ -4,15 +4,15 @@ import { MessageCircle, X, ChevronRight, ArrowLeft } from "lucide-react";
 const faqData = [
   {
     question: "Qual o prazo de entrega?",
-    answer: "O prazo de entrega varia de acordo com sua região. Com Frete Grátis: de 3 a 9 dias úteis. Com Frete Expresso (R$ 17,90): de 3 a 5 dias úteis. Após o envio, você receberá o código de rastreamento."
+    answer: "O prazo de entrega varia de acordo com sua região. Com Frete Grátis: de 3 a 9 dias úteis. Com Frete Expresso (R$ 17,90): de 3 a 5 dias úteis. O produto é enviado pela Shopee Oficial com código de rastreamento."
   },
   {
     question: "Este site é seguro?",
-    answer: "Sim! Sua compra é 100% segura. Seus dados são protegidos com criptografia de ponta a ponta. Nossa loja possui mais de 89 mil avaliações positivas e 98% de satisfação."
+    answer: "Sim! Sua compra é 100% segura. Este produto é vendido e enviado pela Shopee Oficial, com Garantia Shopee em todas as transações. Seus dados são protegidos com criptografia."
   },
   {
     question: "O produto tem garantia?",
-    answer: "Sim! O produto possui 90 dias de garantia contra defeitos de fabricação. Além disso, você tem 7 dias após o recebimento para devolução."
+    answer: "Sim! O produto possui 90 dias de garantia contra defeitos de fabricação pela Shopee Oficial. Além disso, você tem 7 dias após o recebimento para devolução."
   },
   {
     question: "Como funciona o Pix?",
@@ -24,7 +24,7 @@ const faqData = [
   },
   {
     question: "Como rastreio meu pedido?",
-    answer: "Após o envio, você receberá o código de rastreio por e-mail e WhatsApp. Acompanhe em tempo real pelo site dos Correios ou transportadora."
+    answer: "Após o envio pela Shopee Oficial, você receberá o código de rastreio por e-mail e WhatsApp. Acompanhe em tempo real pela Transportadora Shopee."
   },
   {
     question: "Posso alterar meu endereço?",
@@ -32,7 +32,7 @@ const faqData = [
   },
   {
     question: "Vocês emitem nota fiscal?",
-    answer: "Sim! Emitimos nota fiscal eletrônica (NF-e) automaticamente. Ela será enviada para seu e-mail após a confirmação do pagamento."
+    answer: "Sim! A Shopee Oficial emite nota fiscal eletrônica (NF-e) automaticamente. Ela será enviada para seu e-mail após a confirmação do pagamento."
   }
 ];
 

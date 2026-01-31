@@ -57,6 +57,8 @@ const ProductGallery = memo(({ currentIndex, onIndexChange }: ProductGalleryProp
             src={img}
             alt={`AquaVolt - Kart Aquático Elétrico ${index + 1}`}
             className="w-full h-full object-cover flex-shrink-0"
+            width={600}
+            height={600}
             loading={index === 0 ? "eager" : "lazy"}
             decoding="async"
             fetchPriority={index === 0 ? "high" : "low"}

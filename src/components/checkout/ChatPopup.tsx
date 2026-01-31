@@ -15,19 +15,19 @@ interface ChatPopupProps {
 const faqData = [
   {
     question: "Este site é seguro?",
-    answer: "Sim! Sua compra é 100% segura. Vendemos através da plataforma Shopee, que oferece a Garantia Shopee em todas as transações. Seus dados são protegidos com criptografia de ponta a ponta, e você só libera o pagamento após confirmar o recebimento do produto. Além disso, nossa loja possui mais de 89 mil avaliações positivas e 98% de satisfação dos clientes."
+    answer: "Sim! Sua compra é 100% segura. Este produto é vendido e enviado pela Shopee Oficial, que oferece a Garantia Shopee em todas as transações. Seus dados são protegidos com criptografia de ponta a ponta, e você só libera o pagamento após confirmar o recebimento."
   },
   {
     question: "Qual o prazo de entrega?",
-    answer: "O prazo de entrega varia de acordo com sua região. Em média, entregas para capitais levam de 3 a 7 dias úteis, enquanto para outras cidades pode levar de 7 a 15 dias úteis. Após o envio, você receberá o código de rastreamento para acompanhar seu pedido em tempo real."
+    answer: "O prazo de entrega varia de acordo com sua região. Em média, entregas para capitais levam de 3 a 7 dias úteis, enquanto para outras cidades pode levar de 7 a 15 dias úteis. Após o envio pela Shopee Oficial, você receberá o código de rastreamento."
   },
   {
     question: "O produto tem garantia?",
-    answer: "Sim! O produto possui 90 dias de garantia contra defeitos de fabricação. Além disso, você tem 7 dias após o recebimento para solicitar a devolução caso não fique satisfeito, conforme o Código de Defesa do Consumidor. Nossa equipe está sempre pronta para ajudar!"
+    answer: "Sim! O produto possui 90 dias de garantia contra defeitos de fabricação pela Shopee Oficial. Além disso, você tem 7 dias após o recebimento para solicitar a devolução, conforme o Código de Defesa do Consumidor."
   },
   {
     question: "Como funciona o Pix?",
-    answer: "Ao escolher Pix como forma de pagamento, você receberá um QR Code para escanear ou um código para copiar e colar. O pagamento é processado instantaneamente e seu pedido é confirmado em segundos. Com Pix, você ainda ganha 12% de desconto no valor total!"
+    answer: "Ao escolher Pix como forma de pagamento, você receberá um QR Code para escanear ou um código para copiar e colar. O pagamento é processado instantaneamente e seu pedido é confirmado em segundos. Com Pix, você ainda ganha 12% de desconto!"
   },
   {
     question: "Posso parcelar minha compra?",
@@ -35,23 +35,23 @@ const faqData = [
   },
   {
     question: "O produto é original?",
-    answer: "Absolutamente! Trabalhamos apenas com produtos originais de alta qualidade. Somos distribuidores autorizados e todos os nossos produtos passam por rigoroso controle de qualidade antes do envio. Você pode conferir as avaliações dos nossos clientes para ver a qualidade dos produtos."
+    answer: "Absolutamente! A Shopee Oficial trabalha apenas com produtos originais de alta qualidade. Todos os produtos passam por rigoroso controle de qualidade antes do envio."
   },
   {
     question: "Como faço para trocar ou devolver?",
-    answer: "É muito simples! Entre em contato conosco pelo chat da Shopee em até 7 dias após o recebimento. Nossa equipe irá gerar uma etiqueta de devolução gratuita para você. Após recebermos o produto, processamos a troca ou reembolso em até 48 horas."
+    answer: "É muito simples! Entre em contato pelo chat da Shopee Oficial em até 7 dias após o recebimento. Nossa equipe irá gerar uma etiqueta de devolução gratuita. Após recebermos o produto, processamos a troca ou reembolso em até 48 horas."
   },
   {
     question: "Vocês emitem nota fiscal?",
-    answer: "Sim! Emitimos nota fiscal eletrônica (NF-e) em todos os pedidos. A nota é enviada automaticamente para seu e-mail após a confirmação do pagamento. Caso precise de uma segunda via, basta solicitar pelo chat."
+    answer: "Sim! A Shopee Oficial emite nota fiscal eletrônica (NF-e) em todos os pedidos. A nota é enviada automaticamente para seu e-mail após a confirmação do pagamento."
   },
   {
     question: "O frete é grátis mesmo?",
-    answer: "Sim! Oferecemos frete grátis para todo o Brasil em compras acima do valor mínimo. O frete é enviado pelos Correios ou transportadora parceira, e você pode acompanhar todo o trajeto pelo código de rastreamento que enviamos após o despacho."
+    answer: "Sim! A Shopee Oficial oferece frete grátis para todo o Brasil! O frete é enviado pela Transportadora Shopee, e você pode acompanhar todo o trajeto pelo código de rastreamento."
   },
   {
     question: "Posso retirar pessoalmente?",
-    answer: "No momento, trabalhamos apenas com entregas. Isso nos permite atender clientes de todo o Brasil com a mesma qualidade e agilidade. Mas fique tranquilo: nosso frete é grátis e o prazo de entrega é super rápido!"
+    answer: "No momento, a Shopee Oficial trabalha apenas com entregas para atender clientes de todo o Brasil com a mesma qualidade e agilidade. Frete grátis e prazo super rápido!"
   }
 ];
 

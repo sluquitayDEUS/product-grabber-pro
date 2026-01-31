@@ -5,9 +5,11 @@ interface LazyImageProps {
   alt: string;
   className?: string;
   priority?: boolean;
+  width?: number;
+  height?: number;
 }
 
-const LazyImage = memo(({ src, alt, className = "", priority = false }: LazyImageProps) => {
+const LazyImage = memo(({ src, alt, className = "", priority = false, width, height }: LazyImageProps) => {
   return (
     <img
       src={src}
@@ -15,6 +17,8 @@ const LazyImage = memo(({ src, alt, className = "", priority = false }: LazyImag
       className={className}
       loading={priority ? "eager" : "lazy"}
       decoding="async"
+      width={width}
+      height={height}
     />
   );
 });
