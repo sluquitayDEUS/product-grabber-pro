@@ -48,20 +48,20 @@ const ProductFooter = ({ onNoColorSelected }: ProductFooterProps) => {
           {/* Chat Button */}
           <button 
             onClick={() => setShowChatPopup(true)}
-            className="flex flex-col items-center justify-center px-4 bg-[#26AA99] gap-0.5"
+            className="flex flex-col items-center justify-center w-[28%] bg-[#26AA99] gap-1"
           >
-            <MessageCircle className="w-5 h-5 text-white" />
-            <span className="text-[10px] text-white leading-none">Conversar agora</span>
+            <MessageCircle className="w-6 h-6 text-white" strokeWidth={1.5} />
+            <span className="text-[11px] text-white leading-none">Conversar agora</span>
           </button>
 
           {/* Cart Button */}
           <button 
             onClick={goToCheckout}
-            className="flex flex-col items-center justify-center px-4 bg-[#26AA99] border-l border-white/30 gap-0.5 relative"
+            className="flex flex-col items-center justify-center w-[28%] bg-[#26AA99] border-l border-white/20 gap-1 relative"
           >
-            <ShoppingCart className="w-5 h-5 text-white" />
-            <span className="text-[10px] text-white leading-none">Adicionar ao carrinho</span>
-            <span className="absolute top-1 right-2 w-4 h-4 bg-white text-[#26AA99] text-[10px] font-bold rounded-full flex items-center justify-center">
+            <ShoppingCart className="w-6 h-6 text-white" strokeWidth={1.5} />
+            <span className="text-[11px] text-white leading-none">Adicionar ao carrinho</span>
+            <span className="absolute top-1 right-3 w-4 h-4 bg-white text-[#26AA99] text-[10px] font-bold rounded-full flex items-center justify-center">
               1
             </span>
           </button>
@@ -71,7 +71,7 @@ const ProductFooter = ({ onNoColorSelected }: ProductFooterProps) => {
             onClick={goToCheckout}
             className="flex-1 h-full bg-[#EE4D2D] text-white flex items-center justify-center"
           >
-            <span className="text-base font-medium">Compre agora</span>
+            <span className="text-lg font-normal">Compre agora</span>
           </button>
         </div>
       </footer>
