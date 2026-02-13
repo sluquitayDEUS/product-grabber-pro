@@ -2,7 +2,7 @@ import { Heart, Share2, BadgeCheck } from "lucide-react";
 import { useState } from "react";
 const ProductTitle = () => {
   const [isFavorite, setIsFavorite] = useState(false);
-  return <div className="bg-card px-3 py-3 border-t border-border">
+  return <div className="bg-card px-3 py-3">
       <div className="flex gap-3">
         {/* Title */}
         <div className="flex-1">

@@ -20,7 +20,7 @@ const ProductThumbnails = memo(({ selectedIndex, onSelect }: ProductThumbnailsPr
           <button
             key={index}
             onClick={() => onSelect(index)}
-            className={`flex-shrink-0 w-16 h-16 rounded-md overflow-hidden border-2 transition-all ${
+            className={`flex-shrink-0 w-[52px] h-[52px] rounded overflow-hidden border-2 transition-all ${
               index === selectedIndex 
                 ? "border-primary" 
                 : "border-transparent hover:border-primary/50"
