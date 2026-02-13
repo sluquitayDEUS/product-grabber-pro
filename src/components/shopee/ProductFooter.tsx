@@ -44,24 +44,24 @@ const ProductFooter = ({ onNoColorSelected }: ProductFooterProps) => {
       )}
 
       <footer className="fixed bottom-0 left-0 right-0 z-50">
-        <div className="flex items-stretch h-[50px]">
+        <div className="flex items-stretch h-[46px]">
           {/* Chat Button */}
           <button 
             onClick={() => setShowChatPopup(true)}
-            className="flex flex-col items-center justify-center w-[28%] bg-[#26AA99] gap-1"
+            className="flex items-center justify-center gap-1.5 px-3 bg-[#26AA99]"
           >
-            <MessageCircle className="w-6 h-6 text-white" strokeWidth={1.5} />
-            <span className="text-[11px] text-white leading-none">Conversar agora</span>
+            <MessageCircle className="w-[18px] h-[18px] text-white" strokeWidth={1.5} />
+            <span className="text-[10px] text-white leading-none whitespace-nowrap">Conversar agora</span>
           </button>
 
           {/* Cart Button */}
           <button 
             onClick={goToCheckout}
-            className="flex flex-col items-center justify-center w-[28%] bg-[#26AA99] border-l border-white/20 gap-1 relative"
+            className="flex items-center justify-center gap-1.5 px-3 bg-[#26AA99] border-l border-white/20 relative"
           >
-            <ShoppingCart className="w-6 h-6 text-white" strokeWidth={1.5} />
-            <span className="text-[11px] text-white leading-none">Adicionar ao carrinho</span>
-            <span className="absolute top-1 right-3 w-4 h-4 bg-white text-[#26AA99] text-[10px] font-bold rounded-full flex items-center justify-center">
+            <ShoppingCart className="w-[18px] h-[18px] text-white" strokeWidth={1.5} />
+            <span className="text-[10px] text-white leading-none whitespace-nowrap">Adicionar ao carrinho</span>
+            <span className="absolute top-0.5 right-1.5 w-[14px] h-[14px] bg-white text-[#EE4D2D] text-[8px] font-bold rounded-full flex items-center justify-center">
               1
             </span>
           </button>
@@ -71,7 +71,7 @@ const ProductFooter = ({ onNoColorSelected }: ProductFooterProps) => {
             onClick={goToCheckout}
             className="flex-1 h-full bg-[#EE4D2D] text-white flex items-center justify-center"
           >
-            <span className="text-lg font-normal">Compre agora</span>
+            <span className="text-base font-normal">Compre agora</span>
           </button>
         </div>
       </footer>
