@@ -1,9 +1,6 @@
 import { useRef, useState, useEffect } from "react";
 import ProductHeader from "@/components/shopee/ProductHeader";
-import PromoBanner from "@/components/shopee/PromoBanner";
 import ProductGallery from "@/components/shopee/ProductGallery";
-import ProductThumbnails from "@/components/shopee/ProductThumbnails";
-import FlashSaleTimer from "@/components/shopee/FlashSaleTimer";
 import ProductPrice from "@/components/shopee/ProductPrice";
 import ProductTitle from "@/components/shopee/ProductTitle";
 import ProductVariations, { ProductVariationsRef } from "@/components/shopee/ProductVariations";
@@ -52,16 +49,13 @@ const Index = () => {
 
   return (
     <div className="min-h-screen bg-background">
-      <div className="max-w-md mx-auto">
-        <PromoBanner />
+      <div className="max-w-md mx-auto relative">
         <ProductHeader />
         <ProductGallery currentIndex={galleryIndex} onIndexChange={setGalleryIndex} />
-        
-        <FlashSaleTimer />
         <ProductPrice />
         <ProductTitle />
-        <ProductVariations ref={variationsRef} />
         <ProductShipping />
+        <ProductVariations ref={variationsRef} />
         <StoreCard />
         <ProductDescription />
         <ProductReviews />

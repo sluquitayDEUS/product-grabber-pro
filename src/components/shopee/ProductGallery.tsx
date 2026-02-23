@@ -1,7 +1,5 @@
 import { useState, memo, useCallback } from "react";
-import { ChevronLeft, ChevronRight } from "lucide-react";
 
-// Import product images
 import aquavolt1 from "@/assets/aquavolt-new-1.webp";
 import aquavolt2 from "@/assets/aquavolt-new-2.webp";
 import aquavolt3 from "@/assets/aquavolt-new-3.webp";
@@ -37,15 +35,10 @@ const ProductGallery = memo(({ currentIndex, onIndexChange }: ProductGalleryProp
   }, [touchStart, touchEnd, currentIndex, onIndexChange]);
 
   return (
-    <div className="relative w-[373px] h-[373px] mx-auto bg-card overflow-hidden">
-      {/* Discount Badge */}
-      <div className="absolute top-3 left-0 z-10 bg-shopee-red text-primary-foreground px-2 py-1 text-xs font-bold">
-        -40%
-      </div>
-
+    <div className="relative w-full bg-card overflow-hidden">
       {/* Images Container */}
       <div
-        className="flex h-full transition-transform duration-300 ease-out will-change-transform"
+        className="flex transition-transform duration-300 ease-out will-change-transform"
         style={{ transform: `translateX(-${currentIndex * 100}%)` }}
         onTouchStart={handleTouchStart}
         onTouchMove={handleTouchMove}
@@ -56,7 +49,7 @@ const ProductGallery = memo(({ currentIndex, onIndexChange }: ProductGalleryProp
             key={index}
             src={img}
             alt={`AquaVolt - Kart Aquático Elétrico ${index + 1}`}
-            className="w-full h-full object-cover flex-shrink-0"
+            className="w-full h-auto flex-shrink-0"
             width={600}
             height={600}
             loading={index === 0 ? "eager" : "lazy"}
@@ -66,25 +59,16 @@ const ProductGallery = memo(({ currentIndex, onIndexChange }: ProductGalleryProp
         ))}
       </div>
 
-      {/* Navigation Arrows (Desktop) */}
-      <button
-        onClick={() => onIndexChange(Math.max(0, currentIndex - 1))}
-        className="absolute left-2 top-1/2 -translate-y-1/2 w-8 h-8 bg-black/30 rounded-full hidden md:flex items-center justify-center"
-        disabled={currentIndex === 0}
-      >
-        <ChevronLeft className="w-5 h-5 text-primary-foreground" />
-      </button>
-      <button
-        onClick={() => onIndexChange(Math.min(images.length - 1, currentIndex + 1))}
-        className="absolute right-2 top-1/2 -translate-y-1/2 w-8 h-8 bg-black/30 rounded-full hidden md:flex items-center justify-center"
-        disabled={currentIndex === images.length - 1}
-      >
-        <ChevronRight className="w-5 h-5 text-primary-foreground" />
-      </button>
-
-      {/* Image Counter */}
-      <div className="absolute bottom-3 right-3 bg-black/50 text-primary-foreground text-xs px-2 py-1 rounded-full">
-        {currentIndex + 1}/{images.length}
+      {/* Frete Grátis banner at bottom of image */}
+      <div className="absolute bottom-0 left-0 right-0 flex items-center justify-between">
+        <div className="flex items-center gap-2 bg-[#1a1a2e]/90 px-3 py-2">
+          <span className="text-lg">🇧🇷</span>
+          <span className="text-white font-bold text-sm">FRETE GRÁTIS acima de R$10</span>
+        </div>
+        {/* Image Counter */}
+        <div className="bg-black/50 text-white text-xs px-2 py-1 rounded-full mr-3 mb-1">
+          {currentIndex + 1}/{images.length}
+        </div>
       </div>
     </div>
   );
