@@ -22,22 +22,22 @@ const ProductPrice = () => {
         </p>
 
         {/* Benefits */}
-        <div className="flex flex-wrap gap-2">
-          <button onClick={() => setFreteOpen(true)} className="flex items-center gap-1 bg-shopee-light px-2 py-1 rounded hover:bg-primary/20 transition-colors">
-            <Truck className="w-3.5 h-3.5 text-primary" />
-            <span className="text-xs text-primary font-medium">Frete Grátis</span>
-          </button>
-          
-          <button onClick={() => setCupomOpen(true)} className="flex items-center gap-1 bg-shopee-light px-2 py-1 rounded hover:bg-primary/20 transition-colors">
-            <Ticket className="w-3.5 h-3.5 text-primary" />
-            <span className="text-xs text-primary font-medium">Cupom R$10</span>
-          </button>
-          
-          <button onClick={() => setMoedasOpen(true)} className="flex items-center gap-1 bg-shopee-light px-2 py-1 rounded hover:bg-primary/20 transition-colors">
-            <Coins className="w-3.5 h-3.5 text-primary" />
-            <span className="text-xs text-primary font-medium">5% Moedas</span>
-          </button>
-        </div>
+        
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
       </div>
 
       <FreteGratisPopup open={freteOpen} onOpenChange={setFreteOpen} />
