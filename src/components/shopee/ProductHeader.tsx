@@ -15,20 +15,20 @@ const ProductHeader = () => {
   return (
     <header className="sticky top-0 z-40 bg-transparent">
       <div className="flex items-center justify-between px-3 py-2">
-        <button className="w-9 h-9 flex items-center justify-center">
-          <ArrowLeft className="w-5 h-5 text-foreground" />
+        <button className="w-9 h-9 flex items-center justify-center rounded-full bg-black/30">
+          <ArrowLeft className="w-5 h-5 text-primary-foreground" />
         </button>
         
         <div className="flex items-center gap-2">
-          <button className="w-9 h-9 flex items-center justify-center">
-            <Search className="w-5 h-5 text-foreground" />
+          <button className="w-9 h-9 flex items-center justify-center rounded-full bg-black/30">
+            <Search className="w-5 h-5 text-primary-foreground" />
           </button>
           
           <button 
             onClick={handleCartClick}
-            className="w-9 h-9 flex items-center justify-center relative"
+            className="w-9 h-9 flex items-center justify-center rounded-full bg-black/30 relative"
           >
-            <ShoppingCart className="w-5 h-5 text-foreground" />
+            <ShoppingCart className="w-5 h-5 text-primary-foreground" />
             {hasVisitedCheckout && (
               <span className="absolute -top-1 -right-1 w-5 h-5 bg-primary text-primary-foreground text-xs rounded-full flex items-center justify-center font-medium">
                 {quantity}
@@ -36,8 +36,8 @@ const ProductHeader = () => {
             )}
           </button>
           
-          <button className="w-9 h-9 flex items-center justify-center">
-            <MoreHorizontal className="w-5 h-5 text-foreground" />
+          <button className="w-9 h-9 flex items-center justify-center rounded-full bg-black/30">
+            <MoreHorizontal className="w-5 h-5 text-primary-foreground" />
           </button>
         </div>
       </div>
