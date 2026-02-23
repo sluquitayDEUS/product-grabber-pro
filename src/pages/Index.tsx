@@ -3,6 +3,7 @@ import ProductHeader from "@/components/shopee/ProductHeader";
 import ProductGallery from "@/components/shopee/ProductGallery";
 import ProductPrice from "@/components/shopee/ProductPrice";
 import ProductTitle from "@/components/shopee/ProductTitle";
+import FlashSaleTimer from "@/components/shopee/FlashSaleTimer";
 import ProductVariations, { ProductVariationsRef } from "@/components/shopee/ProductVariations";
 import ProductShipping from "@/components/shopee/ProductShipping";
 import StoreCard from "@/components/shopee/StoreCard";
@@ -52,10 +53,11 @@ const Index = () => {
       <div className="max-w-md mx-auto relative">
         <ProductHeader />
         <ProductGallery currentIndex={galleryIndex} onIndexChange={setGalleryIndex} />
+        <ProductVariations ref={variationsRef} />
+        <FlashSaleTimer />
         <ProductPrice />
         <ProductTitle />
         <ProductShipping />
-        <ProductVariations ref={variationsRef} />
         <StoreCard />
         <ProductDescription />
         <ProductReviews />
