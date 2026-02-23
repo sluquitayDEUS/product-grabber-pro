@@ -56,7 +56,7 @@ const Index = () => {
         <PromoBanner />
         <ProductHeader />
         <ProductGallery currentIndex={galleryIndex} onIndexChange={setGalleryIndex} />
-        <ProductThumbnails selectedIndex={galleryIndex} onSelect={setGalleryIndex} />
+        
         <FlashSaleTimer />
         <ProductPrice />
         <ProductTitle />

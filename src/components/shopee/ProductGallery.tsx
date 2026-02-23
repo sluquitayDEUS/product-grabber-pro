@@ -37,7 +37,7 @@ const ProductGallery = memo(({ currentIndex, onIndexChange }: ProductGalleryProp
   }, [touchStart, touchEnd, currentIndex, onIndexChange]);
 
   return (
-    <div className="relative w-full aspect-square bg-card overflow-hidden">
+    <div className="relative w-[373px] h-[373px] mx-auto bg-card overflow-hidden">
       {/* Discount Badge */}
       <div className="absolute top-3 left-0 z-10 bg-shopee-red text-primary-foreground px-2 py-1 text-xs font-bold">
         -40%
