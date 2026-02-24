@@ -65,10 +65,11 @@ const ProductGallery = memo(({ currentIndex, onIndexChange }: ProductGalleryProp
 
 
 
-        {/* Image Counter */}
-        <div className="bg-black/50 text-white text-xs px-2 py-1 rounded-full mr-3 mb-1">
-          {currentIndex + 1}/{images.length}
-        </div>
+      </div>
+
+      {/* Image Counter - bottom right */}
+      <div className="absolute bottom-2 right-3 bg-black/50 text-white text-xs px-2 py-1 rounded-full">
+        {currentIndex + 1}/{images.length}
       </div>
     </div>);
 
