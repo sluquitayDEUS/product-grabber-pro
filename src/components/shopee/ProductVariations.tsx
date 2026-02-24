@@ -54,7 +54,7 @@ const ProductVariations = forwardRef<ProductVariationsRef>((_, ref) => {
           <button
             key={color.id}
             onClick={() => setSelectedColor(color.id)}
-            className={`w-[73px] h-[73px] rounded border-2 flex-shrink-0 overflow-hidden transition-all ${
+            className={`w-[48px] h-[48px] rounded border-2 flex-shrink-0 overflow-hidden transition-all ${
               selectedColor === color.id
                 ? "border-primary"
                 : "border-border"
