@@ -3,7 +3,12 @@ const ProductTitle = () => {
     <div className="bg-card px-3 pb-3">
       {/* Escolha badge */}
       <div className="flex items-center gap-1.5 mb-1.5">
-        <span className="border border-primary text-primary text-[10px] font-bold px-1.5 py-0.5 rounded-sm">Escolha</span>
+        <span className="bg-primary text-white text-[10px] font-bold px-1.5 py-0.5 rounded-sm flex items-center gap-1">
+          <svg className="w-3 h-3" viewBox="0 0 24 24" fill="none">
+            <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z" fill="white"/>
+          </svg>
+          Escolha
+        </span>
         <span className="text-[11px] text-muted-foreground">Produto indicado</span>
       </div>
 
