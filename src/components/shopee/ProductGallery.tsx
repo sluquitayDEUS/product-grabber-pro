@@ -42,36 +42,36 @@ const ProductGallery = memo(({ currentIndex, onIndexChange }: ProductGalleryProp
         style={{ transform: `translateX(-${currentIndex * 100}%)` }}
         onTouchStart={handleTouchStart}
         onTouchMove={handleTouchMove}
-        onTouchEnd={handleTouchEnd}
-      >
-        {images.map((img, index) => (
-          <img
-            key={index}
-            src={img}
-            alt={`AquaVolt - Kart Aquático Elétrico ${index + 1}`}
-            className="w-full h-auto flex-shrink-0"
-            width={600}
-            height={600}
-            loading={index === 0 ? "eager" : "lazy"}
-            decoding="async"
-            fetchPriority={index === 0 ? "high" : "low"}
-          />
-        ))}
+        onTouchEnd={handleTouchEnd}>
+
+        {images.map((img, index) =>
+        <img
+          key={index}
+          src={img}
+          alt={`AquaVolt - Kart Aquático Elétrico ${index + 1}`}
+          className="w-full h-auto flex-shrink-0"
+          width={600}
+          height={600}
+          loading={index === 0 ? "eager" : "lazy"}
+          decoding="async"
+          fetchPriority={index === 0 ? "high" : "low"} />
+
+        )}
       </div>
 
       {/* Frete Grátis banner at bottom of image */}
       <div className="absolute bottom-0 left-0 right-0 flex items-center justify-between">
-        <div className="flex items-center gap-2 bg-[#1a1a2e]/90 px-3 py-2">
-          <span className="text-lg">🇧🇷</span>
-          <span className="text-white font-bold text-sm">FRETE GRÁTIS acima de R$10</span>
-        </div>
+        
+
+
+
         {/* Image Counter */}
         <div className="bg-black/50 text-white text-xs px-2 py-1 rounded-full mr-3 mb-1">
           {currentIndex + 1}/{images.length}
         </div>
       </div>
-    </div>
-  );
+    </div>);
+
 });
 
 ProductGallery.displayName = "ProductGallery";
