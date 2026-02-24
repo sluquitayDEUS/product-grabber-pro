@@ -3,7 +3,7 @@ const ProductTitle = () => {
     <div className="bg-card px-3 pb-3">
       {/* Escolha badge */}
       <div className="flex items-center gap-1.5 mb-1.5">
-        <span className="bg-green-600 text-white text-[10px] font-bold px-1.5 py-0.5 rounded">Escolha</span>
+        <span className="border border-primary text-primary text-[10px] font-bold px-1.5 py-0.5 rounded-sm">Escolha</span>
         <span className="text-[11px] text-muted-foreground">Produto indicado</span>
       </div>
 
