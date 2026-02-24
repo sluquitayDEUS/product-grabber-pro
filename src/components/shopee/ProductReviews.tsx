@@ -254,8 +254,10 @@ const ProductReviews = memo(() => {
     <div className="bg-card mt-2">
       {/* Header */}
       <div className="flex items-center justify-between px-3 py-3 border-b border-border">
-        <div className="flex items-center gap-2">
-          <h2 className="text-sm font-medium text-foreground">Avaliações do Produto</h2>
+        <div className="flex items-center gap-1.5">
+          <span className="text-lg font-bold text-foreground">4.8</span>
+          <svg className="w-4 h-4 text-shopee-yellow fill-shopee-yellow" viewBox="0 0 20 20"><path d="M10 15l-5.878 3.09 1.123-6.545L.489 6.91l6.572-.955L10 0l2.939 5.955 6.572.955-4.756 4.635 1.123 6.545z" /></svg>
+          <h2 className="text-sm font-medium text-foreground">Avaliações do produto</h2>
           <span className="text-xs text-muted-foreground">(1.2 mil)</span>
         </div>
         <span className="text-xs text-muted-foreground">

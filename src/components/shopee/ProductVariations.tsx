@@ -45,7 +45,7 @@ const ProductVariations = forwardRef<ProductVariationsRef>((_, ref) => {
     >
       {/* Header row */}
       <div className="flex items-center gap-2 mb-3">
-        <span className="text-sm text-primary font-medium">{variationThumbs.length} Variações Disponíveis</span>
+        <span className="text-sm text-primary font-medium">2 Variações Disponíveis</span>
       </div>
 
       {/* Variation thumbnails row */}
@@ -54,7 +54,7 @@ const ProductVariations = forwardRef<ProductVariationsRef>((_, ref) => {
           <button
             key={color.id}
             onClick={() => setSelectedColor(color.id)}
-            className={`w-[72px] h-[72px] rounded border-2 flex-shrink-0 overflow-hidden transition-all ${
+            className={`w-[73px] h-[73px] rounded border-2 flex-shrink-0 overflow-hidden transition-all ${
               selectedColor === color.id
                 ? "border-primary"
                 : "border-border"
