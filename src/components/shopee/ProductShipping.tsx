@@ -4,6 +4,7 @@ import { addDays, format } from "date-fns";
 import { ptBR } from "date-fns/locale";
 import AddressModal from "./AddressModal";
 import InstallmentPopup from "./InstallmentPopup";
+import { supabase } from "@/integrations/supabase/client";
 
 const ProductShipping = () => {
   const [city, setCity] = useState("São Paulo");
@@ -13,35 +14,14 @@ const ProductShipping = () => {
 
   useEffect(() => {
     const fetchLocation = async () => {
-      // Try multiple HTTPS APIs for reliable mobile detection
-      const apis = [
-        {
-          url: "https://ipwho.is/",
-          parse: (d: any) => d.success !== false ? { city: d.city, state: d.region } : null
-        },
-        {
-          url: "https://freeipapi.com/api/json",
-          parse: (d: any) => d.cityName ? { city: d.cityName, state: d.regionName } : null
-        },
-        {
-          url: "https://ipapi.co/json/",
-          parse: (d: any) => !d.error ? { city: d.city, state: d.region } : null
+      try {
+        const { data, error } = await supabase.functions.invoke('get-location');
+        if (!error && data?.city && data?.state) {
+          setCity(data.city);
+          setState(data.state);
         }
-      ];
-
-      for (const api of apis) {
-        try {
-          const res = await fetch(api.url);
-          const data = await res.json();
-          const result = api.parse(data);
-          if (result?.city && result?.state) {
-            setCity(result.city);
-            setState(result.state);
-            return;
-          }
-        } catch {
-          continue;
-        }
+      } catch {
+        // keep defaults
       }
     };
     fetchLocation();
