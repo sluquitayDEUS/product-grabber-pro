@@ -35,7 +35,7 @@ const ProductGallery = memo(({ currentIndex, onIndexChange }: ProductGalleryProp
   }, [touchStart, touchEnd, currentIndex, onIndexChange]);
 
   return (
-    <div className="relative w-full bg-card overflow-hidden">
+    <div className="relative w-full bg-card overflow-hidden aspect-square">
       {/* Images Container */}
       <div
         className="flex transition-transform duration-300 ease-out will-change-transform"
@@ -49,9 +49,9 @@ const ProductGallery = memo(({ currentIndex, onIndexChange }: ProductGalleryProp
           key={index}
           src={img}
           alt={`AquaVolt - Kart Aquático Elétrico ${index + 1}`}
-          className="w-full h-auto flex-shrink-0"
-          width={600}
-          height={600}
+          className="w-full h-full flex-shrink-0 object-cover"
+          width={1024}
+          height={1024}
           loading={index === 0 ? "eager" : "lazy"}
           decoding="async"
           fetchPriority={index === 0 ? "high" : "low"} />
