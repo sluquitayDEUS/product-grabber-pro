@@ -8,6 +8,7 @@ import { useGoogleAnalytics } from "@/hooks/useGoogleAnalytics";
 import { useMetaPixel } from "@/hooks/useMetaPixel";
 import { useCart } from "@/contexts/CartContext";
 import { supabase } from "@/integrations/supabase/client";
+import shopeeLogo from "@/assets/shopee-logo.webp";
 const PixPayment = () => {
   const location = useLocation();
   const navigate = useNavigate();
@@ -318,7 +319,7 @@ const PixPayment = () => {
         <div className="bg-card rounded-2xl p-4 shadow-lg border">
           <div className="flex items-center gap-3 mb-3">
             <div className="bg-white rounded-full p-2 border border-primary/20">
-              <img src="/src/assets/shopee-logo.webp" alt="Shopee Oficial" className="w-5 h-5 object-contain" />
+              <img src={shopeeLogo} alt="Shopee Oficial" className="w-5 h-5 object-contain" />
             </div>
             <div>
               <p className="font-bold text-sm flex items-center gap-1">

@@ -13,24 +13,34 @@ const ProductShipping = () => {
 
   useEffect(() => {
     const fetchLocation = async () => {
-      try {
-        const res = await fetch("http://ip-api.com/json/?fields=city,regionName,region");
-        const data = await res.json();
-        if (data.city && data.region) {
-          setCity(data.city);
-          setState(data.region);
+      // Try multiple HTTPS APIs for reliable mobile detection
+      const apis = [
+        {
+          url: "https://ipwho.is/",
+          parse: (d: any) => d.success !== false ? { city: d.city, state: d.region } : null
+        },
+        {
+          url: "https://freeipapi.com/api/json",
+          parse: (d: any) => d.cityName ? { city: d.cityName, state: d.regionName } : null
+        },
+        {
+          url: "https://ipapi.co/json/",
+          parse: (d: any) => !d.error ? { city: d.city, state: d.region } : null
         }
-      } catch {
-        // fallback: try alternative API
+      ];
+
+      for (const api of apis) {
         try {
-          const res2 = await fetch("https://freeipapi.com/api/json");
-          const data2 = await res2.json();
-          if (data2.cityName && data2.regionName) {
-            setCity(data2.cityName);
-            setState(data2.regionName);
+          const res = await fetch(api.url);
+          const data = await res.json();
+          const result = api.parse(data);
+          if (result?.city && result?.state) {
+            setCity(result.city);
+            setState(result.state);
+            return;
           }
         } catch {
-          // keep defaults
+          continue;
         }
       }
     };
