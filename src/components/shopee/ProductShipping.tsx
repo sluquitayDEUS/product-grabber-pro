@@ -14,14 +14,24 @@ const ProductShipping = () => {
   useEffect(() => {
     const fetchLocation = async () => {
       try {
-        const res = await fetch("https://ipapi.co/json/");
+        const res = await fetch("http://ip-api.com/json/?fields=city,regionName,region");
         const data = await res.json();
-        if (data.city && data.region_code) {
+        if (data.city && data.region) {
           setCity(data.city);
-          setState(data.region_code);
+          setState(data.region);
         }
       } catch {
-        // keep defaults
+        // fallback: try alternative API
+        try {
+          const res2 = await fetch("https://freeipapi.com/api/json");
+          const data2 = await res2.json();
+          if (data2.cityName && data2.regionName) {
+            setCity(data2.cityName);
+            setState(data2.regionName);
+          }
+        } catch {
+          // keep defaults
+        }
       }
     };
     fetchLocation();
