@@ -4,6 +4,12 @@ import boiaImg from "@/assets/related-boia.webp";
 import oculosImg from "@/assets/related-oculos.webp";
 import neopreneImg from "@/assets/related-neoprene.jpg";
 import pranchaImg from "@/assets/related-prancha.jpg";
+import remosImg from "@/assets/related-remos.webp";
+import piscinaImg from "@/assets/related-piscina.jpg";
+import nadeiraImg from "@/assets/related-nadadeira.jpg";
+import flamingoImg from "@/assets/related-flamingo.jpg";
+import shortsImg from "@/assets/related-shorts.webp";
+import baldinhoImg from "@/assets/related-baldinho.jpg";
 
 const products = [
   {
@@ -33,6 +39,48 @@ const products = [
     title: "Prancha De Bodyboard Mirim Pequena Para Praia E Piscina Onda Radical",
     sold: "3.4mil",
     rating: 4.8,
+  },
+  {
+    id: 5,
+    image: remosImg,
+    title: "Kit 2 Remos Cabo Alumínio P/ Bote Barco Pesca Canoa 1,4 M",
+    sold: "947",
+    rating: 4.5,
+  },
+  {
+    id: 6,
+    image: piscinaImg,
+    title: "Piscina Inflável 3 Anéis 118 Litros 23x99 Cm Summer Fun",
+    sold: "5.8mil",
+    rating: 4.7,
+  },
+  {
+    id: 7,
+    image: nadeiraImg,
+    title: "Pé de Pato Nadadeira Speedo Power Fin Natação",
+    sold: "1.5mil",
+    rating: 4.8,
+  },
+  {
+    id: 8,
+    image: flamingoImg,
+    title: "Boia Flamingo Gigante Piscina",
+    sold: "4.2mil",
+    rating: 4.6,
+  },
+  {
+    id: 9,
+    image: shortsImg,
+    title: "Kit 3 Shorts de Praia Masculino Neon",
+    sold: "7.1mil",
+    rating: 4.4,
+  },
+  {
+    id: 10,
+    image: baldinhoImg,
+    title: "Baldinho de Praia e Jardim Kit Monte Líbano",
+    sold: "2.3mil",
+    rating: 4.9,
   },
 ];
 
