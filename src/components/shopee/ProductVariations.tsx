@@ -31,7 +31,7 @@ const ProductVariations = forwardRef<ProductVariationsRef>((_, ref) => {
 
   useEffect(() => {
     if (isHighlighted) {
-      const timer = setTimeout(() => setIsHighlighted(false), 2000);
+      const timer = setTimeout(() => setIsHighlighted(false), 3000);
       return () => clearTimeout(timer);
     }
   }, [isHighlighted]);
@@ -40,12 +40,15 @@ const ProductVariations = forwardRef<ProductVariationsRef>((_, ref) => {
     <div 
       ref={containerRef}
       className={`bg-card px-3 py-3 mt-[2px] transition-all duration-300 ${
-        isHighlighted ? "ring-2 ring-red-500 ring-offset-2" : ""
+        isHighlighted ? "border-2 border-red-500 bg-red-100 shadow-[0_0_15px_rgba(239,68,68,0.4)]" : ""
       }`}
     >
       {/* Header row */}
       <div className="flex items-center gap-2 mb-3">
         <span className="text-sm text-primary font-medium">2 Variações Disponíveis</span>
+        {isHighlighted && (
+          <span className="text-xs text-red-600 font-bold animate-bounce">⚠️ Selecione uma cor!</span>
+        )}
       </div>
 
       {/* Variation thumbnails row */}
