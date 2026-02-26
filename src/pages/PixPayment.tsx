@@ -108,8 +108,8 @@ const PixPayment = () => {
     trackAddPaymentInfo(amount, "pix");
     trackGenerateLead(amount);
 
-    // Start polling for payment status (every 5 seconds)
-    pollingRef.current = setInterval(checkPaymentStatus, 5000);
+    // Start polling for payment status (every 10 seconds)
+    pollingRef.current = setInterval(checkPaymentStatus, 10000);
     // Also check immediately
     checkPaymentStatus();
 
