@@ -1,5 +1,5 @@
 import { Copy, Check, Clock, ShieldCheck, ArrowLeft, CheckCircle2, Store, Truck, Lock, Smartphone, Star, Package } from "lucide-react";
-import { useState, useEffect, useRef, useCallback } from "react";
+import { useState, useEffect, useRef } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { QRCodeSVG } from "qrcode.react";
@@ -35,6 +35,8 @@ const PixPayment = () => {
   } = useCart();
   const hasTrackedPurchase = useRef(false);
   const pollingRef = useRef<ReturnType<typeof setInterval> | null>(null);
+  const hasInitialized = useRef(false);
+  const isPaidRef = useRef(false);
 
   // Get data from navigation state
   const {
@@ -43,75 +45,71 @@ const PixPayment = () => {
     transactionId
   } = location.state || {};
 
-  // Check payment status
-  const checkPaymentStatus = useCallback(async () => {
-    if (!transactionId || isPaid) return;
-    try {
-      const {
-        data,
-        error
-      } = await supabase.functions.invoke('check-payment-status', {
-        body: {
-          transactionId
-        }
-      });
-      if (error) {
-        console.error('Error checking payment status:', error);
-        return;
-      }
-      const normalizedStatus = String(data?.status ?? "").toLowerCase();
-      if (normalizedStatus === 'paid') {
-        setIsPaid(true);
-
-        // Stop polling
-        if (pollingRef.current) {
-          clearInterval(pollingRef.current);
-          pollingRef.current = null;
-        }
-
-        // Track Purchase events only when payment is confirmed
-        if (!hasTrackedPurchase.current) {
-          hasTrackedPurchase.current = true;
-
-          // Google Analytics Purchase
-          gaTrackPurchase(transactionId, amount, "aquavolt-001", "AquaVolt - Prancha Elétrica Subaquática", quantity);
-
-          // Meta Pixel Purchase
-          metaTrackPurchase(amount, "AquaVolt - Prancha Elétrica Subaquática", "aquavolt-001", transactionId, customer?.email, customer?.phone, customer?.name);
-        }
-
-        // Redirect to success page
-        navigate("/order-success", {
-          state: {
-            orderId: transactionId,
-            amount,
-            paymentMethod: "pix"
-          }
-        });
-      }
-    } catch (err) {
-      console.error('Payment status check failed:', err);
-    }
-  }, [transactionId, isPaid, amount, quantity, customer, gaTrackPurchase, metaTrackPurchase, navigate]);
+  // Initialization effect - runs once
   useEffect(() => {
-    if (!qrCode) {
-      navigate("/");
+    if (!qrCode || hasInitialized.current) {
+      if (!qrCode) navigate("/");
       return;
     }
+    hasInitialized.current = true;
 
     // Mark Pix as generated and clear abandoned cart tracking
     markPixGenerated();
     clearAbandonedCart();
 
-    // Track page view and payment info (but NOT purchase - that waits for confirmation)
+    // Track page view and payment info
     trackPageView("/pix-payment", "AquaVolt - Pagamento Pix");
     trackAddPaymentInfo(amount, "pix");
     trackGenerateLead(amount);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
-    // Start polling for payment status (every 10 seconds)
-    pollingRef.current = setInterval(checkPaymentStatus, 10000);
-    // Also check immediately
-    checkPaymentStatus();
+  // Polling effect - runs once based on transactionId
+  useEffect(() => {
+    if (!transactionId) return;
+
+    const checkStatus = async () => {
+      if (isPaidRef.current) return;
+      try {
+        const { data, error } = await supabase.functions.invoke('check-payment-status', {
+          body: { transactionId }
+        });
+        if (error) {
+          console.error('Error checking payment status:', error);
+          return;
+        }
+        const normalizedStatus = String(data?.status ?? "").toLowerCase();
+        if (normalizedStatus === 'paid') {
+          isPaidRef.current = true;
+          setIsPaid(true);
+
+          // Stop polling
+          if (pollingRef.current) {
+            clearInterval(pollingRef.current);
+            pollingRef.current = null;
+          }
+
+          // Track Purchase events only when payment is confirmed
+          if (!hasTrackedPurchase.current) {
+            hasTrackedPurchase.current = true;
+            gaTrackPurchase(transactionId, amount, "aquavolt-001", "AquaVolt - Prancha Elétrica Subaquática", quantity);
+            metaTrackPurchase(amount, "AquaVolt - Prancha Elétrica Subaquática", "aquavolt-001", transactionId, customer?.email, customer?.phone, customer?.name);
+          }
+
+          navigate("/order-success", {
+            state: { orderId: transactionId, amount, paymentMethod: "pix" }
+          });
+        }
+      } catch (err) {
+        console.error('Payment status check failed:', err);
+      }
+    };
+
+    // Check immediately
+    checkStatus();
+
+    // Poll every 10 seconds
+    pollingRef.current = setInterval(checkStatus, 10000);
 
     // Countdown timer
     const timer = setInterval(() => {
@@ -120,20 +118,21 @@ const PixPayment = () => {
           clearInterval(timer);
           return 0;
         }
-        // Pulse effect when time is running low (less than 5 minutes)
         if (prev <= 300) {
           setPulseTimer(true);
         }
         return prev - 1;
       });
     }, 1000);
+
     return () => {
       clearInterval(timer);
       if (pollingRef.current) {
         clearInterval(pollingRef.current);
       }
     };
-  }, [qrCode, navigate, trackPageView, trackAddPaymentInfo, trackGenerateLead, amount, markPixGenerated, clearAbandonedCart, checkPaymentStatus]);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [transactionId]);
   const handleCopyCode = async () => {
     try {
       await navigator.clipboard.writeText(qrCode);
