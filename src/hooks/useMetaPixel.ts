@@ -1,7 +1,6 @@
 import { useCallback, useEffect, useRef } from "react";
-import { supabase } from "@/integrations/supabase/client";
 
-const PIXEL_ID = "1428100488706955";
+const PIXEL_ID = "918331787348685";
 const STORAGE_KEY = "meta_pixel_events";
 
 interface TrackedEvent {
@@ -160,35 +159,6 @@ export const useMetaPixel = () => {
       console.log(`Meta Pixel (client): ${eventName}`, fbqParams, eventId);
     }
 
-    // Server-side tracking via Conversion API
-    try {
-      const { data, error } = await supabase.functions.invoke("meta-pixel", {
-        body: {
-          event_name: eventName,
-          event_id: eventId,
-          event_source_url: window.location.href,
-          user_ip: "", // Will be detected server-side
-          user_agent: navigator.userAgent,
-          email: params?.email,
-          phone: params?.phone,
-          name: params?.name,
-          external_id: visitorId,
-          value: params?.value,
-          currency: params?.currency || "BRL",
-          content_name: params?.content_name,
-          content_id: params?.content_id,
-          transaction_id: params?.transaction_id,
-        },
-      });
-
-      if (error) {
-        console.error("Meta Pixel CAPI error:", error);
-      } else {
-        console.log(`Meta Pixel (server): ${eventName}`, data);
-      }
-    } catch (err) {
-      console.error("Meta Pixel CAPI error:", err);
-    }
 
     // Mark event as tracked (for deduplication)
     if (!skipDedupe) {
