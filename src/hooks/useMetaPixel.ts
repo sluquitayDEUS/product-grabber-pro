@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useRef } from "react";
 
-const PIXEL_ID = "918331787348685";
+const PIXEL_ID = "712591894471734";
 const STORAGE_KEY = "meta_pixel_events";
 
 interface TrackedEvent {
