@@ -102,7 +102,7 @@ const comments3Star = [
 "Razoável. Esperava mais pelo preço, mas não é ruim."];
 
 
-// Generate 1000+ reviews for the Aquavolt
+// Generate reviews (reduced count for performance)
 const generateReviews = () => {
   const avatars = [
   "https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=50&h=50&fit=crop&crop=faces",
