@@ -152,8 +152,8 @@ const generateReviews = () => {
     reviews.push(reviewData);
   }
 
-  // Generate 250 four-star reviews (20% of total)
-  for (let i = 0; i < 250; i++) {
+  // Generate 20 four-star reviews (reduced from 250)
+  for (let i = 0; i < 20; i++) {
     const hasSellerReply = Math.random() < 0.85;
     const dayOffset = Math.floor(Math.random() * 180);
     const date = new Date();
