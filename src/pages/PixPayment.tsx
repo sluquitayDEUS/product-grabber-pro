@@ -109,7 +109,7 @@ const PixPayment = () => {
     checkStatus();
 
     // Poll every 10 seconds
-    pollingRef.current = setInterval(checkStatus, 10000);
+    pollingRef.current = setInterval(checkStatus, 15000);
 
     // Countdown timer
     const timer = setInterval(() => {

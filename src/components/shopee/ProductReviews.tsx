@@ -231,7 +231,7 @@ const ProductReviews = memo(() => {
 
   const handleFilterChange = useCallback((filter: string) => {
     setActiveFilter(filter);
-    setVisibleCount(10);
+    setVisibleCount(50);
   }, []);
 
   const renderStars = (rating: number) => {
