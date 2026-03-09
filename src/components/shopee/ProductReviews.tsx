@@ -173,8 +173,8 @@ const generateReviews = () => {
     });
   }
 
-  // Generate 50 three-star reviews (5% of total)
-  for (let i = 0; i < 50; i++) {
+  // Generate 5 three-star reviews (reduced from 50)
+  for (let i = 0; i < 5; i++) {
     const hasSellerReply = Math.random() < 0.85;
     const dayOffset = Math.floor(Math.random() * 180);
     const date = new Date();
