@@ -5,12 +5,7 @@ const corsHeaders = {
   'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type',
 };
 
-interface StatusRequest {
-  transactionId: string;
-}
-
 serve(async (req) => {
-  // Handle CORS preflight
   if (req.method === 'OPTIONS') {
     return new Response(null, { headers: corsHeaders });
   }
@@ -20,15 +15,13 @@ serve(async (req) => {
     const secretKey = Deno.env.get('FURIAPAY_SECRET_KEY');
 
     if (!publicKey || !secretKey) {
-      console.error('Missing Furia Pay credentials');
       return new Response(
         JSON.stringify({ error: 'Payment gateway not configured' }),
         { status: 500, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
       );
     }
 
-    const body: StatusRequest = await req.json();
-    
+    const body = await req.json();
     if (!body.transactionId) {
       return new Response(
         JSON.stringify({ error: 'Transaction ID is required' }),
@@ -36,84 +29,56 @@ serve(async (req) => {
       );
     }
 
-    console.log('Checking payment status for:', body.transactionId);
-
-    // Build authentication header (Basic Auth as per Furia Pay documentation)
-    const credentials = `${publicKey}:${secretKey}`;
-    const encodedCredentials = btoa(credentials);
-    const auth = `Basic ${encodedCredentials}`;
-
-    // Call Furia Pay API to get transaction status
-    // Official endpoint: GET /v1/payment-transaction/info/{id}
-    // https://furiapaybrasil.readme.io/reference/get_v1payment-transactioninfoid
+    const auth = `Basic ${btoa(`${publicKey}:${secretKey}`)}`;
     const apiUrl = `https://api.furiapaybr.app/v1/payment-transaction/info/${body.transactionId}`;
-
-    console.log('Calling Furia Pay status API:', apiUrl);
 
     const response = await fetch(apiUrl, {
       method: 'GET',
-      headers: {
-        'Authorization': auth,
-        'Content-Type': 'application/json',
-      },
+      headers: { 'Authorization': auth, 'Content-Type': 'application/json' },
     });
 
     const responseText = await response.text();
-    console.log('Furia Pay status raw response:', response.status, responseText);
 
     let data: Record<string, unknown> = {};
-    if (responseText && responseText.trim()) {
-      try {
-        data = JSON.parse(responseText);
-      } catch (parseError) {
-        console.error('Failed to parse Furia Pay status response:', parseError);
+    if (responseText?.trim()) {
+      try { data = JSON.parse(responseText); } catch {
         return new Response(
-          JSON.stringify({
-            error: 'Invalid response from payment gateway',
-            details: { status: response.status, body: responseText },
-          }),
+          JSON.stringify({ error: 'Invalid response from payment gateway' }),
           { status: 500, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
         );
       }
     }
 
-    console.log('Furia Pay status parsed response:', response.status, JSON.stringify(data, null, 2));
+    // Handle 429 rate limit gracefully — return PENDING instead of error
+    if (response.status === 429) {
+      return new Response(
+        JSON.stringify({ success: true, status: "pending", rawStatus: "PENDING", transactionId: body.transactionId, rateLimited: true }),
+        { status: 200, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+      );
+    }
 
     if (!response.ok) {
-      const errorMessage = (data.message as string) || 
-                          (data.error as string) || 
-                          'Failed to check payment status';
-      
       return new Response(
-        JSON.stringify({
-          error: errorMessage,
-          details: data,
-        }),
+        JSON.stringify({ error: 'Failed to check payment status', details: data }),
         { status: response.status || 500, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
       );
     }
 
-    // Response is wrapped in a "data" object according to Furia Pay API
     const paymentData = (data.data || data) as Record<string, unknown>;
-
-    // Return status
-    // Furia Pay statuses are usually uppercase: PAID, PENDING, REFUNDED, FAILED, REFUSED, etc.
     const rawStatus = String(paymentData.status ?? "");
-    const normalizedStatus = rawStatus.toLowerCase();
 
     return new Response(
       JSON.stringify({
         success: true,
         transactionId: paymentData.id,
-        status: normalizedStatus,
+        status: rawStatus.toLowerCase(),
         rawStatus,
-        paymentMethod: paymentData.payment_method || paymentData.paymentMethod,
-        paidAt: paymentData.paid_at || paymentData.paidAt || null,
+        paymentMethod: paymentData.payment_method,
+        paidAt: paymentData.paid_at || null,
       }),
       { status: 200, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
     );
   } catch (error) {
-    console.error('Check payment status error:', error);
     return new Response(
       JSON.stringify({ error: error instanceof Error ? error.message : 'Unknown error' }),
       { status: 500, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
