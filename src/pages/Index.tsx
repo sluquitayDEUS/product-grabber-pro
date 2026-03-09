@@ -60,14 +60,18 @@ const Index = () => {
         <ProductPrice />
         <ProductTitle />
         <ProductShipping />
-        <StoreCard />
-        <ProductDescription />
-        <ProductReviews />
-        <RelatedProducts />
-        <ProductPageFooter />
+        <Suspense fallback={<div className="h-40" />}>
+          <StoreCard />
+          <ProductDescription />
+          <ProductReviews />
+          <RelatedProducts />
+          <ProductPageFooter />
+        </Suspense>
       </div>
-      <ProductFooter onNoColorSelected={handleNoColorSelected} />
-      <ScrollToTopButton />
+      <Suspense fallback={null}>
+        <ProductFooter onNoColorSelected={handleNoColorSelected} />
+        <ScrollToTopButton />
+      </Suspense>
     </div>
   );
 };

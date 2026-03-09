@@ -226,7 +226,7 @@ const ProductReviews = memo(() => {
   const nextLoadCount = Math.min(5, remainingCount);
 
   const handleLoadMore = useCallback(() => {
-    setVisibleCount((prev) => prev + 5);
+    setVisibleCount((prev) => prev + 10);
   }, []);
 
   const handleFilterChange = useCallback((filter: string) => {
