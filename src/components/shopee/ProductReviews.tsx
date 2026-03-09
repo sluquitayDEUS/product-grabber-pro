@@ -125,8 +125,8 @@ const generateReviews = () => {
   let id = 1;
   let imageReviewsCount = 0;
 
-  // Generate 900 five-star reviews (75% of total)
-  for (let i = 0; i < 900; i++) {
+  // Generate 75 five-star reviews (reduced from 900)
+  for (let i = 0; i < 75; i++) {
     // Only first 3 reviews with images (one image each)
     const hasImages = imageReviewsCount < 3;
     // 85% chance of seller reply
