@@ -335,6 +335,8 @@ const ProductReviews = memo(() => {
               src={img}
               alt={`Review ${index + 1}`}
               className="w-20 h-20 rounded-lg object-cover"
+              width={80}
+              height={80}
               loading="lazy"
               decoding="async" />
 
