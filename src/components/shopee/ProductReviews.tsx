@@ -205,7 +205,7 @@ const allReviews = generateReviews();
 
 const ProductReviews = memo(() => {
   const [activeFilter, setActiveFilter] = useState("Todas");
-  const [visibleCount, setVisibleCount] = useState(5);
+  const [visibleCount, setVisibleCount] = useState(50);
 
   const filteredReviews = useMemo(() => {
     if (activeFilter === "Com Foto") {
