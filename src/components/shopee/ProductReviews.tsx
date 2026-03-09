@@ -303,6 +303,8 @@ const ProductReviews = memo(() => {
               src={review.avatar}
               alt={review.user}
               className="w-8 h-8 rounded-full object-cover"
+              width={32}
+              height={32}
               loading="lazy"
               decoding="async" />
 
