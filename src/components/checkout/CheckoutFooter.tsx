@@ -87,8 +87,6 @@ const CheckoutFooter = ({
         }]
       });
       if (result.paymentMethod === "pix" && result.pix) {
-        // Mark that Pix was successfully generated
-        onPixGenerated?.();
         navigate("/pix-payment", {
           state: {
             qrCode: result.pix.qrCode,
