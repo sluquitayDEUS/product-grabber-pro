@@ -9,7 +9,7 @@ import Index from "./pages/Index";
 import Checkout from "./pages/Checkout";
 import PixPayment from "./pages/PixPayment";
 import OrderSuccess from "./pages/OrderSuccess";
-import AdminPanel from "./pages/AdminPanel";
+
 import PoliticaPrivacidade from "./pages/PoliticaPrivacidade";
 import TermosCondicoes from "./pages/TermosCondicoes";
 import PoliticaReembolso from "./pages/PoliticaReembolso";
@@ -30,7 +30,7 @@ const App = () => (
             <Route path="/checkout" element={<Checkout />} />
             <Route path="/pix-payment" element={<PixPayment />} />
             <Route path="/order-success" element={<OrderSuccess />} />
-            <Route path="/admin" element={<AdminPanel />} />
+            
             <Route path="/politica-privacidade" element={<PoliticaPrivacidade />} />
             <Route path="/termos-condicoes" element={<TermosCondicoes />} />
             <Route path="/politica-reembolso" element={<PoliticaReembolso />} />

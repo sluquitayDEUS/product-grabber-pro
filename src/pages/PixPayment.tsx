@@ -3,7 +3,6 @@ import { useState, useEffect, useRef } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { QRCodeSVG } from "qrcode.react";
-import { useAbandonedCart } from "@/hooks/useAbandonedCart";
 import { useGoogleAnalytics } from "@/hooks/useGoogleAnalytics";
 import { useMetaPixel } from "@/hooks/useMetaPixel";
 import { useCart } from "@/contexts/CartContext";
@@ -16,10 +15,6 @@ const PixPayment = () => {
   const [timeLeft, setTimeLeft] = useState(15 * 60); // 15 minutes in seconds
   const [pulseTimer, setPulseTimer] = useState(false);
   const [isPaid, setIsPaid] = useState(false);
-  const {
-    markPixGenerated,
-    clearAbandonedCart
-  } = useAbandonedCart();
   const {
     trackPageView,
     trackPurchase: gaTrackPurchase,
@@ -52,10 +47,6 @@ const PixPayment = () => {
       return;
     }
     hasInitialized.current = true;
-
-    // Mark Pix as generated and clear abandoned cart tracking
-    markPixGenerated();
-    clearAbandonedCart();
 
     // Track page view and payment info
     trackPageView("/pix-payment", "AquaVolt - Pagamento Pix");

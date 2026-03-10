@@ -76,55 +76,6 @@ const handler = async (req: Request): Promise<Response> => {
       );
     }
 
-    // List abandoned carts
-    if (action === "list") {
-      const { data: carts, error } = await supabase
-        .from("abandoned_carts")
-        .select("*")
-        .order("created_at", { ascending: false });
-
-      if (error) throw error;
-
-      return new Response(
-        JSON.stringify({ success: true, carts }),
-        { status: 200, headers: { ...corsHeaders, "Content-Type": "application/json" } }
-      );
-    }
-
-    // Mark as contacted
-    if (action === "contact") {
-      const { id, notes } = await req.json();
-      
-      const { error } = await supabase
-        .from("abandoned_carts")
-        .update({ contacted: true, notes, updated_at: new Date().toISOString() })
-        .eq("id", id);
-
-      if (error) throw error;
-
-      return new Response(
-        JSON.stringify({ success: true }),
-        { status: 200, headers: { ...corsHeaders, "Content-Type": "application/json" } }
-      );
-    }
-
-    // Delete cart
-    if (action === "delete") {
-      const { id } = await req.json();
-      
-      const { error } = await supabase
-        .from("abandoned_carts")
-        .delete()
-        .eq("id", id);
-
-      if (error) throw error;
-
-      return new Response(
-        JSON.stringify({ success: true }),
-        { status: 200, headers: { ...corsHeaders, "Content-Type": "application/json" } }
-      );
-    }
-
     // Logout
     if (action === "logout") {
       await supabase

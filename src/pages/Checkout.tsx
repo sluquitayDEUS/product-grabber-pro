@@ -8,14 +8,12 @@ import CheckoutSummary from "@/components/checkout/CheckoutSummary";
 import CheckoutFooter from "@/components/checkout/CheckoutFooter";
 import CheckoutChatButton from "@/components/checkout/CheckoutChatButton";
 import { useCart } from "@/contexts/CartContext";
-import { useAbandonedCart } from "@/hooks/useAbandonedCart";
 import { useMetaPixel } from "@/hooks/useMetaPixel";
 import { useGoogleAnalytics } from "@/hooks/useGoogleAnalytics";
 
 const Checkout = () => {
   const addressRef = useRef<CheckoutAddressRef>(null);
   const { setHasVisitedCheckout, quantity, product } = useCart();
-  const { notifyCreditCardAttempt, markPixGenerated } = useAbandonedCart();
   const { trackInitiateCheckout, trackAddToCart } = useMetaPixel();
   const { trackPageView, trackBeginCheckout, trackAddToCart: gaTrackAddToCart } = useGoogleAnalytics();
   
@@ -67,8 +65,6 @@ const Checkout = () => {
       <CheckoutSummary />
       <CheckoutFooter 
         onAddressInvalid={handleAddressInvalid} 
-        onCreditCardAttempt={notifyCreditCardAttempt}
-        onPixGenerated={markPixGenerated}
       />
       
       {/* Small Chat Button - appears when scrolled down */}

@@ -13,7 +13,6 @@ import RelatedProducts from "@/components/shopee/RelatedProducts";
 import ProductFooter from "@/components/shopee/ProductFooter";
 import ProductPageFooter from "@/components/shopee/ProductPageFooter";
 import ScrollToTopButton from "@/components/shopee/ScrollToTopButton";
-import { useAbandonedCart } from "@/hooks/useAbandonedCart";
 import { useMetaPixel } from "@/hooks/useMetaPixel";
 import { useGoogleAnalytics } from "@/hooks/useGoogleAnalytics";
 
@@ -23,9 +22,6 @@ const Index = () => {
   const { trackViewContent } = useMetaPixel();
   const { trackPageView, trackViewItem } = useGoogleAnalytics();
   
-  // Initialize abandoned cart tracking (checks for stale carts on page load)
-  useAbandonedCart();
-
   // Track ViewContent on page load
   useEffect(() => {
     // Meta Pixel tracking

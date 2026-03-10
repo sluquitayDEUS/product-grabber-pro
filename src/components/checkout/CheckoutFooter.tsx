@@ -7,13 +7,9 @@ import { validateCPF } from "@/lib/cpfValidator";
 import { useState } from "react";
 interface CheckoutFooterProps {
   onAddressInvalid?: () => void;
-  onCreditCardAttempt?: () => void;
-  onPixGenerated?: () => void;
 }
 const CheckoutFooter = ({
   onAddressInvalid,
-  onCreditCardAttempt,
-  onPixGenerated
 }: CheckoutFooterProps) => {
   const navigate = useNavigate();
   const {
@@ -48,14 +44,9 @@ const CheckoutFooter = ({
     if (!isAddressValid()) {
       setShowAddressWarning(true);
       setTimeout(() => setShowAddressWarning(false), 3100);
-      onAddressInvalid?.();
-      return;
     }
 
-    // Notify credit card attempt before processing
-    if (paymentMethod === "credit") {
-      onCreditCardAttempt?.();
-    }
+
 
     // Validate card data if credit card
     if (paymentMethod === "credit" && !cardData) {
@@ -96,8 +87,6 @@ const CheckoutFooter = ({
         }]
       });
       if (result.paymentMethod === "pix" && result.pix) {
-        // Mark that Pix was successfully generated
-        onPixGenerated?.();
         navigate("/pix-payment", {
           state: {
             qrCode: result.pix.qrCode,
