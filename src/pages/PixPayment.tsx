@@ -16,10 +16,6 @@ const PixPayment = () => {
   const [pulseTimer, setPulseTimer] = useState(false);
   const [isPaid, setIsPaid] = useState(false);
   const {
-    markPixGenerated,
-    clearAbandonedCart
-  } = useAbandonedCart();
-  const {
     trackPageView,
     trackPurchase: gaTrackPurchase,
     trackGenerateLead,
