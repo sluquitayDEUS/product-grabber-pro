@@ -102,58 +102,38 @@ const comments3Star = [
 "Razoável. Esperava mais pelo preço, mas não é ruim."];
 
 
-// Generate 1000+ reviews for the Aquavolt
+// Generate reviews for the Aquavolt (reduced for performance)
 const generateReviews = () => {
-  const avatars = [
-  "https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=50&h=50&fit=crop&crop=faces",
-  "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=50&h=50&fit=crop&crop=faces",
-  "https://images.unsplash.com/photo-1599566150163-29194dcabd36?w=50&h=50&fit=crop&crop=faces",
-  "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=50&h=50&fit=crop&crop=faces",
-  "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=50&h=50&fit=crop&crop=faces",
-  "https://images.unsplash.com/photo-1527980965255-d3b416303d12?w=50&h=50&fit=crop&crop=faces",
-  "https://images.unsplash.com/photo-1580489944761-15a19d654956?w=50&h=50&fit=crop&crop=faces",
-  "https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=50&h=50&fit=crop&crop=faces"];
-
-
-  // Only 3 review images from the site
   const reviewImages = [review1, review2, review3];
-
   const variations = ["Vermelho/Preto", "Azul/Preto"];
   const names = ["A***o", "M***a", "R***o", "C***s", "J***a", "P***o", "L***a", "F***o", "B***a", "D***o", "G***a", "S***o", "T***a", "V***o", "N***a", "E***a", "I***o", "U***a", "K***o", "Z***a"];
 
   const reviews: any[] = [];
   let id = 1;
-  let imageReviewsCount = 0;
 
-  // Generate 900 five-star reviews (75% of total)
-  for (let i = 0; i < 900; i++) {
-    // Only first 3 reviews with images (one image each)
-    const hasImages = imageReviewsCount < 3;
-    // 85% chance of seller reply
+  // Generate 75 five-star reviews
+  for (let i = 0; i < 75; i++) {
+    const hasImages = i < 3;
     const hasSellerReply = Math.random() < 0.85;
     const dayOffset = Math.floor(Math.random() * 180);
     const date = new Date();
     date.setDate(date.getDate() - dayOffset);
 
-    const reviewData: any = {
+    reviews.push({
       id: id++,
-      user: names[Math.floor(Math.random() * names.length)],
-      avatar: avatars[Math.floor(Math.random() * avatars.length)],
+      user: names[i % names.length],
       rating: 5,
       date: date.toLocaleDateString("pt-BR"),
-      variation: variations[Math.floor(Math.random() * variations.length)],
-      comment: comments5Star[Math.floor(Math.random() * comments5Star.length)],
-      images: hasImages ? [reviewImages[imageReviewsCount]] : [],
+      variation: variations[i % 2],
+      comment: comments5Star[i % comments5Star.length],
+      images: hasImages ? [reviewImages[i]] : [],
       likes: Math.floor(Math.random() * 200) + 10,
-      sellerReply: hasSellerReply ? sellerReplies[Math.floor(Math.random() * sellerReplies.length)] : null
-    };
-
-    if (hasImages) imageReviewsCount++;
-    reviews.push(reviewData);
+      sellerReply: hasSellerReply ? sellerReplies[i % sellerReplies.length] : null
+    });
   }
 
-  // Generate 250 four-star reviews (20% of total)
-  for (let i = 0; i < 250; i++) {
+  // Generate 20 four-star reviews
+  for (let i = 0; i < 20; i++) {
     const hasSellerReply = Math.random() < 0.85;
     const dayOffset = Math.floor(Math.random() * 180);
     const date = new Date();
@@ -161,42 +141,38 @@ const generateReviews = () => {
 
     reviews.push({
       id: id++,
-      user: names[Math.floor(Math.random() * names.length)],
-      avatar: avatars[Math.floor(Math.random() * avatars.length)],
+      user: names[i % names.length],
       rating: 4,
       date: date.toLocaleDateString("pt-BR"),
-      variation: variations[Math.floor(Math.random() * variations.length)],
-      comment: comments4Star[Math.floor(Math.random() * comments4Star.length)],
+      variation: variations[i % 2],
+      comment: comments4Star[i % comments4Star.length],
       images: [],
       likes: Math.floor(Math.random() * 80) + 5,
-      sellerReply: hasSellerReply ? sellerReplies[Math.floor(Math.random() * sellerReplies.length)] : null
+      sellerReply: hasSellerReply ? sellerReplies[i % sellerReplies.length] : null
     });
   }
 
-  // Generate 50 three-star reviews (5% of total)
-  for (let i = 0; i < 50; i++) {
-    const hasSellerReply = Math.random() < 0.85;
+  // Generate 5 three-star reviews
+  for (let i = 0; i < 5; i++) {
     const dayOffset = Math.floor(Math.random() * 180);
     const date = new Date();
     date.setDate(date.getDate() - dayOffset);
 
     reviews.push({
       id: id++,
-      user: names[Math.floor(Math.random() * names.length)],
-      avatar: avatars[Math.floor(Math.random() * avatars.length)],
+      user: names[i % names.length],
       rating: 3,
       date: date.toLocaleDateString("pt-BR"),
-      variation: variations[Math.floor(Math.random() * variations.length)],
-      comment: comments3Star[Math.floor(Math.random() * comments3Star.length)],
+      variation: variations[i % 2],
+      comment: comments3Star[i % comments3Star.length],
       images: [],
       likes: Math.floor(Math.random() * 30) + 1,
-      sellerReply: hasSellerReply ? sellerReplies[Math.floor(Math.random() * sellerReplies.length)] : null
+      sellerReply: sellerReplies[i % sellerReplies.length]
     });
   }
 
-  // Shuffle reviews but keep image reviews in first positions
   const imageReviews = reviews.filter((r) => r.images.length > 0);
-  const textReviews = reviews.filter((r) => r.images.length === 0).sort(() => Math.random() - 0.5);
+  const textReviews = reviews.filter((r) => r.images.length === 0);
 
   return [...imageReviews, ...textReviews];
 };
@@ -299,12 +275,9 @@ const ProductReviews = memo(() => {
         <div key={review.id} className="px-3 py-4">
             {/* User Info */}
             <div className="flex items-center gap-2 mb-2">
-              <img
-              src={review.avatar}
-              alt={review.user}
-              className="w-8 h-8 rounded-full object-cover"
-              loading="lazy"
-              decoding="async" />
+              <div className="w-8 h-8 rounded-full bg-primary/10 flex items-center justify-center text-xs font-bold text-primary flex-shrink-0">
+                {review.user.charAt(0)}
+              </div>
 
               <div>
                 <p className="text-xs font-medium text-foreground">{review.user}</p>
