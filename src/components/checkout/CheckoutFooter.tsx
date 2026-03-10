@@ -7,13 +7,9 @@ import { validateCPF } from "@/lib/cpfValidator";
 import { useState } from "react";
 interface CheckoutFooterProps {
   onAddressInvalid?: () => void;
-  onCreditCardAttempt?: () => void;
-  onPixGenerated?: () => void;
 }
 const CheckoutFooter = ({
   onAddressInvalid,
-  onCreditCardAttempt,
-  onPixGenerated
 }: CheckoutFooterProps) => {
   const navigate = useNavigate();
   const {
