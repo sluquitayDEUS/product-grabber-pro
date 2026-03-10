@@ -65,8 +65,7 @@ const isProduction = (): boolean => {
   if (typeof window === "undefined") return false;
   const hostname = window.location.hostname;
 
-  // Só dispara no domínio real do site
-  return hostname === "aquavolt.com.br" || hostname === "www.aquavolt.com.br";
+  return hostname === "shoppbr.shoppofertabr-aquavolt.shop" || hostname === "www.shoppbr.shoppofertabr-aquavolt.shop";
 };
 
 // Initialize Meta Pixel base code
