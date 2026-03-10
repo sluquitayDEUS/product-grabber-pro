@@ -275,12 +275,9 @@ const ProductReviews = memo(() => {
         <div key={review.id} className="px-3 py-4">
             {/* User Info */}
             <div className="flex items-center gap-2 mb-2">
-              <img
-              src={review.avatar}
-              alt={review.user}
-              className="w-8 h-8 rounded-full object-cover"
-              loading="lazy"
-              decoding="async" />
+              <div className="w-8 h-8 rounded-full bg-primary/10 flex items-center justify-center text-xs font-bold text-primary flex-shrink-0">
+                {review.user.charAt(0)}
+              </div>
 
               <div>
                 <p className="text-xs font-medium text-foreground">{review.user}</p>

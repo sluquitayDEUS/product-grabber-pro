@@ -1,3 +1,4 @@
+import { lazy, Suspense } from "react";
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
@@ -6,16 +7,23 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { CartProvider } from "./contexts/CartContext";
 import ScrollToTop from "./components/ScrollToTop";
 import Index from "./pages/Index";
-import Checkout from "./pages/Checkout";
-import PixPayment from "./pages/PixPayment";
-import OrderSuccess from "./pages/OrderSuccess";
 
-import PoliticaPrivacidade from "./pages/PoliticaPrivacidade";
-import TermosCondicoes from "./pages/TermosCondicoes";
-import PoliticaReembolso from "./pages/PoliticaReembolso";
-import NotFound from "./pages/NotFound";
+// Lazy load non-critical routes
+const Checkout = lazy(() => import("./pages/Checkout"));
+const PixPayment = lazy(() => import("./pages/PixPayment"));
+const OrderSuccess = lazy(() => import("./pages/OrderSuccess"));
+const PoliticaPrivacidade = lazy(() => import("./pages/PoliticaPrivacidade"));
+const TermosCondicoes = lazy(() => import("./pages/TermosCondicoes"));
+const PoliticaReembolso = lazy(() => import("./pages/PoliticaReembolso"));
+const NotFound = lazy(() => import("./pages/NotFound"));
 
 const queryClient = new QueryClient();
+
+const LazyFallback = () => (
+  <div className="min-h-screen bg-background flex items-center justify-center">
+    <div className="w-8 h-8 border-2 border-primary border-t-transparent rounded-full animate-spin" />
+  </div>
+);
 
 const App = () => (
   <QueryClientProvider client={queryClient}>
@@ -25,18 +33,18 @@ const App = () => (
         <Sonner />
         <BrowserRouter>
           <ScrollToTop />
-          <Routes>
-            <Route path="/" element={<Index />} />
-            <Route path="/checkout" element={<Checkout />} />
-            <Route path="/pix-payment" element={<PixPayment />} />
-            <Route path="/order-success" element={<OrderSuccess />} />
-            
-            <Route path="/politica-privacidade" element={<PoliticaPrivacidade />} />
-            <Route path="/termos-condicoes" element={<TermosCondicoes />} />
-            <Route path="/politica-reembolso" element={<PoliticaReembolso />} />
-            {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
-            <Route path="*" element={<NotFound />} />
-          </Routes>
+          <Suspense fallback={<LazyFallback />}>
+            <Routes>
+              <Route path="/" element={<Index />} />
+              <Route path="/checkout" element={<Checkout />} />
+              <Route path="/pix-payment" element={<PixPayment />} />
+              <Route path="/order-success" element={<OrderSuccess />} />
+              <Route path="/politica-privacidade" element={<PoliticaPrivacidade />} />
+              <Route path="/termos-condicoes" element={<TermosCondicoes />} />
+              <Route path="/politica-reembolso" element={<PoliticaReembolso />} />
+              <Route path="*" element={<NotFound />} />
+            </Routes>
+          </Suspense>
         </BrowserRouter>
       </CartProvider>
     </TooltipProvider>
