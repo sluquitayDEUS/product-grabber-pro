@@ -59,6 +59,13 @@ const ProductGallery = memo(({ currentIndex, onIndexChange }: ProductGalleryProp
         )}
       </div>
 
+      {/* Frete Grátis banner at bottom of image */}
+      <div className="absolute bottom-0 left-0 right-0 flex items-center justify-between">
+        
+
+
+
+      </div>
 
       {/* Image Counter - bottom right */}
       <div className="absolute bottom-2 right-3 bg-black/50 text-white text-xs px-2 py-1 rounded-full">

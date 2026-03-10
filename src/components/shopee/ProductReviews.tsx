@@ -102,7 +102,7 @@ const comments3Star = [
 "Razoável. Esperava mais pelo preço, mas não é ruim."];
 
 
-// Generate reviews (reduced count for performance)
+// Generate 1000+ reviews for the Aquavolt
 const generateReviews = () => {
   const avatars = [
   "https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=50&h=50&fit=crop&crop=faces",
@@ -125,8 +125,8 @@ const generateReviews = () => {
   let id = 1;
   let imageReviewsCount = 0;
 
-  // Generate 75 five-star reviews (reduced from 900)
-  for (let i = 0; i < 75; i++) {
+  // Generate 900 five-star reviews (75% of total)
+  for (let i = 0; i < 900; i++) {
     // Only first 3 reviews with images (one image each)
     const hasImages = imageReviewsCount < 3;
     // 85% chance of seller reply
@@ -152,8 +152,8 @@ const generateReviews = () => {
     reviews.push(reviewData);
   }
 
-  // Generate 20 four-star reviews (reduced from 250)
-  for (let i = 0; i < 20; i++) {
+  // Generate 250 four-star reviews (20% of total)
+  for (let i = 0; i < 250; i++) {
     const hasSellerReply = Math.random() < 0.85;
     const dayOffset = Math.floor(Math.random() * 180);
     const date = new Date();
@@ -173,8 +173,8 @@ const generateReviews = () => {
     });
   }
 
-  // Generate 5 three-star reviews (reduced from 50)
-  for (let i = 0; i < 5; i++) {
+  // Generate 50 three-star reviews (5% of total)
+  for (let i = 0; i < 50; i++) {
     const hasSellerReply = Math.random() < 0.85;
     const dayOffset = Math.floor(Math.random() * 180);
     const date = new Date();
@@ -226,12 +226,12 @@ const ProductReviews = memo(() => {
   const nextLoadCount = Math.min(5, remainingCount);
 
   const handleLoadMore = useCallback(() => {
-    setVisibleCount((prev) => prev + 10);
+    setVisibleCount((prev) => prev + 5);
   }, []);
 
   const handleFilterChange = useCallback((filter: string) => {
     setActiveFilter(filter);
-    setVisibleCount(50);
+    setVisibleCount(10);
   }, []);
 
   const renderStars = (rating: number) => {
@@ -303,8 +303,6 @@ const ProductReviews = memo(() => {
               src={review.avatar}
               alt={review.user}
               className="w-8 h-8 rounded-full object-cover"
-              width={32}
-              height={32}
               loading="lazy"
               decoding="async" />
 
@@ -335,8 +333,6 @@ const ProductReviews = memo(() => {
               src={img}
               alt={`Review ${index + 1}`}
               className="w-20 h-20 rounded-lg object-cover"
-              width={80}
-              height={80}
               loading="lazy"
               decoding="async" />
 

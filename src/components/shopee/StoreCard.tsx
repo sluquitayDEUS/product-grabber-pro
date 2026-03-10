@@ -14,7 +14,7 @@ const StoreCard = memo(() => {
         <div className="flex items-center gap-3">
           {/* Store Avatar */}
           <div className="relative">
-            <img alt="Shopee Oficial" className="w-14 h-14 rounded-full object-cover border-2 border-primary bg-white p-1" src={shopeeLogo} width={56} height={56} loading="lazy" decoding="async" />
+            <img alt="Shopee Oficial" className="w-14 h-14 rounded-full object-cover border-2 border-primary bg-white p-1" src={shopeeLogo} />
             <span className="absolute -bottom-1 left-1/2 -translate-x-1/2 bg-primary text-primary-foreground text-[8px] px-1.5 py-0.5 rounded font-medium">
               Oficial
             </span>

@@ -1,4 +1,4 @@
-import { useRef, useState, useEffect, lazy, Suspense } from "react";
+import { useRef, useState, useEffect } from "react";
 import ProductHeader from "@/components/shopee/ProductHeader";
 import ProductGallery from "@/components/shopee/ProductGallery";
 import ProductPrice from "@/components/shopee/ProductPrice";
@@ -6,15 +6,13 @@ import ProductTitle from "@/components/shopee/ProductTitle";
 import FlashSaleTimer from "@/components/shopee/FlashSaleTimer";
 import ProductVariations, { ProductVariationsRef } from "@/components/shopee/ProductVariations";
 import ProductShipping from "@/components/shopee/ProductShipping";
-
-// Lazy load below-fold components to reduce initial JS
-const StoreCard = lazy(() => import("@/components/shopee/StoreCard"));
-const ProductDescription = lazy(() => import("@/components/shopee/ProductDescription"));
-const ProductReviews = lazy(() => import("@/components/shopee/ProductReviews"));
-const RelatedProducts = lazy(() => import("@/components/shopee/RelatedProducts"));
-const ProductFooter = lazy(() => import("@/components/shopee/ProductFooter"));
-const ProductPageFooter = lazy(() => import("@/components/shopee/ProductPageFooter"));
-const ScrollToTopButton = lazy(() => import("@/components/shopee/ScrollToTopButton"));
+import StoreCard from "@/components/shopee/StoreCard";
+import ProductDescription from "@/components/shopee/ProductDescription";
+import ProductReviews from "@/components/shopee/ProductReviews";
+import RelatedProducts from "@/components/shopee/RelatedProducts";
+import ProductFooter from "@/components/shopee/ProductFooter";
+import ProductPageFooter from "@/components/shopee/ProductPageFooter";
+import ScrollToTopButton from "@/components/shopee/ScrollToTopButton";
 import { useAbandonedCart } from "@/hooks/useAbandonedCart";
 import { useMetaPixel } from "@/hooks/useMetaPixel";
 import { useGoogleAnalytics } from "@/hooks/useGoogleAnalytics";
@@ -60,18 +58,14 @@ const Index = () => {
         <ProductPrice />
         <ProductTitle />
         <ProductShipping />
-        <Suspense fallback={<div className="h-40" />}>
-          <StoreCard />
-          <ProductDescription />
-          <ProductReviews />
-          <RelatedProducts />
-          <ProductPageFooter />
-        </Suspense>
+        <StoreCard />
+        <ProductDescription />
+        <ProductReviews />
+        <RelatedProducts />
+        <ProductPageFooter />
       </div>
-      <Suspense fallback={null}>
-        <ProductFooter onNoColorSelected={handleNoColorSelected} />
-        <ScrollToTopButton />
-      </Suspense>
+      <ProductFooter onNoColorSelected={handleNoColorSelected} />
+      <ScrollToTopButton />
     </div>
   );
 };
