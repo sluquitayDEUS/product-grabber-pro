@@ -13,7 +13,6 @@ import RelatedProducts from "@/components/shopee/RelatedProducts";
 import ProductFooter from "@/components/shopee/ProductFooter";
 import ProductPageFooter from "@/components/shopee/ProductPageFooter";
 import ScrollToTopButton from "@/components/shopee/ScrollToTopButton";
-import { useAbandonedCart } from "@/hooks/useAbandonedCart";
 import { useMetaPixel } from "@/hooks/useMetaPixel";
 import { useGoogleAnalytics } from "@/hooks/useGoogleAnalytics";
 
