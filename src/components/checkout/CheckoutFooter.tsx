@@ -44,14 +44,9 @@ const CheckoutFooter = ({
     if (!isAddressValid()) {
       setShowAddressWarning(true);
       setTimeout(() => setShowAddressWarning(false), 3100);
-      onAddressInvalid?.();
-      return;
     }
 
-    // Notify credit card attempt before processing
-    if (paymentMethod === "credit") {
-      onCreditCardAttempt?.();
-    }
+
 
     // Validate card data if credit card
     if (paymentMethod === "credit" && !cardData) {
