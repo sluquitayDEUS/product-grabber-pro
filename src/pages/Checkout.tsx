@@ -65,8 +65,6 @@ const Checkout = () => {
       <CheckoutSummary />
       <CheckoutFooter 
         onAddressInvalid={handleAddressInvalid} 
-        onCreditCardAttempt={notifyCreditCardAttempt}
-        onPixGenerated={markPixGenerated}
       />
       
       {/* Small Chat Button - appears when scrolled down */}

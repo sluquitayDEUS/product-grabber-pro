@@ -3,12 +3,10 @@ import { useLocation, useNavigate } from "react-router-dom";
 import { useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import confetti from "canvas-confetti";
-import { useAbandonedCart } from "@/hooks/useAbandonedCart";
 
 const OrderSuccess = () => {
   const location = useLocation();
   const navigate = useNavigate();
-  const { clearAbandonedCart } = useAbandonedCart();
 
   // Get order data from navigation state
   const { orderId, amount, paymentMethod } = location.state || {};
@@ -19,12 +17,6 @@ const OrderSuccess = () => {
       navigate("/");
       return;
     }
-
-    // Clear abandoned cart data since order was successful
-    clearAbandonedCart();
-
-    // Note: Purchase events are now tracked in PixPayment.tsx when payment is confirmed
-    // This prevents duplicate tracking and ensures we only track confirmed payments
 
     // Trigger confetti celebration
     const duration = 3 * 1000;
@@ -56,7 +48,7 @@ const OrderSuccess = () => {
     }, 250);
 
     return () => clearInterval(interval);
-  }, [orderId, navigate, clearAbandonedCart]);
+  }, [orderId, navigate]);
 
   const formatCurrency = (value: number) => {
     return (value / 100).toLocaleString("pt-BR", {

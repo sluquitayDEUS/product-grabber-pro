@@ -9,7 +9,7 @@ import Index from "./pages/Index";
 import Checkout from "./pages/Checkout";
 import PixPayment from "./pages/PixPayment";
 import OrderSuccess from "./pages/OrderSuccess";
-import AdminPanel from "./pages/AdminPanel";
+
 import PoliticaPrivacidade from "./pages/PoliticaPrivacidade";
 import TermosCondicoes from "./pages/TermosCondicoes";
 import PoliticaReembolso from "./pages/PoliticaReembolso";

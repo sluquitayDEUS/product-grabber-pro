@@ -48,10 +48,6 @@ const PixPayment = () => {
     }
     hasInitialized.current = true;
 
-    // Mark Pix as generated and clear abandoned cart tracking
-    markPixGenerated();
-    clearAbandonedCart();
-
     // Track page view and payment info
     trackPageView("/pix-payment", "AquaVolt - Pagamento Pix");
     trackAddPaymentInfo(amount, "pix");

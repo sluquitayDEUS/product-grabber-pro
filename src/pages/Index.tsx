@@ -22,9 +22,6 @@ const Index = () => {
   const { trackViewContent } = useMetaPixel();
   const { trackPageView, trackViewItem } = useGoogleAnalytics();
   
-  // Initialize abandoned cart tracking (checks for stale carts on page load)
-  useAbandonedCart();
-
   // Track ViewContent on page load
   useEffect(() => {
     // Meta Pixel tracking
