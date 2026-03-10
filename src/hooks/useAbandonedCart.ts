@@ -35,7 +35,7 @@ interface StoredCartData {
 
 export const useAbandonedCart = () => {
   const { customer, shippingAddress, product, totalPriceInCents, quantity } = useCart();
-  const timeoutRef = useRef<NodeJS.Timeout | null>(null);
+  const timeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const lastActivityRef = useRef<number>(Date.now());
   const notifyingRef = useRef<boolean>(false);
 
