@@ -14,7 +14,6 @@ import { useGoogleAnalytics } from "@/hooks/useGoogleAnalytics";
 const Checkout = () => {
   const addressRef = useRef<CheckoutAddressRef>(null);
   const { setHasVisitedCheckout, quantity, product } = useCart();
-  const { notifyCreditCardAttempt, markPixGenerated } = useAbandonedCart();
   const { trackInitiateCheckout, trackAddToCart } = useMetaPixel();
   const { trackPageView, trackBeginCheckout, trackAddToCart: gaTrackAddToCart } = useGoogleAnalytics();
   
