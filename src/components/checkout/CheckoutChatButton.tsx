@@ -16,11 +16,11 @@ const faqData = [
   },
   {
     question: "Como funciona o Pix?",
-    answer: "Ao escolher Pix, você receberá um QR Code para escanear. O pagamento é instantâneo e você ganha até 12% de desconto!"
+    answer: "Ao escolher Pix, você receberá um QR Code para escanear. O pagamento é instantâneo! Você ganha 5% de desconto na compra de 1 unidade ou 12% de desconto na compra de 2 unidades!"
   },
   {
     question: "Posso parcelar?",
-    answer: "Sim! Aceitamos cartões de crédito com parcelamento em até 12x sem juros."
+    answer: "Sim! Aceitamos cartões de crédito com parcelamento em até 12x com juros."
   },
   {
     question: "Como rastreio meu pedido?",
