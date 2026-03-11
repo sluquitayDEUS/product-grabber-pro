@@ -79,7 +79,7 @@ const ProductDescription = memo(() => {
               <div className="relative w-full" style={{
               paddingBottom: "56.25%"
             }}>
-                <iframe src="https://fast.wistia.net/embed/iframe/x00b5mokfv?seo=true&videoFoam=true&playerColor=ee4d2d" title="AquaVolt Video" allow="autoplay; fullscreen" allowFullScreen frameBorder="0" scrolling="no" className="absolute top-0 left-0 w-full h-full rounded-lg" name="wistia_embed" />
+                <iframe src="https://fast.wistia.net/embed/iframe/x00b5mokfv?web_component=true&seo=true" title="AquaVolt Video" allow="autoplay; fullscreen" frameBorder="0" scrolling="no" className="absolute top-0 left-0 w-full h-full rounded-lg" name="wistia_embed" loading="lazy" />
               </div>
             </div>
             
