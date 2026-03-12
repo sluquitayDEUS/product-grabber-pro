@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { useToast } from "@/hooks/use-toast";
 import { useCart } from "@/contexts/CartContext";
 import { usePayment } from "@/hooks/usePayment";
+import { useMetaPixel } from "@/hooks/useMetaPixel";
 import { validateCPF } from "@/lib/cpfValidator";
 import { useState } from "react";
 interface CheckoutFooterProps {
@@ -27,10 +28,8 @@ const CheckoutFooter = ({
     pixDiscount,
     quantity
   } = useCart();
-  const {
-    processPayment,
-    isLoading
-  } = usePayment();
+  const { processPayment, isLoading } = usePayment();
+  const { trackPurchase: metaTrackPurchase } = useMetaPixel();
   const [showAddressWarning, setShowAddressWarning] = useState(false);
   const subtotal = product.price * product.quantity;
   const voucher = -5.00;
@@ -95,6 +94,24 @@ const CheckoutFooter = ({
           }
         });
       } else if (result.paymentMethod === "credit_card" && result.status === "paid") {
+        metaTrackPurchase(
+          totalPriceInCents,
+          "AquaVolt - Prancha Elétrica Subaquática",
+          "aquavolt-001",
+          result.transactionId,
+          {
+            email: customer.email,
+            phone: customer.phone,
+            name: customer.name,
+            document: customer.document,
+            city: shippingAddress.city,
+            state: shippingAddress.state,
+            zipcode: shippingAddress.zipcode,
+            street: shippingAddress.street,
+            neighborhood: shippingAddress.neighborhood,
+          },
+          quantity
+        );
         navigate("/order-success", {
           state: {
             orderId: result.transactionId,

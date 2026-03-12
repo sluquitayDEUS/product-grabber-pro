@@ -11,26 +11,8 @@ interface MetaEventData {
   event_id: string;
   event_source_url: string;
   action_source: string;
-  user_data: {
-    client_ip_address?: string;
-    client_user_agent?: string;
-    em?: string[];
-    ph?: string[];
-    fn?: string[];
-    external_id?: string[];
-  };
-  custom_data?: {
-    value?: number;
-    currency?: string;
-    content_name?: string;
-    content_ids?: string[];
-    content_type?: string;
-    contents?: Array<{
-      id: string;
-      quantity: number;
-      item_price?: number;
-    }>;
-  };
+  user_data: Record<string, any>;
+  custom_data?: Record<string, any>;
 }
 
 interface RequestBody {
@@ -42,15 +24,21 @@ interface RequestBody {
   email?: string;
   phone?: string;
   name?: string;
+  document?: string;
   external_id?: string;
+  city?: string;
+  state?: string;
+  zipcode?: string;
+  street?: string;
+  neighborhood?: string;
   value?: number;
   currency?: string;
   content_name?: string;
   content_id?: string;
   transaction_id?: string;
+  quantity?: number;
 }
 
-// Hash SHA-256
 async function hashData(data: string): Promise<string> {
   const encoder = new TextEncoder();
   const dataBuffer = encoder.encode(data.toLowerCase().trim());
@@ -66,7 +54,7 @@ serve(async (req) => {
 
   try {
     const accessToken = Deno.env.get("META_ACCESS_TOKEN");
-    const pixelId = "918331787348685";
+    const pixelId = "712591894471734";
 
     if (!accessToken) {
       console.error("META_ACCESS_TOKEN not configured");
@@ -77,17 +65,17 @@ serve(async (req) => {
     }
 
     const body: RequestBody = await req.json();
-    console.log("Received event request:", body.event_name, body.event_id);
+    console.log("Received event:", body.event_name, body.event_id);
 
-    // Get real client IP from headers (Cloudflare/proxy headers)
-    const clientIp = req.headers.get("cf-connecting-ip") 
-      || req.headers.get("x-real-ip") 
+    // Get real client IP
+    const clientIp = req.headers.get("cf-connecting-ip")
+      || req.headers.get("x-real-ip")
       || req.headers.get("x-forwarded-for")?.split(",")[0]?.trim()
       || body.user_ip
       || "";
 
-    // Build user_data with hashed values
-    const userData: MetaEventData["user_data"] = {
+    // Build user_data with ALL available hashed customer data
+    const userData: Record<string, any> = {
       client_ip_address: clientIp,
       client_user_agent: body.user_agent,
     };
@@ -97,19 +85,36 @@ serve(async (req) => {
     }
     if (body.phone) {
       const cleanPhone = body.phone.replace(/\D/g, "");
-      userData.ph = [await hashData(cleanPhone)];
+      if (cleanPhone) userData.ph = [await hashData(cleanPhone)];
     }
     if (body.name) {
-      const firstName = body.name.split(" ")[0];
-      userData.fn = [await hashData(firstName)];
+      const parts = body.name.trim().split(/\s+/);
+      if (parts[0]) userData.fn = [await hashData(parts[0])];
+      if (parts.length > 1) userData.ln = [await hashData(parts[parts.length - 1])];
     }
-    if (body.external_id) {
+    if (body.document) {
+      // CPF as external_id for cross-device matching
+      const cleanDoc = body.document.replace(/\D/g, "");
+      if (cleanDoc) userData.external_id = [await hashData(cleanDoc)];
+    } else if (body.external_id) {
       userData.external_id = [await hashData(body.external_id)];
     }
+    if (body.city) {
+      userData.ct = [await hashData(body.city)];
+    }
+    if (body.state) {
+      userData.st = [await hashData(body.state)];
+    }
+    if (body.zipcode) {
+      const cleanZip = body.zipcode.replace(/\D/g, "");
+      if (cleanZip) userData.zp = [await hashData(cleanZip)];
+    }
+    // Country always BR
+    userData.country = [await hashData("br")];
 
-    // Build custom_data based on event type
-    const customData: MetaEventData["custom_data"] = {};
-    
+    // Build custom_data
+    const customData: Record<string, any> = {};
+
     if (body.value !== undefined) {
       customData.value = body.value;
       customData.currency = body.currency || "BRL";
@@ -122,9 +127,15 @@ serve(async (req) => {
       customData.content_type = "product";
       customData.contents = [{
         id: body.content_id,
-        quantity: 1,
+        quantity: body.quantity || 1,
         item_price: body.value,
       }];
+    }
+    if (body.quantity) {
+      customData.num_items = body.quantity;
+    }
+    if (body.transaction_id) {
+      customData.order_id = body.transaction_id;
     }
 
     const eventData: MetaEventData = {
@@ -140,20 +151,11 @@ serve(async (req) => {
       eventData.custom_data = customData;
     }
 
-    // Attach transaction_id as order_id for Purchase (helps attribution & debugging)
-    if (body.transaction_id) {
-      customData.content_ids = customData.content_ids || [];
-      (customData as any).order_id = body.transaction_id;
-    }
-
-    const payload = {
-      data: [eventData],
-    };
-
+    const payload = { data: [eventData] };
     console.log("Sending to Meta:", JSON.stringify(payload, null, 2));
 
     const response = await fetch(
-      `https://graph.facebook.com/v18.0/${pixelId}/events?access_token=${accessToken}`,
+      `https://graph.facebook.com/v21.0/${pixelId}/events?access_token=${accessToken}`,
       {
         method: "POST",
         headers: { "Content-Type": "application/json" },
