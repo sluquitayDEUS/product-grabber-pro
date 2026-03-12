@@ -219,7 +219,7 @@ const CheckoutAddress = forwardRef<CheckoutAddressRef>((_, ref) => {
     setLocation({ city: draft.city, state: draft.state });
     
     // Track AddPaymentInfo when address is saved
-    trackAddPaymentInfo(draft.email, draft.phone, draft.name);
+    trackAddPaymentInfo({ email: draft.email, phone: draft.phone, name: draft.name });
     
     setSheetOpen(false);
   };
