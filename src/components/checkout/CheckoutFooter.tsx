@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { useToast } from "@/hooks/use-toast";
 import { useCart } from "@/contexts/CartContext";
 import { usePayment } from "@/hooks/usePayment";
+import { useMetaPixel } from "@/hooks/useMetaPixel";
 import { validateCPF } from "@/lib/cpfValidator";
 import { useState } from "react";
 interface CheckoutFooterProps {
