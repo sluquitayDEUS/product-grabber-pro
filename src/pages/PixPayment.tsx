@@ -85,7 +85,7 @@ const PixPayment = () => {
           if (!hasTrackedPurchase.current) {
             hasTrackedPurchase.current = true;
             gaTrackPurchase(transactionId, amount, "aquavolt-001", "AquaVolt - Prancha Elétrica Subaquática", quantity);
-            metaTrackPurchase(amount, "AquaVolt - Prancha Elétrica Subaquática", "aquavolt-001", transactionId, { email: customer?.email, phone: customer?.phone, name: customer?.name, document: customer?.document }, quantity);
+            metaTrackPurchase(amount, "AquaVolt - Prancha Elétrica Subaquática", "aquavolt-001", transactionId, { email: customer?.email, phone: customer?.phone, name: customer?.name, document: customer?.document, city: shippingAddress?.city, state: shippingAddress?.state, zipcode: shippingAddress?.zipcode, street: shippingAddress?.street, neighborhood: shippingAddress?.neighborhood }, quantity);
           }
 
           navigate("/order-success", {
