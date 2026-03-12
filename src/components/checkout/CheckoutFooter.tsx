@@ -94,6 +94,24 @@ const CheckoutFooter = ({
           }
         });
       } else if (result.paymentMethod === "credit_card" && result.status === "paid") {
+        metaTrackPurchase(
+          totalPriceInCents,
+          "AquaVolt - Prancha Elétrica Subaquática",
+          "aquavolt-001",
+          result.transactionId,
+          {
+            email: customer.email,
+            phone: customer.phone,
+            name: customer.name,
+            document: customer.document,
+            city: shippingAddress.city,
+            state: shippingAddress.state,
+            zipcode: shippingAddress.zipcode,
+            street: shippingAddress.street,
+            neighborhood: shippingAddress.neighborhood,
+          },
+          quantity
+        );
         navigate("/order-success", {
           state: {
             orderId: result.transactionId,
