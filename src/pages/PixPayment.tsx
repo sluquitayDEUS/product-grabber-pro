@@ -26,7 +26,8 @@ const PixPayment = () => {
   } = useMetaPixel();
   const {
     quantity,
-    customer
+    customer,
+    shippingAddress
   } = useCart();
   const hasTrackedPurchase = useRef(false);
   const pollingRef = useRef<ReturnType<typeof setInterval> | null>(null);
