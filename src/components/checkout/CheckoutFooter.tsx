@@ -28,10 +28,8 @@ const CheckoutFooter = ({
     pixDiscount,
     quantity
   } = useCart();
-  const {
-    processPayment,
-    isLoading
-  } = usePayment();
+  const { processPayment, isLoading } = usePayment();
+  const { trackPurchase: metaTrackPurchase } = useMetaPixel();
   const [showAddressWarning, setShowAddressWarning] = useState(false);
   const subtotal = product.price * product.quantity;
   const voucher = -5.00;
