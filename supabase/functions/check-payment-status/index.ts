@@ -79,6 +79,22 @@ serve(async (req) => {
 
     console.log('Furia Pay status parsed response:', response.status, JSON.stringify(data, null, 2));
 
+    // Handle rate limiting (429) gracefully - return pending status instead of error
+    if (response.status === 429) {
+      console.log('Rate limited by Furia Pay, returning pending status');
+      return new Response(
+        JSON.stringify({
+          success: true,
+          transactionId: body.transactionId,
+          status: "pending",
+          rawStatus: "RATE_LIMITED",
+          paymentMethod: null,
+          paidAt: null,
+        }),
+        { status: 200, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+      );
+    }
+
     if (!response.ok) {
       const errorMessage = (data.message as string) || 
                           (data.error as string) || 
