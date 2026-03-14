@@ -43,6 +43,8 @@ const CheckoutFooter = ({
     if (!isAddressValid()) {
       setShowAddressWarning(true);
       setTimeout(() => setShowAddressWarning(false), 3100);
+      onAddressInvalid?.();
+      return;
     }
 
 
