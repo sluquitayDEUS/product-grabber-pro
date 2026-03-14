@@ -1,4 +1,4 @@
-import { useRef, useState, useEffect } from "react";
+import { useRef, useState, useEffect, lazy, Suspense } from "react";
 import ProductHeader from "@/components/shopee/ProductHeader";
 import ProductGallery from "@/components/shopee/ProductGallery";
 import ProductPrice from "@/components/shopee/ProductPrice";
@@ -6,15 +6,22 @@ import ProductTitle from "@/components/shopee/ProductTitle";
 import FlashSaleTimer from "@/components/shopee/FlashSaleTimer";
 import ProductVariations, { ProductVariationsRef } from "@/components/shopee/ProductVariations";
 import ProductShipping from "@/components/shopee/ProductShipping";
-import StoreCard from "@/components/shopee/StoreCard";
-import ProductDescription from "@/components/shopee/ProductDescription";
-import ProductReviews from "@/components/shopee/ProductReviews";
-import RelatedProducts from "@/components/shopee/RelatedProducts";
 import ProductFooter from "@/components/shopee/ProductFooter";
-import ProductPageFooter from "@/components/shopee/ProductPageFooter";
 import ScrollToTopButton from "@/components/shopee/ScrollToTopButton";
+import LazySection from "@/components/ui/LazySection";
 import { useMetaPixel } from "@/hooks/useMetaPixel";
 import { useGoogleAnalytics } from "@/hooks/useGoogleAnalytics";
+
+// Lazy load heavy below-fold components
+const StoreCard = lazy(() => import("@/components/shopee/StoreCard"));
+const ProductDescription = lazy(() => import("@/components/shopee/ProductDescription"));
+const ProductReviews = lazy(() => import("@/components/shopee/ProductReviews"));
+const RelatedProducts = lazy(() => import("@/components/shopee/RelatedProducts"));
+const ProductPageFooter = lazy(() => import("@/components/shopee/ProductPageFooter"));
+
+const SectionFallback = () => (
+  <div className="bg-card animate-pulse" style={{ minHeight: 120 }} />
+);
 
 const Index = () => {
   const variationsRef = useRef<ProductVariationsRef>(null);
@@ -22,16 +29,12 @@ const Index = () => {
   const { trackViewContent } = useMetaPixel();
   const { trackPageView, trackViewItem } = useGoogleAnalytics();
   
-  // Track ViewContent on page load
   useEffect(() => {
-    // Meta Pixel tracking
     trackViewContent(
       "AquaVolt - Prancha Elétrica Subaquática",
       "aquavolt-001",
-      149700 // R$ 1.497,00 em centavos
+      149700
     );
-    
-    // Google Analytics tracking
     trackPageView("/", "AquaVolt - Produto");
     trackViewItem(
       "aquavolt-001",
@@ -54,11 +57,36 @@ const Index = () => {
         <ProductPrice />
         <ProductTitle />
         <ProductShipping />
-        <StoreCard />
-        <ProductDescription />
-        <ProductReviews />
-        <RelatedProducts />
-        <ProductPageFooter />
+        
+        <LazySection rootMargin="300px" fallback={<SectionFallback />}>
+          <Suspense fallback={<SectionFallback />}>
+            <StoreCard />
+          </Suspense>
+        </LazySection>
+
+        <LazySection rootMargin="300px" fallback={<SectionFallback />}>
+          <Suspense fallback={<SectionFallback />}>
+            <ProductDescription />
+          </Suspense>
+        </LazySection>
+
+        <LazySection rootMargin="300px" fallback={<SectionFallback />}>
+          <Suspense fallback={<SectionFallback />}>
+            <ProductReviews />
+          </Suspense>
+        </LazySection>
+
+        <LazySection rootMargin="200px" fallback={<SectionFallback />}>
+          <Suspense fallback={<SectionFallback />}>
+            <RelatedProducts />
+          </Suspense>
+        </LazySection>
+
+        <LazySection rootMargin="200px" fallback={<SectionFallback />}>
+          <Suspense fallback={<SectionFallback />}>
+            <ProductPageFooter />
+          </Suspense>
+        </LazySection>
       </div>
       <ProductFooter onNoColorSelected={handleNoColorSelected} />
       <ScrollToTopButton />
