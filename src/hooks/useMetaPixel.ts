@@ -1,51 +1,9 @@
 import { useCallback, useEffect, useRef } from "react";
-import { supabase } from "@/integrations/supabase/client";
 
 const PIXEL_ID = "712591894471734";
-const STORAGE_KEY = "meta_pixel_events";
-
-interface TrackedEvent {
-  event_name: string;
-  timestamp: number;
-}
 
 const generateEventId = (): string => {
   return `${Date.now()}_${Math.random().toString(36).substring(2, 11)}`;
-};
-
-const getVisitorId = (): string => {
-  const key = "meta_visitor_id";
-  let visitorId = localStorage.getItem(key);
-  if (!visitorId) {
-    visitorId = `visitor_${Date.now()}_${Math.random().toString(36).substring(2, 15)}`;
-    localStorage.setItem(key, visitorId);
-  }
-  return visitorId;
-};
-
-const wasEventTracked = (eventName: string): boolean => {
-  try {
-    const stored = localStorage.getItem(STORAGE_KEY);
-    if (!stored) return false;
-    const events: TrackedEvent[] = JSON.parse(stored);
-    const oneDayAgo = Date.now() - 24 * 60 * 60 * 1000;
-    const validEvents = events.filter(e => e.timestamp > oneDayAgo);
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(validEvents));
-    return validEvents.some(e => e.event_name === eventName);
-  } catch {
-    return false;
-  }
-};
-
-const markEventTracked = (eventName: string): void => {
-  try {
-    const stored = localStorage.getItem(STORAGE_KEY);
-    const events: TrackedEvent[] = stored ? JSON.parse(stored) : [];
-    events.push({ event_name: eventName, timestamp: Date.now() });
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(events));
-  } catch {
-    // Ignore
-  }
 };
 
 const isProduction = (): boolean => {
@@ -79,6 +37,7 @@ const initPixel = (): void => {
   script.src = "https://connect.facebook.net/en_US/fbevents.js";
   document.head.appendChild(script);
 
+  // Init with empty — we'll use Advanced Matching on each event
   (window as any).fbq("init", PIXEL_ID);
 };
 
@@ -86,7 +45,7 @@ interface CustomerParams {
   email?: string;
   phone?: string;
   name?: string;
-  document?: string; // CPF
+  document?: string;
   street?: string;
   number?: string;
   complement?: string;
@@ -102,12 +61,42 @@ interface TrackEventParams extends CustomerParams {
   content_name?: string;
   content_id?: string;
   transaction_id?: string;
-  skipDedupe?: boolean;
   quantity?: number;
 }
 
+// Build Advanced Matching user data for fbq
+const buildUserData = (params?: CustomerParams): Record<string, string> => {
+  const ud: Record<string, string> = {};
+  if (!params) return ud;
+
+  if (params.email) ud.em = params.email.toLowerCase().trim();
+  if (params.phone) {
+    const clean = params.phone.replace(/\D/g, "");
+    if (clean) ud.ph = clean;
+  }
+  if (params.name) {
+    const parts = params.name.trim().split(/\s+/);
+    if (parts[0]) ud.fn = parts[0].toLowerCase();
+    if (parts.length > 1) ud.ln = parts[parts.length - 1].toLowerCase();
+  }
+  if (params.document) {
+    const cleanDoc = params.document.replace(/\D/g, "");
+    if (cleanDoc) ud.external_id = cleanDoc;
+  }
+  if (params.city) ud.ct = params.city.toLowerCase().trim();
+  if (params.state) ud.st = params.state.toLowerCase().trim();
+  if (params.zipcode) {
+    const cleanZip = params.zipcode.replace(/\D/g, "");
+    if (cleanZip) ud.zp = cleanZip;
+  }
+  ud.country = "br";
+
+  return ud;
+};
+
 export const useMetaPixel = () => {
   const initializedRef = useRef(false);
+  const firedEventsRef = useRef(new Set<string>());
 
   useEffect(() => {
     if (!initializedRef.current) {
@@ -116,76 +105,50 @@ export const useMetaPixel = () => {
     }
   }, []);
 
-  const trackEvent = useCallback(async (eventName: string, params?: TrackEventParams) => {
+  const trackEvent = useCallback((eventName: string, params?: TrackEventParams) => {
     if (!isProduction()) {
-      console.log(`Meta Pixel: Skipping ${eventName} on non-production domain`);
+      console.log(`Meta Pixel: Skipping ${eventName} on non-production`);
       return;
     }
 
-    const skipDedupe = params?.skipDedupe || eventName === "Purchase";
-    if (!skipDedupe && wasEventTracked(eventName)) {
-      console.log(`Meta Pixel: Event ${eventName} already tracked, skipping`);
+    // Deduplicate per page session (except Purchase which always fires)
+    const dedupeKey = eventName === "Purchase"
+      ? `${eventName}_${params?.transaction_id || Date.now()}`
+      : eventName;
+
+    if (firedEventsRef.current.has(dedupeKey)) {
+      console.log(`Meta Pixel: ${eventName} already fired this session, skipping`);
       return;
     }
+
+    if (!(window as any).fbq) return;
 
     const eventId = generateEventId();
-    const visitorId = getVisitorId();
 
-    // Client-side tracking via fbq
-    if ((window as any).fbq) {
-      const fbqParams: Record<string, any> = {};
-      if (params?.value) fbqParams.value = params.value;
-      if (params?.currency) fbqParams.currency = params.currency;
-      if (params?.content_name) fbqParams.content_name = params.content_name;
-      if (params?.content_id) {
-        fbqParams.content_ids = [params.content_id];
-        fbqParams.content_type = "product";
-      }
-      if (params?.quantity) {
-        fbqParams.num_items = params.quantity;
-      }
-      (window as any).fbq("track", eventName, fbqParams, { eventID: eventId });
-      console.log(`Meta Pixel (client): ${eventName}`, fbqParams, eventId);
+    // Update user data via Advanced Matching
+    const userData = buildUserData(params);
+    if (Object.keys(userData).length > 0) {
+      (window as any).fbq("init", PIXEL_ID, userData);
     }
 
-    // Server-side CAPI tracking with full customer data
-    try {
-      await supabase.functions.invoke("meta-pixel", {
-        body: {
-          event_name: eventName,
-          event_id: eventId,
-          event_source_url: window.location.href,
-          user_agent: navigator.userAgent,
-          user_ip: "",
-          // Customer identification data
-          email: params?.email || "",
-          phone: params?.phone || "",
-          name: params?.name || "",
-          document: params?.document || "",
-          external_id: visitorId,
-          // Address data
-          city: params?.city || "",
-          state: params?.state || "",
-          zipcode: params?.zipcode || "",
-          street: params?.street || "",
-          neighborhood: params?.neighborhood || "",
-          // Commerce data
-          value: params?.value,
-          currency: params?.currency || "BRL",
-          content_name: params?.content_name,
-          content_id: params?.content_id,
-          transaction_id: params?.transaction_id,
-          quantity: params?.quantity,
-        },
-      });
-      console.log(`Meta Pixel (CAPI): ${eventName} sent successfully`);
-    } catch (err) {
-      console.error(`Meta Pixel (CAPI): Failed to send ${eventName}`, err);
+    // Build event params
+    const fbqParams: Record<string, any> = {};
+    if (params?.value !== undefined) {
+      fbqParams.value = params.value;
+      fbqParams.currency = params.currency || "BRL";
     }
+    if (params?.content_name) fbqParams.content_name = params.content_name;
+    if (params?.content_id) {
+      fbqParams.content_ids = [params.content_id];
+      fbqParams.content_type = "product";
+    }
+    if (params?.quantity) fbqParams.num_items = params.quantity;
+    if (params?.transaction_id) fbqParams.order_id = params.transaction_id;
 
-    if (!skipDedupe) {
-      markEventTracked(eventName);
-    }
+    (window as any).fbq("track", eventName, fbqParams, { eventID: eventId });
+    console.log(`Meta Pixel: ${eventName}`, fbqParams, eventId);
+
+    firedEventsRef.current.add(dedupeKey);
   }, []);
 
   const trackViewContent = useCallback((contentName: string, contentId: string, value?: number) => {
@@ -218,7 +181,6 @@ export const useMetaPixel = () => {
       content_name: contentName,
       content_id: contentId,
       transaction_id: transactionId,
-      skipDedupe: true,
       quantity,
       ...customerData,
     });
