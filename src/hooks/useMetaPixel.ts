@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useRef } from "react";
 
-const PIXEL_ID = "712591894471734";
+const PIXEL_ID = "911500998376053";
 
 const generateEventId = (): string => {
   return `${Date.now()}_${Math.random().toString(36).substring(2, 11)}`;
