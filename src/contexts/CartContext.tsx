@@ -5,6 +5,7 @@ import { ptBR } from "date-fns/locale";
 // Import product images
 import aquavoltVermelho from "@/assets/aquavolt-vermelho.jpg";
 import aquavoltAzul from "@/assets/aquavolt-azul.jpg";
+import relogio1 from "@/assets/relogio/relogio-1.webp";
 
 interface LocationData {
   state: string;
@@ -60,13 +61,52 @@ interface ColorOption {
   image: string;
 }
 
-const colorOptions: ColorOption[] = [
-  { id: 1, name: "Vermelho/Preto", image: aquavoltVermelho },
-  { id: 2, name: "Azul/Preto", image: aquavoltAzul },
-];
+export type ProductType = "aquavolt" | "relogio";
+
+interface ProductConfig {
+  id: string;
+  name: string;
+  price: number;
+  originalPrice: number;
+  defaultImage: string;
+  colorOptions: ColorOption[];
+  requiresColor: boolean;
+  maxQuantity: number;
+}
+
+const productConfigs: Record<ProductType, ProductConfig> = {
+  aquavolt: {
+    id: "aquavolt-001",
+    name: "Aquavolt - Kart Aquático 100% Elétrico",
+    price: 390.90,
+    originalPrice: 590.90,
+    defaultImage: aquavoltVermelho,
+    colorOptions: [
+      { id: 1, name: "Vermelho/Preto", image: aquavoltVermelho },
+      { id: 2, name: "Azul/Preto", image: aquavoltAzul },
+    ],
+    requiresColor: true,
+    maxQuantity: 2,
+  },
+  relogio: {
+    id: "relogio-imperium-001",
+    name: "Relógio Imperium - Linha Suíça Premium A+",
+    price: 187.90,
+    originalPrice: 489.90,
+    defaultImage: relogio1,
+    colorOptions: [
+      { id: 1, name: "Prata/Azul", image: relogio1 },
+    ],
+    requiresColor: false,
+    maxQuantity: 2,
+  },
+};
 
 interface CartContextType {
   product: Product;
+  productType: ProductType;
+  setProductType: (type: ProductType) => void;
+  productConfig: ProductConfig;
   location: LocationData;
   setLocation: (location: LocationData) => void;
   selectedShipping: ShippingOption;
@@ -125,6 +165,7 @@ const calculateShippingOptions = (): { standard: ShippingOption; express: Shippi
 const CartContext = createContext<CartContextType | undefined>(undefined);
 
 export const CartProvider = ({ children }: { children: ReactNode }) => {
+  const [productType, setProductType] = useState<ProductType>("aquavolt");
   const [location, setLocation] = useState<LocationData>({
     state: "São Paulo",
     city: "São Paulo"
@@ -152,33 +193,38 @@ export const CartProvider = ({ children }: { children: ReactNode }) => {
   const [quantity, setQuantity] = useState(1);
   const [hasVisitedCheckout, setHasVisitedCheckout] = useState(false);
 
+  const config = productConfigs[productType];
   const shippingOptions = calculateShippingOptions();
   const selectedShipping = shippingOptions[shippingType];
 
-  const selectedColorOption = selectedColor ? colorOptions.find(c => c.id === selectedColor) || colorOptions[0] : colorOptions[0];
+  const selectedColorOption = selectedColor
+    ? config.colorOptions.find(c => c.id === selectedColor) || config.colorOptions[0]
+    : config.colorOptions[0];
 
   const product: Product = {
-    id: "1",
-    name: "Aquavolt - Kart Aquático 100% Elétrico",
+    id: config.id,
+    name: config.name,
     image: selectedColorOption.image,
-    price: 390.90,
-    originalPrice: 590.90,
+    price: config.price,
+    originalPrice: config.originalPrice,
     variation: selectedColorOption.name,
     quantity: quantity
   };
 
   const subtotal = product.price * quantity;
-  // PIX discount: 5% for 1 unit, 12% for 2 units
   const pixDiscountRate = paymentMethod === "pix" ? (quantity >= 2 ? 0.12 : 0.05) : 0;
   const pixDiscount = subtotal * pixDiscountRate;
-  // Voucher discount: fixed R$5
   const voucherDiscount = 5;
   const totalPrice = subtotal + selectedShipping.price - pixDiscount - voucherDiscount;
   const totalPriceInCents = Math.round(totalPrice * 100);
+
   return (
     <CartContext.Provider
       value={{
         product,
+        productType,
+        setProductType,
+        productConfig: config,
         location,
         setLocation,
         selectedShipping,

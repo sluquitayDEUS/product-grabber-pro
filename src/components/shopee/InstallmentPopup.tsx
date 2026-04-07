@@ -1,15 +1,17 @@
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { CreditCard, QrCode, Zap } from "lucide-react";
+import { useCart } from "@/contexts/CartContext";
 
 interface InstallmentPopupProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
 }
 
-const PRODUCT_PRICE = 390.90;
 const INTEREST_RATE = 0.06;
 
 const InstallmentPopup = ({ open, onOpenChange }: InstallmentPopupProps) => {
+  const { product } = useCart();
+  const PRODUCT_PRICE = product.price;
   const pixPrice = PRODUCT_PRICE * 0.95;
 
   const getInstallmentValue = (n: number) => {

@@ -98,8 +98,8 @@ const CheckoutFooter = ({
       } else if (result.paymentMethod === "credit_card" && result.status === "paid") {
         metaTrackPurchase(
           totalPriceInCents,
-          "AquaVolt - Prancha Elétrica Subaquática",
-          "aquavolt-001",
+          product.name,
+          product.id,
           result.transactionId,
           {
             email: customer.email,

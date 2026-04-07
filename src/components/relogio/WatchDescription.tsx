@@ -3,9 +3,9 @@ import { ChevronDown, ChevronUp } from "lucide-react";
 import LazyImage from "@/components/ui/lazy-image";
 
 import selosImg from "@/assets/relogio/selos.webp";
-import carteiraBrinde from "@/assets/relogio/carteira-brinde.jpg";
+import carteiraBrinde from "@/assets/relogio/carteira-brinde.webp";
 import relogio1 from "@/assets/relogio/relogio-1.webp";
-import relogio2 from "@/assets/relogio/relogio-2.jpg";
+import relogio2 from "@/assets/relogio/relogio-2.webp";
 
 const specs = [
   { label: "Material", value: "Aço 904L" },

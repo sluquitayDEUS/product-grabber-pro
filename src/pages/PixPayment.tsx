@@ -27,7 +27,8 @@ const PixPayment = () => {
   const {
     quantity,
     customer,
-    shippingAddress
+    shippingAddress,
+    product
   } = useCart();
   const hasTrackedPurchase = useRef(false);
   const pollingRef = useRef<ReturnType<typeof setInterval> | null>(null);
@@ -50,7 +51,7 @@ const PixPayment = () => {
     hasInitialized.current = true;
 
     // Track page view and payment info
-    trackPageView("/pix-payment", "AquaVolt - Pagamento Pix");
+    trackPageView("/pix-payment", "Pagamento Pix");
     trackAddPaymentInfo(amount, "pix");
     trackGenerateLead(amount);
   // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -84,8 +85,8 @@ const PixPayment = () => {
           // Track Purchase events only when payment is confirmed
           if (!hasTrackedPurchase.current) {
             hasTrackedPurchase.current = true;
-            gaTrackPurchase(transactionId, amount, "aquavolt-001", "AquaVolt - Prancha Elétrica Subaquática", quantity);
-            metaTrackPurchase(amount, "AquaVolt - Prancha Elétrica Subaquática", "aquavolt-001", transactionId, { email: customer?.email, phone: customer?.phone, name: customer?.name, document: customer?.document, city: shippingAddress?.city, state: shippingAddress?.state, zipcode: shippingAddress?.zipcode, street: shippingAddress?.street, neighborhood: shippingAddress?.neighborhood }, quantity);
+            gaTrackPurchase(transactionId, amount, product.id, product.name, quantity);
+            metaTrackPurchase(amount, product.name, product.id, transactionId, { email: customer?.email, phone: customer?.phone, name: customer?.name, document: customer?.document, city: shippingAddress?.city, state: shippingAddress?.state, zipcode: shippingAddress?.zipcode, street: shippingAddress?.street, neighborhood: shippingAddress?.neighborhood }, quantity);
           }
 
           navigate("/order-success", {
