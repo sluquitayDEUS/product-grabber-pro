@@ -15,6 +15,7 @@ const OrderSuccess = lazy(() => import("./pages/OrderSuccess"));
 const PoliticaPrivacidade = lazy(() => import("./pages/PoliticaPrivacidade"));
 const TermosCondicoes = lazy(() => import("./pages/TermosCondicoes"));
 const PoliticaReembolso = lazy(() => import("./pages/PoliticaReembolso"));
+const Relogio = lazy(() => import("./pages/Relogio"));
 const NotFound = lazy(() => import("./pages/NotFound"));
 
 const queryClient = new QueryClient();
@@ -36,6 +37,7 @@ const App = () => (
           <Suspense fallback={<LazyFallback />}>
             <Routes>
               <Route path="/" element={<Index />} />
+              <Route path="/relogio" element={<Relogio />} />
               <Route path="/checkout" element={<Checkout />} />
               <Route path="/pix-payment" element={<PixPayment />} />
               <Route path="/order-success" element={<OrderSuccess />} />
