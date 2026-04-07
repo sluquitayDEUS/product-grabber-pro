@@ -1,4 +1,5 @@
 import { useRef, useState, useEffect, lazy, Suspense } from "react";
+import { useCart } from "@/contexts/CartContext";
 import ProductHeader from "@/components/shopee/ProductHeader";
 import ProductGallery from "@/components/shopee/ProductGallery";
 import ProductPrice from "@/components/shopee/ProductPrice";
@@ -28,8 +29,11 @@ const Index = () => {
   const [galleryIndex, setGalleryIndex] = useState(0);
   const { trackViewContent } = useMetaPixel();
   const { trackPageView, trackViewItem } = useGoogleAnalytics();
+  const { setProductType } = useCart();
   
   useEffect(() => {
+    setProductType("aquavolt");
+    
     trackViewContent(
       "AquaVolt - Prancha Elétrica Subaquática",
       "aquavolt-001",
@@ -41,7 +45,7 @@ const Index = () => {
       "AquaVolt - Prancha Elétrica Subaquática",
       149700
     );
-  }, [trackViewContent, trackPageView, trackViewItem]);
+  }, [trackViewContent, trackPageView, trackViewItem, setProductType]);
 
   const handleNoColorSelected = () => {
     variationsRef.current?.scrollAndHighlight();
