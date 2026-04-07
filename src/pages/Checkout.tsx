@@ -21,31 +21,31 @@ const Checkout = () => {
   useEffect(() => {
     setHasVisitedCheckout(true);
     
-    const productValue = (product?.price || 149700) * quantity;
+    const productValue = (product?.price || 0) * quantity;
     
     // Meta Pixel tracking
     trackInitiateCheckout(
       productValue,
-      "AquaVolt - Prancha Elétrica Subaquática",
-      "aquavolt-001"
+      product.name,
+      product.id
     );
     trackAddToCart(
       productValue,
-      "AquaVolt - Prancha Elétrica Subaquática",
-      "aquavolt-001"
+      product.name,
+      product.id
     );
     
     // Google Analytics tracking
-    trackPageView("/checkout", "AquaVolt - Checkout");
+    trackPageView("/checkout", `${product.name} - Checkout`);
     trackBeginCheckout(
       productValue,
-      "aquavolt-001",
-      "AquaVolt - Prancha Elétrica Subaquática",
+      product.id,
+      product.name,
       quantity
     );
     gaTrackAddToCart(
-      "aquavolt-001",
-      "AquaVolt - Prancha Elétrica Subaquática",
+      product.id,
+      product.name,
       productValue,
       quantity
     );
