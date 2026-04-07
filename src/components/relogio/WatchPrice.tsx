@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { FreteGratisPopup, CupomPopup, MoedasPopup } from "@/components/shopee/InfoPopups";
+import InstallmentPopup from "@/components/shopee/InstallmentPopup";
 
 const WatchPrice = () => {
   const [freteOpen, setFreteOpen] = useState(false);
