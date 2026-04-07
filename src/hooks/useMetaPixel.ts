@@ -9,7 +9,13 @@ const generateEventId = (): string => {
 const isProduction = (): boolean => {
   if (typeof window === "undefined") return false;
   const hostname = window.location.hostname;
-  return hostname === "shoppbr.shoppofertabr-aquavolt.shop" || hostname === "www.shoppbr.shoppofertabr-aquavolt.shop";
+  const allowedDomains = [
+    "shoppbr.shoppofertabr-aquavolt.shop",
+    "www.shoppbr.shoppofertabr-aquavolt.shop",
+    "promocao.shoppbr-aquavolt-promo.shop",
+    "www.promocao.shoppbr-aquavolt-promo.shop",
+  ];
+  return allowedDomains.includes(hostname);
 };
 
 const initPixel = (): void => {
