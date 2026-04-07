@@ -1,9 +1,9 @@
 import { useState, memo, useCallback } from "react";
 
 import relogio1 from "@/assets/relogio/relogio-1.webp";
-import relogio2 from "@/assets/relogio/relogio-2.jpg";
-import relogio3 from "@/assets/relogio/relogio-3.jpg";
-import relogio4 from "@/assets/relogio/relogio-4.jpg";
+import relogio2 from "@/assets/relogio/relogio-2.webp";
+import relogio3 from "@/assets/relogio/relogio-3.webp";
+import relogio4 from "@/assets/relogio/relogio-4.webp";
 
 const images = [relogio1, relogio2, relogio3, relogio4];
 
