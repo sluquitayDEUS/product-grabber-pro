@@ -64,6 +64,12 @@ const Relogio = () => {
           </Suspense>
         </LazySection>
 
+        <LazySection rootMargin="300px" fallback={<SectionFallback />}>
+          <Suspense fallback={<SectionFallback />}>
+            <WatchRelatedProducts />
+          </Suspense>
+        </LazySection>
+
         <LazySection rootMargin="200px" fallback={<SectionFallback />}>
           <Suspense fallback={<SectionFallback />}>
             <ProductPageFooter />
