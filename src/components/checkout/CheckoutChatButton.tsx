@@ -1,7 +1,8 @@
 import { useState, useEffect } from "react";
 import { MessageCircle, X, ChevronRight, ArrowLeft } from "lucide-react";
+import { useCart } from "@/contexts/CartContext";
 
-const faqData = [
+const aquavoltFaq = [
   {
     question: "Qual o prazo de entrega?",
     answer: "O prazo de entrega varia de acordo com sua região. Com Frete Grátis: de 3 a 9 dias úteis. Com Frete Expresso (R$ 17,90): de 3 a 5 dias úteis. O produto é enviado pela Shopee Oficial com código de rastreamento."
@@ -12,7 +13,7 @@ const faqData = [
   },
   {
     question: "O produto tem garantia?",
-    answer: "Sim! O produto possui 90 dias de garantia contra defeitos de fabricação pela Shopee Oficial. Além disso, você tem 7 dias após o recebimento para devolução."
+    answer: "Sim! O AquaVolt possui 90 dias de garantia contra defeitos de fabricação pela Shopee Oficial. Além disso, você tem 7 dias após o recebimento para devolução."
   },
   {
     question: "Como funciona o Pix?",
@@ -36,20 +37,56 @@ const faqData = [
   }
 ];
 
+const relogioFaq = [
+  {
+    question: "Qual o prazo de entrega?",
+    answer: "O prazo é de 3 a 9 dias úteis com Frete Grátis ou 3 a 5 dias úteis com Frete Express. Enviamos para todo o Brasil com rastreio completo pela Transportadora Shopee!"
+  },
+  {
+    question: "Este site é seguro?",
+    answer: "Sim, 100% seguro! Este produto é vendido e enviado pela Shopee Oficial, com Garantia Shopee. Seus dados são protegidos com criptografia SSL."
+  },
+  {
+    question: "O relógio tem garantia?",
+    answer: "Sim! O Relógio Imperium possui garantia de 2 anos contra perda e roubo, além de Cartão de Garantia e Certificado de Autenticidade."
+  },
+  {
+    question: "Como funciona o Pix?",
+    answer: "Ao escolher Pix, você receberá um QR Code para escanear. O pagamento é instantâneo! Você ganha 5% de desconto na compra de 1 unidade ou 12% na compra de 2 unidades!"
+  },
+  {
+    question: "Posso parcelar?",
+    answer: "Sim! Aceitamos cartões de crédito com parcelamento em até 12x de R$ 16,55."
+  },
+  {
+    question: "O relógio é à prova d'água?",
+    answer: "Sim! Resistência à água de até 30 metros, perfeito para uso no dia a dia. Vidro de cristal de safira garante proteção máxima."
+  },
+  {
+    question: "Posso alterar meu endereço?",
+    answer: "Sim! Você pode alterar o endereço antes de finalizar o pedido. Após a confirmação do pagamento, entre em contato conosco."
+  },
+  {
+    question: "Vocês emitem nota fiscal?",
+    answer: "Sim! A Shopee Oficial emite nota fiscal eletrônica (NF-e) automaticamente. Ela será enviada para seu e-mail após a confirmação do pagamento."
+  }
+];
+
 const CheckoutChatButton = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [selectedQuestion, setSelectedQuestion] = useState<number | null>(null);
   const [isVisible, setIsVisible] = useState(false);
+  const { productType } = useCart();
+
+  const faqData = productType === "relogio" ? relogioFaq : aquavoltFaq;
 
   useEffect(() => {
     const handleScroll = () => {
-      // Only show after user has scrolled at least 100px
       const scrollTop = window.scrollY;
       setIsVisible(scrollTop > 100);
     };
 
     window.addEventListener("scroll", handleScroll);
-    // Don't check initial position - start hidden
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
@@ -66,7 +103,6 @@ const CheckoutChatButton = () => {
 
   return (
     <>
-      {/* Small floating chat button - above footer */}
       {!isOpen && (
         <button
           onClick={() => setIsOpen(true)}
@@ -77,10 +113,8 @@ const CheckoutChatButton = () => {
         </button>
       )}
 
-      {/* Chat popup - small and compact */}
       {isOpen && (
         <div className="fixed bottom-36 left-2 w-60 max-h-64 bg-card rounded-lg shadow-xl z-[60] overflow-hidden border border-border animate-in fade-in slide-in-from-bottom-2 duration-200">
-          {/* Header */}
           <div className="flex items-center justify-between p-2 bg-[#EE4D2D] text-white">
             <div className="flex items-center gap-2">
               {selectedQuestion !== null && (
@@ -98,7 +132,6 @@ const CheckoutChatButton = () => {
             </button>
           </div>
 
-          {/* Content */}
           <div className="overflow-y-auto max-h-56">
             {selectedQuestion === null ? (
               <div className="p-2">
