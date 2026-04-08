@@ -138,7 +138,7 @@ const WatchReviews = memo(() => {
 
       <div className="flex gap-2 px-3 py-3 overflow-x-auto scrollbar-hide">
         {filters.map((filter) => (
-          <button key={filter} onClick={() => { setActiveFilter(filter); setVisibleCount(10); }}
+          <button key={filter} onClick={() => { setActiveFilter(filter); setVisibleCount(50); }}
             className={`flex-shrink-0 px-3 py-1.5 rounded-full text-xs transition-all ${activeFilter === filter ? "bg-shopee-light text-primary border border-primary" : "bg-secondary text-foreground border border-transparent"}`}>
             {filter}
           </button>

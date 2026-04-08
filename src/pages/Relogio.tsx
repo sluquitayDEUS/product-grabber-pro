@@ -15,6 +15,7 @@ import { useGoogleAnalytics } from "@/hooks/useGoogleAnalytics";
 const StoreCard = lazy(() => import("@/components/shopee/StoreCard"));
 const WatchDescription = lazy(() => import("@/components/relogio/WatchDescription"));
 const WatchReviews = lazy(() => import("@/components/relogio/WatchReviews"));
+const WatchRelatedProducts = lazy(() => import("@/components/relogio/WatchRelatedProducts"));
 const ProductPageFooter = lazy(() => import("@/components/shopee/ProductPageFooter"));
 
 const SectionFallback = () => (
