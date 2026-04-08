@@ -52,8 +52,8 @@ const generateReviews = () => {
   const reviews: any[] = [];
   let id = 1;
 
-  for (let i = 0; i < 60; i++) {
-    const hasSellerReply = Math.random() < 0.8;
+  for (let i = 0; i < 80; i++) {
+    const hasSellerReply = Math.random() < 0.85;
     const dayOffset = Math.floor(Math.random() * 120);
     const date = new Date();
     date.setDate(date.getDate() - dayOffset);
@@ -79,7 +79,7 @@ const generateReviews = () => {
     });
   }
 
-  for (let i = 0; i < 3; i++) {
+  for (let i = 0; i < 5; i++) {
     const dayOffset = Math.floor(Math.random() * 120);
     const date = new Date();
     date.setDate(date.getDate() - dayOffset);
@@ -99,7 +99,7 @@ const allReviews = generateReviews();
 
 const WatchReviews = memo(() => {
   const [activeFilter, setActiveFilter] = useState("Todas");
-  const [visibleCount, setVisibleCount] = useState(10);
+  const [visibleCount, setVisibleCount] = useState(50);
 
   const filteredReviews = useMemo(() => {
     if (activeFilter.includes("★")) {
@@ -127,18 +127,18 @@ const WatchReviews = memo(() => {
       {/* Rating Summary */}
       <div className="flex items-center gap-3 px-3 py-3 border-b border-border">
         <div className="flex items-baseline gap-1">
-          <span className="text-2xl font-bold text-primary">4.9</span>
+          <span className="text-2xl font-bold text-primary">4.8</span>
           <span className="text-xs text-muted-foreground">/5</span>
         </div>
         <div>
           {renderStars(5)}
-          <p className="text-xs text-muted-foreground mt-0.5">856 avaliações</p>
+          <p className="text-xs text-muted-foreground mt-0.5">1.2 mil avaliações</p>
         </div>
       </div>
 
       <div className="flex gap-2 px-3 py-3 overflow-x-auto scrollbar-hide">
         {filters.map((filter) => (
-          <button key={filter} onClick={() => { setActiveFilter(filter); setVisibleCount(10); }}
+          <button key={filter} onClick={() => { setActiveFilter(filter); setVisibleCount(50); }}
             className={`flex-shrink-0 px-3 py-1.5 rounded-full text-xs transition-all ${activeFilter === filter ? "bg-shopee-light text-primary border border-primary" : "bg-secondary text-foreground border border-transparent"}`}>
             {filter}
           </button>
