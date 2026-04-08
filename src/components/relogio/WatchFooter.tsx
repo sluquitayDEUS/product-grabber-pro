@@ -41,7 +41,7 @@ const WatchFooter = () => {
             className="flex-1 h-full bg-[#EE4D2D] text-white flex flex-col items-center justify-center"
           >
             <span className="text-sm font-medium italic">Comprar com desconto</span>
-            <span className="text-base font-bold">R$187,90</span>
+            <span className="text-base font-bold">R$169,90</span>
           </button>
         </div>
       </footer>

@@ -91,8 +91,8 @@ const productConfigs: Record<ProductType, ProductConfig> = {
   relogio: {
     id: "relogio-imperium-001",
     name: "Relógio Imperium - Linha Suíça Premium A+",
-    price: 187.90,
-    originalPrice: 489.90,
+    price: 169.90,
+    originalPrice: 282.90,
     defaultImage: relogio1,
     colorOptions: [
       { id: 1, name: "Prata/Azul", image: relogio1 },
