@@ -29,7 +29,7 @@ const faqData = [
   },
   {
     question: "Quais formas de pagamento?",
-    answer: "Aceitamos PIX e Cartão de Crédito (em até 12x de R$ 18,29). No PIX, oferecemos até 12% de desconto! O pagamento via PIX é instantâneo e o pedido é processado imediatamente."
+    answer: "Aceitamos PIX e Cartão de Crédito (em até 12x de R$ 16,55). No PIX, oferecemos até 12% de desconto! O pagamento via PIX é instantâneo e o pedido é processado imediatamente."
   },
   {
     question: "O relógio tem garantia?",

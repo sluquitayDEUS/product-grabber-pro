@@ -6,13 +6,14 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
+import { useCart } from "@/contexts/CartContext";
 
 interface ChatPopupProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
 }
 
-const faqData = [
+const aquavoltFaq = [
   {
     question: "Este site é seguro?",
     answer: "Sim! Sua compra é 100% segura. Este produto é vendido e enviado pela Shopee Oficial, que oferece a Garantia Shopee em todas as transações. Seus dados são protegidos com criptografia de ponta a ponta, e você só libera o pagamento após confirmar o recebimento."
@@ -23,19 +24,19 @@ const faqData = [
   },
   {
     question: "O produto tem garantia?",
-    answer: "Sim! O produto possui 90 dias de garantia contra defeitos de fabricação pela Shopee Oficial. Além disso, você tem 7 dias após o recebimento para solicitar a devolução, conforme o Código de Defesa do Consumidor."
+    answer: "Sim! O AquaVolt possui 90 dias de garantia contra defeitos de fabricação pela Shopee Oficial. Além disso, você tem 7 dias após o recebimento para solicitar a devolução, conforme o Código de Defesa do Consumidor."
   },
   {
     question: "Como funciona o Pix?",
-    answer: "Ao escolher Pix como forma de pagamento, você receberá um QR Code para escanear ou um código para copiar e colar. O pagamento é processado instantaneamente e seu pedido é confirmado em segundos. Com Pix, você ainda ganha 12% de desconto!"
+    answer: "Ao escolher Pix como forma de pagamento, você receberá um QR Code para escanear ou um código para copiar e colar. O pagamento é processado instantaneamente e seu pedido é confirmado em segundos. Com Pix, você ainda ganha até 12% de desconto!"
   },
   {
     question: "Posso parcelar minha compra?",
-    answer: "Sim! Aceitamos cartões de crédito com parcelamento em até 12x. As parcelas são calculadas automaticamente no checkout, e você pode escolher a quantidade que melhor se encaixa no seu orçamento."
+    answer: "Sim! Aceitamos cartões de crédito com parcelamento em até 12x. As parcelas são calculadas automaticamente no checkout."
   },
   {
     question: "O produto é original?",
-    answer: "Absolutamente! A Shopee Oficial trabalha apenas com produtos originais de alta qualidade. Todos os produtos passam por rigoroso controle de qualidade antes do envio."
+    answer: "Absolutamente! A Shopee Oficial trabalha apenas com produtos originais de alta qualidade. O AquaVolt passa por rigoroso controle de qualidade antes do envio."
   },
   {
     question: "Como faço para trocar ou devolver?",
@@ -55,8 +56,54 @@ const faqData = [
   }
 ];
 
+const relogioFaq = [
+  {
+    question: "Este site é seguro?",
+    answer: "Sim, 100% seguro! Este produto é vendido e enviado pela Shopee Oficial, que oferece o programa Garantia Shopee. Seu pagamento só é liberado após você confirmar o recebimento. Utilizamos criptografia SSL."
+  },
+  {
+    question: "Qual o prazo de entrega?",
+    answer: "O prazo é de 3 a 9 dias úteis com Frete Grátis ou 3 a 5 dias úteis com Frete Express. Enviamos para todo o Brasil com rastreio completo pela Transportadora Shopee!"
+  },
+  {
+    question: "O relógio tem garantia?",
+    answer: "Sim! O Relógio Imperium possui garantia de 2 anos contra perda e roubo, além de Cartão de Garantia e Certificado de Autenticidade. Você também tem 7 dias após o recebimento para solicitar devolução."
+  },
+  {
+    question: "Como funciona o Pix?",
+    answer: "Ao escolher Pix, você receberá um QR Code para escanear. O pagamento é instantâneo! Você ganha 5% de desconto na compra de 1 unidade ou 12% de desconto na compra de 2 unidades!"
+  },
+  {
+    question: "Posso parcelar minha compra?",
+    answer: "Sim! Aceitamos cartões de crédito com parcelamento em até 12x de R$ 16,55. As parcelas são calculadas automaticamente no checkout."
+  },
+  {
+    question: "O relógio é à prova d'água?",
+    answer: "Sim! O Relógio Imperium possui resistência à água de até 30 metros, perfeito para uso no dia a dia. Vidro de cristal de safira garante proteção máxima."
+  },
+  {
+    question: "Qual o material do relógio?",
+    answer: "Aço 904L de alta densidade, pulseira de Titânio, vidro de Cristal de Safira e movimento Automático com máquina base ETA2840 suíça."
+  },
+  {
+    question: "O que vem na caixa?",
+    answer: "Relógio Imperium, Caixa Personalizada (BRINDE), Cartão de Garantia de 2 anos, Ajustador de Pulseira (BRINDE), Certificado de Autenticidade e Carteira de Couro de brinde!"
+  },
+  {
+    question: "Vocês emitem nota fiscal?",
+    answer: "Sim! A Shopee Oficial emite nota fiscal eletrônica (NF-e) automaticamente. Ela será enviada para seu e-mail após a confirmação do pagamento."
+  },
+  {
+    question: "O frete é grátis mesmo?",
+    answer: "Sim! A Shopee Oficial oferece frete grátis para todo o Brasil! Você pode acompanhar todo o trajeto pelo código de rastreamento."
+  }
+];
+
 const ChatPopup = ({ open, onOpenChange }: ChatPopupProps) => {
   const [selectedQuestion, setSelectedQuestion] = useState<number | null>(null);
+  const { productType } = useCart();
+
+  const faqData = productType === "relogio" ? relogioFaq : aquavoltFaq;
 
   const handleClose = () => {
     setSelectedQuestion(null);

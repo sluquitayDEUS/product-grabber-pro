@@ -12,14 +12,14 @@ const WatchPrice = () => {
       <div className="bg-card p-3">
         {/* Price Row */}
         <div className="flex items-center gap-2">
-          <span className="text-2xl font-bold text-primary">R$ 187,90</span>
-          <span className="text-sm text-muted-foreground line-through">R$ 489,90</span>
-          <span className="bg-primary/10 text-primary text-xs font-semibold px-1.5 py-0.5 rounded">-62%</span>
+          <span className="text-2xl font-bold text-primary">R$ 169,90</span>
+          <span className="text-sm text-muted-foreground line-through">R$ 282,90</span>
+          <span className="bg-primary/10 text-primary text-xs font-semibold px-1.5 py-0.5 rounded">-40%</span>
         </div>
 
         {/* Installments */}
         <p className="text-xs text-muted-foreground mt-1 mb-3">
-          ou 12x de R$ 18,29
+          ou 12x de R$ 16,55
         </p>
 
         {/* Benefits row */}
