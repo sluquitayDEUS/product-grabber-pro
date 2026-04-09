@@ -7,8 +7,8 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { CartProvider } from "./contexts/CartContext";
 import ScrollToTop from "./components/ScrollToTop";
 import Index from "./pages/Index";
+import { newProducts } from "./data/products";
 
-// Lazy load non-critical routes
 const Checkout = lazy(() => import("./pages/Checkout"));
 const PixPayment = lazy(() => import("./pages/PixPayment"));
 const OrderSuccess = lazy(() => import("./pages/OrderSuccess"));
@@ -16,6 +16,8 @@ const PoliticaPrivacidade = lazy(() => import("./pages/PoliticaPrivacidade"));
 const TermosCondicoes = lazy(() => import("./pages/TermosCondicoes"));
 const PoliticaReembolso = lazy(() => import("./pages/PoliticaReembolso"));
 const Relogio = lazy(() => import("./pages/Relogio"));
+const Produtos = lazy(() => import("./pages/Produtos"));
+const GenericProductPage = lazy(() => import("./pages/GenericProductPage"));
 const NotFound = lazy(() => import("./pages/NotFound"));
 
 const queryClient = new QueryClient();
@@ -38,6 +40,10 @@ const App = () => (
             <Routes>
               <Route path="/" element={<Index />} />
               <Route path="/relogio" element={<Relogio />} />
+              <Route path="/produtos" element={<Produtos />} />
+              {newProducts.map((p) => (
+                <Route key={p.slug} path={`/${p.slug}`} element={<GenericProductPage product={p} />} />
+              ))}
               <Route path="/checkout" element={<Checkout />} />
               <Route path="/pix-payment" element={<PixPayment />} />
               <Route path="/order-success" element={<OrderSuccess />} />
