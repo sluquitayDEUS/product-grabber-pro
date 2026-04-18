@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useRef } from "react";
+import { supabase } from "@/integrations/supabase/client";
 
-const PIXEL_ID = "911500998376053";
+const PIXEL_ID = "1843828709886859";
 
 const generateEventId = (): string => {
   return `${Date.now()}_${Math.random().toString(36).substring(2, 11)}`;
@@ -16,6 +17,29 @@ const isProduction = (): boolean => {
     "www.promocao.shoppbr-aquavolt-promo.shop",
   ];
   return allowedDomains.includes(hostname);
+};
+
+// Read browser cookie value
+const getCookie = (name: string): string | undefined => {
+  if (typeof document === "undefined") return undefined;
+  const match = document.cookie.match(new RegExp(`(^| )${name}=([^;]+)`));
+  return match ? decodeURIComponent(match[2]) : undefined;
+};
+
+// Get _fbc — if absent but fbclid is in URL, build it per Meta spec
+const getFbc = (): string | undefined => {
+  const cookie = getCookie("_fbc");
+  if (cookie) return cookie;
+  if (typeof window === "undefined") return undefined;
+  const url = new URL(window.location.href);
+  const fbclid = url.searchParams.get("fbclid");
+  if (!fbclid) return undefined;
+  const fbc = `fb.1.${Date.now()}.${fbclid}`;
+  // Persist for subsequent events
+  try {
+    document.cookie = `_fbc=${fbc}; max-age=${60 * 60 * 24 * 90}; path=/`;
+  } catch { /* ignore */ }
+  return fbc;
 };
 
 const initPixel = (): void => {
@@ -43,8 +67,8 @@ const initPixel = (): void => {
   script.src = "https://connect.facebook.net/en_US/fbevents.js";
   document.head.appendChild(script);
 
-  // Init with empty — we'll use Advanced Matching on each event
   (window as any).fbq("init", PIXEL_ID);
+  (window as any).fbq("track", "PageView");
 };
 
 interface CustomerParams {
@@ -70,15 +94,15 @@ interface TrackEventParams extends CustomerParams {
   quantity?: number;
 }
 
-// Build Advanced Matching user data for fbq
-const buildUserData = (params?: CustomerParams): Record<string, string> => {
+// Advanced Matching for browser pixel (clear text — Meta hashes client-side)
+const buildBrowserUserData = (params?: CustomerParams): Record<string, string> => {
   const ud: Record<string, string> = {};
   if (!params) return ud;
 
   if (params.email) ud.em = params.email.toLowerCase().trim();
   if (params.phone) {
     const clean = params.phone.replace(/\D/g, "");
-    if (clean) ud.ph = clean;
+    if (clean) ud.ph = clean.length >= 10 ? `55${clean}` : clean;
   }
   if (params.name) {
     const parts = params.name.trim().split(/\s+/);
@@ -100,6 +124,52 @@ const buildUserData = (params?: CustomerParams): Record<string, string> => {
   return ud;
 };
 
+// Send server-side event via Conversions API (deduped by event_id)
+const sendCapiEvent = async (
+  eventName: string,
+  eventId: string,
+  params?: TrackEventParams
+) => {
+  try {
+    const customData: Record<string, unknown> = {};
+    if (params?.value !== undefined) {
+      customData.value = params.value;
+      customData.currency = params.currency || "BRL";
+    }
+    if (params?.content_name) customData.content_name = params.content_name;
+    if (params?.content_id) {
+      customData.content_ids = [params.content_id];
+      customData.content_type = "product";
+    }
+    if (params?.quantity) customData.num_items = params.quantity;
+    if (params?.transaction_id) customData.order_id = params.transaction_id;
+
+    await supabase.functions.invoke("meta-conversions-api", {
+      body: {
+        event_name: eventName,
+        event_id: eventId,
+        event_source_url: window.location.href,
+        action_source: "website",
+        user_data: {
+          email: params?.email,
+          phone: params?.phone,
+          name: params?.name,
+          document: params?.document,
+          city: params?.city,
+          state: params?.state,
+          zipcode: params?.zipcode,
+          fbp: getCookie("_fbp"),
+          fbc: getFbc(),
+          client_user_agent: navigator.userAgent,
+        },
+        custom_data: customData,
+      },
+    });
+  } catch (err) {
+    console.error("CAPI send failed:", err);
+  }
+};
+
 export const useMetaPixel = () => {
   const initializedRef = useRef(false);
   const firedEventsRef = useRef(new Set<string>());
@@ -117,13 +187,12 @@ export const useMetaPixel = () => {
       return;
     }
 
-    // Deduplicate per page session (except Purchase which always fires)
     const dedupeKey = eventName === "Purchase"
       ? `${eventName}_${params?.transaction_id || Date.now()}`
       : eventName;
 
     if (firedEventsRef.current.has(dedupeKey)) {
-      console.log(`Meta Pixel: ${eventName} already fired this session, skipping`);
+      console.log(`Meta Pixel: ${eventName} already fired, skipping`);
       return;
     }
 
@@ -131,13 +200,12 @@ export const useMetaPixel = () => {
 
     const eventId = generateEventId();
 
-    // Update user data via Advanced Matching
-    const userData = buildUserData(params);
+    // Re-init with Advanced Matching for this event
+    const userData = buildBrowserUserData(params);
     if (Object.keys(userData).length > 0) {
       (window as any).fbq("init", PIXEL_ID, userData);
     }
 
-    // Build event params
     const fbqParams: Record<string, any> = {};
     if (params?.value !== undefined) {
       fbqParams.value = params.value;
@@ -151,8 +219,12 @@ export const useMetaPixel = () => {
     if (params?.quantity) fbqParams.num_items = params.quantity;
     if (params?.transaction_id) fbqParams.order_id = params.transaction_id;
 
+    // 1) Browser Pixel
     (window as any).fbq("track", eventName, fbqParams, { eventID: eventId });
-    console.log(`Meta Pixel: ${eventName}`, fbqParams, eventId);
+    console.log(`Meta Pixel (browser): ${eventName}`, fbqParams, eventId);
+
+    // 2) Server-side CAPI (deduped via same event_id)
+    sendCapiEvent(eventName, eventId, params);
 
     firedEventsRef.current.add(dedupeKey);
   }, []);
