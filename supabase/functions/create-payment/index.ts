@@ -109,12 +109,6 @@ serve(async (req) => {
         document: cleanDocument,
         ...(cleanPhone && { phone: cleanPhone }),
       },
-      products: body.items.map((item, idx) => ({
-        id: `prod_${idx}_${Date.now()}`,
-        name: item.title,
-        quantity: item.quantity,
-        price: Number((item.unitPrice / 100).toFixed(2)),
-      })),
       metadata: {
         provider: 'lovable-checkout',
         externalRef: body.externalRef || identifier,
