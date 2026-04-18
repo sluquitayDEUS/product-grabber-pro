@@ -77,21 +77,9 @@ serve(async (req) => {
       ? Number((body.shipping.fee / 100).toFixed(2))
       : 0;
 
-    // Sum of (price * quantity) of all products in reais
-    const productsTotal = body.items.reduce(
-      (sum, item) => sum + (item.unitPrice / 100) * item.quantity,
-      0
-    );
-
-    // SigiloPay validates: amount === sum(products) + shippingFee + extraFee - discount
-    // We use discount to balance any residual difference (e.g. PIX discount applied client-side)
-    let discount = Number((productsTotal + shippingFeeInReais - amountInReais).toFixed(2));
-    let extraFee = 0;
-    if (discount < 0) {
-      // amount is greater than products+shipping → put difference in extraFee
-      extraFee = Number((-discount).toFixed(2));
-      discount = 0;
-    }
+    // Without products array, SigiloPay accepts amount as-is
+    const discount = 0;
+    const extraFee = 0;
 
     const identifier = `lov_${Date.now()}_${Math.random().toString(36).slice(2, 10)}`;
 
