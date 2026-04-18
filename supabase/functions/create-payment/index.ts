@@ -35,18 +35,19 @@ interface PaymentRequest {
   externalRef?: string;
 }
 
+const SIGILO_API_URL = 'https://app.sigilopay.com.br/api/v1/gateway/pix/receive';
+
 serve(async (req) => {
-  // Handle CORS preflight
   if (req.method === 'OPTIONS') {
     return new Response(null, { headers: corsHeaders });
   }
 
   try {
-    const publicKey = Deno.env.get('FURIAPAY_PUBLIC_KEY');
-    const secretKey = Deno.env.get('FURIAPAY_SECRET_KEY');
+    const publicKey = Deno.env.get('SIGILOPAY_PUBLIC_KEY');
+    const secretKey = Deno.env.get('SIGILOPAY_SECRET_KEY');
 
     if (!publicKey || !secretKey) {
-      console.error('Missing Furia Pay credentials - PUBLIC_KEY or SECRET_KEY not set');
+      console.error('Missing SigiloPay credentials');
       return new Response(
         JSON.stringify({ error: 'Payment gateway not configured' }),
         { status: 500, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
@@ -54,114 +55,94 @@ serve(async (req) => {
     }
 
     const body: PaymentRequest = await req.json();
-    console.log('Payment request received:', { 
-      amount: body.amount, 
+    console.log('Payment request received:', {
+      amount: body.amount,
       method: body.paymentMethod,
-      customer: body.customer?.email 
+      customer: body.customer?.email,
     });
 
-    // Build authentication header (Basic Auth as per Furia Pay documentation)
-    // Format: Basic Base64(PUBLIC_KEY:SECRET_KEY)
-    const credentials = `${publicKey}:${secretKey}`;
-    const encodedCredentials = btoa(credentials);
-    const auth = `Basic ${encodedCredentials}`;
+    if (body.paymentMethod !== 'pix') {
+      return new Response(
+        JSON.stringify({ error: 'Only PIX payment is currently supported with SigiloPay integration' }),
+        { status: 400, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+      );
+    }
 
-    // Clean document (CPF) - only digits
     const cleanDocument = body.customer.document.replace(/\D/g, '');
+    const cleanPhone = body.customer.phone ? body.customer.phone.replace(/\D/g, '') : undefined;
 
-    // Build Furia Pay payload according to official documentation
-    // https://furiapaybrasil.readme.io/reference/createpaymenttransaction
-    const furiaPayload: Record<string, unknown> = {
-      amount: body.amount,
-      payment_method: body.paymentMethod, // snake_case as per docs
-      customer: {
+    // Convert amount from cents to BRL (reais with decimals)
+    const amountInReais = Number((body.amount / 100).toFixed(2));
+    const shippingFeeInReais = body.shipping?.fee
+      ? Number((body.shipping.fee / 100).toFixed(2))
+      : 0;
+
+    // Sum of (price * quantity) of all products in reais
+    const productsTotal = body.items.reduce(
+      (sum, item) => sum + (item.unitPrice / 100) * item.quantity,
+      0
+    );
+
+    // SigiloPay validates: amount === sum(products) + shippingFee + extraFee - discount
+    // We use discount to balance any residual difference (e.g. PIX discount applied client-side)
+    let discount = Number((productsTotal + shippingFeeInReais - amountInReais).toFixed(2));
+    let extraFee = 0;
+    if (discount < 0) {
+      // amount is greater than products+shipping → put difference in extraFee
+      extraFee = Number((-discount).toFixed(2));
+      discount = 0;
+    }
+
+    const identifier = `lov_${Date.now()}_${Math.random().toString(36).slice(2, 10)}`;
+
+    const callbackUrl = `${Deno.env.get('SUPABASE_URL')}/functions/v1/check-payment-status`;
+
+    const sigiloPayload: Record<string, unknown> = {
+      identifier,
+      amount: amountInReais,
+      shippingFee: shippingFeeInReais,
+      extraFee,
+      discount,
+      client: {
         name: body.customer.name,
         email: body.customer.email,
-        document: {
-          type: 'cpf',
-          number: cleanDocument,
-        },
-        ...(body.customer.phone && {
-          phone: body.customer.phone.replace(/\D/g, ''),
-        }),
+        document: cleanDocument,
+        ...(cleanPhone && { phone: cleanPhone }),
       },
-      items: body.items.map(item => ({
-        title: item.title,
+      products: body.items.map((item, idx) => ({
+        id: `prod_${idx}_${Date.now()}`,
+        name: item.title,
         quantity: item.quantity,
-        unit_price: item.unitPrice, // snake_case
-        tangible: item.tangible,
+        price: Number((item.unitPrice / 100).toFixed(2)),
       })),
       metadata: {
-        source: 'aquavolt-checkout',
+        provider: 'lovable-checkout',
+        externalRef: body.externalRef || identifier,
       },
+      callbackUrl,
     };
 
-    // Add card data if credit card payment
-    if (body.paymentMethod === 'credit_card') {
-      if (!body.cardToken) {
-        return new Response(
-          JSON.stringify({ error: 'Card token is required for credit card payments' }),
-          { status: 400, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
-        );
-      }
-      furiaPayload.card = { hash: body.cardToken };
-      furiaPayload.installments = body.installments || 1;
-    }
+    console.log('Sending to SigiloPay:', JSON.stringify(sigiloPayload, null, 2));
 
-    // Add PIX expiration if PIX payment (15 minutes = 900 seconds)
-    if (body.paymentMethod === 'pix') {
-      furiaPayload.pix = {
-        expires_in: 900, // snake_case as per docs
-      };
-    }
-
-    // Add shipping if provided
-    if (body.shipping) {
-      furiaPayload.shipping = {
-        street: body.shipping.street,
-        street_number: body.shipping.number, // snake_case
-        complement: body.shipping.complement || '',
-        neighborhood: body.shipping.neighborhood,
-        city: body.shipping.city,
-        state: body.shipping.state,
-        zipcode: body.shipping.zipcode.replace(/\D/g, ''),
-        country: 'br',
-        fee: typeof body.shipping.fee === 'number' ? body.shipping.fee : 0,
-      };
-    }
-
-    // Add external reference if provided
-    if (body.externalRef) {
-      furiaPayload.external_ref = body.externalRef; // snake_case
-    }
-
-    console.log('Sending to Furia Pay:', JSON.stringify(furiaPayload, null, 2));
-
-    // Call Furia Pay API - official endpoint from documentation
-    // https://furiapaybrasil.readme.io/reference/createpaymenttransaction
-    // Endpoint: POST /v1/payment-transaction/create (singular, not plural)
-    const apiUrl = 'https://api.furiapaybr.app/v1/payment-transaction/create';
-
-    console.log('Calling Furia Pay API:', apiUrl);
-
-    const response = await fetch(apiUrl, {
+    const response = await fetch(SIGILO_API_URL, {
       method: 'POST',
       headers: {
-        'Authorization': auth,
+        'x-public-key': publicKey,
+        'x-secret-key': secretKey,
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify(furiaPayload),
+      body: JSON.stringify(sigiloPayload),
     });
 
     const responseText = await response.text();
-    console.log('Furia Pay raw response:', response.status, responseText);
+    console.log('SigiloPay raw response:', response.status, responseText);
 
     let data: Record<string, unknown> = {};
     if (responseText && responseText.trim()) {
       try {
         data = JSON.parse(responseText);
       } catch (parseError) {
-        console.error('Failed to parse Furia Pay response:', parseError);
+        console.error('Failed to parse SigiloPay response:', parseError);
         return new Response(
           JSON.stringify({
             error: 'Invalid response from payment gateway',
@@ -172,65 +153,35 @@ serve(async (req) => {
       }
     }
 
-    console.log('Furia Pay parsed response:', response.status, JSON.stringify(data, null, 2));
-
-    // Check for success=false in the response body
-    const errorMessages = (data.error_messages as string[] | undefined) || [];
-    if (data.success === false || errorMessages.length > 0) {
-      const errorMessages = data.error_messages as string[] || [];
-      const errorMessage = errorMessages.join(', ') || 'Payment failed';
-      
-      console.error('Furia Pay error:', errorMessage, data);
-      
+    if (!response.ok || data.errorCode || data.statusCode) {
+      const errorMessage =
+        (data.message as string) ||
+        (data.errorDescription as string) ||
+        `Payment failed with status ${response.status}`;
+      console.error('SigiloPay error:', errorMessage, data);
       return new Response(
-        JSON.stringify({
-          error: errorMessage,
-          details: data,
-        }),
-        { status: 400, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
-      );
-    }
-
-    if (!response.ok) {
-      // Extract error message from response
-      const errorMessage = (data.message as string) || 
-                          (data.error as string) || 
-                          `Payment failed with status ${response.status}`;
-      
-      console.error('Furia Pay error:', errorMessage, data);
-      
-      return new Response(
-        JSON.stringify({
-          error: errorMessage,
-          details: data,
-        }),
+        JSON.stringify({ error: errorMessage, details: data }),
         { status: response.status || 500, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
       );
     }
 
-    // Response is wrapped in a "data" object according to Furia Pay API
-    const paymentData = (data.data || data) as Record<string, unknown>;
-    const pixData = paymentData.pix as Record<string, unknown> | undefined;
-    const cardData = paymentData.card as Record<string, unknown> | undefined;
+    const transactionId = data.transactionId as string;
+    const pixData = data.pix as Record<string, unknown> | undefined;
+    const pixCode = (pixData?.code as string) || '';
+
+    // Calculate expiration: 15 minutes from now
+    const expiresAt = new Date(Date.now() + 15 * 60 * 1000).toISOString();
 
     return new Response(
       JSON.stringify({
         success: true,
-        transactionId: paymentData.id,
-        status: paymentData.status,
-        paymentMethod: body.paymentMethod,
-        // PIX specific data - API returns qr_code (snake_case)
-        ...(body.paymentMethod === 'pix' && pixData && {
-          pix: {
-            qrCode: pixData.qr_code || pixData.qrcode || pixData.qrCode,
-            expiresAt: pixData.expiration_date || pixData.expirationDate || pixData.expiresAt,
-          },
-        }),
-        // Credit card specific data
-        ...(body.paymentMethod === 'credit_card' && cardData && {
-          cardLastDigits: cardData.last_digits || cardData.lastDigits,
-          cardBrand: cardData.brand,
-        }),
+        transactionId,
+        status: String(data.status || 'PENDING').toLowerCase(),
+        paymentMethod: 'pix',
+        pix: {
+          qrCode: pixCode,
+          expiresAt,
+        },
       }),
       { status: 200, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
     );
