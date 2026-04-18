@@ -6,16 +6,6 @@ import { ptBR } from "date-fns/locale";
 import aquavoltVermelho from "@/assets/aquavolt-vermelho.jpg";
 import aquavoltAzul from "@/assets/aquavolt-azul.jpg";
 import relogio1 from "@/assets/relogio/relogio-1.webp";
-import fritadeira1 from "@/assets/produtos/fritadeira-1.webp";
-import tv1 from "@/assets/produtos/tv-1.webp";
-import tanquinho1 from "@/assets/produtos/tanquinho-1.webp";
-import cooktop1 from "@/assets/produtos/cooktop-1.webp";
-import iphone1 from "@/assets/produtos/iphone-1.webp";
-import geladeira1 from "@/assets/produtos/geladeira-1.webp";
-import cozinha1 from "@/assets/produtos/cozinha-1.webp";
-import multiprocessador1 from "@/assets/produtos/multiprocessador-1.webp";
-import ventilador1 from "@/assets/produtos/ventilador-1.webp";
-import notebook1 from "@/assets/produtos/notebook-1.webp";
 
 interface LocationData {
   state: string;
@@ -71,7 +61,7 @@ interface ColorOption {
   image: string;
 }
 
-export type ProductType = "aquavolt" | "relogio" | "fritadeira" | "tv" | "tanquinho" | "cooktop" | "iphone" | "geladeira" | "cozinha" | "multiprocessador" | "ventilador" | "notebook";
+export type ProductType = "aquavolt" | "relogio";
 
 interface ProductConfig {
   id: string;
@@ -104,49 +94,11 @@ const productConfigs: Record<ProductType, ProductConfig> = {
     price: 169.90,
     originalPrice: 282.90,
     defaultImage: relogio1,
-    colorOptions: [{ id: 1, name: "Prata/Azul", image: relogio1 }],
+    colorOptions: [
+      { id: 1, name: "Prata/Azul", image: relogio1 },
+    ],
     requiresColor: false,
     maxQuantity: 2,
-  },
-  fritadeira: {
-    id: "fritadeira-001", name: "Fritadeira Air Fryer Forno Mondial AFON-12L 12L 2000W", price: 150.00, originalPrice: 250.00,
-    defaultImage: fritadeira1, colorOptions: [{ id: 1, name: "Preto", image: fritadeira1 }], requiresColor: false, maxQuantity: 2,
-  },
-  tv: {
-    id: "tv-001", name: "Smart TV 43\" TCL 43S5K QLED Full HD Google TV", price: 150.00, originalPrice: 250.00,
-    defaultImage: tv1, colorOptions: [{ id: 1, name: "Preto", image: tv1 }], requiresColor: false, maxQuantity: 2,
-  },
-  tanquinho: {
-    id: "tanquinho-001", name: "Tanquinho Colormaq LCS10M Semiautomática 10kg", price: 150.00, originalPrice: 250.00,
-    defaultImage: tanquinho1, colorOptions: [{ id: 1, name: "Branca", image: tanquinho1 }], requiresColor: false, maxQuantity: 2,
-  },
-  cooktop: {
-    id: "cooktop-001", name: "Cooktop Indução 2 Zonas Suggar", price: 150.00, originalPrice: 250.00,
-    defaultImage: cooktop1, colorOptions: [{ id: 1, name: "Preto", image: cooktop1 }], requiresColor: false, maxQuantity: 2,
-  },
-  iphone: {
-    id: "iphone-001", name: "Apple iPhone 15 128GB Preto", price: 150.00, originalPrice: 250.00,
-    defaultImage: iphone1, colorOptions: [{ id: 1, name: "Preto", image: iphone1 }], requiresColor: false, maxQuantity: 2,
-  },
-  geladeira: {
-    id: "geladeira-001", name: "Geladeira Consul CRM44MB Duplex Inverter 377L", price: 150.00, originalPrice: 250.00,
-    defaultImage: geladeira1, colorOptions: [{ id: 1, name: "Branca", image: geladeira1 }], requiresColor: false, maxQuantity: 2,
-  },
-  cozinha: {
-    id: "cozinha-001", name: "Cozinha Compacta Madesa Emilly Pop Rustic", price: 150.00, originalPrice: 250.00,
-    defaultImage: cozinha1, colorOptions: [{ id: 1, name: "Rustic", image: cozinha1 }], requiresColor: false, maxQuantity: 2,
-  },
-  multiprocessador: {
-    id: "multiprocessador-001", name: "Multiprocessador Mondial Turbo Chef 9 em 1 1000W", price: 150.00, originalPrice: 250.00,
-    defaultImage: multiprocessador1, colorOptions: [{ id: 1, name: "Preto", image: multiprocessador1 }], requiresColor: false, maxQuantity: 2,
-  },
-  ventilador: {
-    id: "ventilador-001", name: "Ventilador Mondial Turbo 40cm 8 Pás", price: 150.00, originalPrice: 250.00,
-    defaultImage: ventilador1, colorOptions: [{ id: 1, name: "Preto/Prata", image: ventilador1 }], requiresColor: false, maxQuantity: 2,
-  },
-  notebook: {
-    id: "notebook-001", name: "Notebook Positivo Vision C14 Intel Celeron 4GB 128GB", price: 150.00, originalPrice: 250.00,
-    defaultImage: notebook1, colorOptions: [{ id: 1, name: "Cinza", image: notebook1 }], requiresColor: false, maxQuantity: 2,
   },
 };
 
