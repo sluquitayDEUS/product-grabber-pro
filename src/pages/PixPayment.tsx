@@ -1,4 +1,4 @@
-import { Copy, Check, Clock, ShieldCheck, ArrowLeft, CheckCircle2, Store, Truck, Lock, Smartphone, Star, Package } from "lucide-react";
+import { Copy, Check, Clock, ShieldCheck, CheckCircle2, Store, Truck, Lock, Smartphone, Star, Package } from "lucide-react";
 import { useState, useEffect, useRef } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
@@ -154,9 +154,6 @@ const PixPayment = () => {
   return <div className="min-h-screen bg-background">
       {/* Header */}
       <header className="bg-primary text-primary-foreground py-4 px-4 flex items-center gap-3 sticky top-0 z-50 shadow-md">
-        <button onClick={() => navigate("/")} className="p-1 hover:bg-white/10 rounded-full transition-colors">
-          <ArrowLeft className="w-5 h-5" />
-        </button>
         <div className="flex items-center gap-2 flex-1">
           <div className="bg-white rounded-lg p-1.5">
             <svg width="24" height="24" viewBox="0 0 512 512" fill="none">
